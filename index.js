@@ -11,10 +11,6 @@ votes = new db({filename: 'votes.db', autoload: true});
   });
 }*/
 
-codes.find({a:1}, function(err, docs) {
-  console.log(docs);
-});
-
 app.use(require('cors')());
 
 app.use(express.static('client'));
@@ -23,12 +19,12 @@ app.use(express.static('client'));
 var validCodes = ['123', 'hej'];
 var adminPassword = "hej123";
 
+//Kontrollerar kod hos klienten mot databasen
+
 app.use('/client', function(req, res, next) {
 
-    console.log(req.query.id);
     codes.findOne({code:+req.query.id}, function (err, doc) {
-      console.log(doc);
-      console.log(err);
+
       if(doc){
         next();
       }
@@ -38,6 +34,8 @@ app.use('/client', function(req, res, next) {
     });
 
 });
+
+//Kontrollerar admins lösenord
 
 app.use('/admin', function(req, res, next) {
 
@@ -51,17 +49,64 @@ app.use('/admin', function(req, res, next) {
 
 app.get('/admin/votes', function (req, res, next) {
 
-  var votes = [{
-    title: 'överphhös',
-    result: 'Adhara'
-  }, {
-    title: 'Ordförande',
-    result: null
-  }];
-
-  res.json(votes);
+  votes.find({}, function (err, docs) {
+    res.json(docs);
+  });
 
 });
+
+//ADMIN FUNKTIONER
+
+app.get('/admin/newvote', function (req, res, next) {
+
+  votes.findOne({isActive:true}, function(err, doc) {
+    if(!doc){
+      if(req.query.title){
+
+          vote = {
+            title: req.query.title,
+            options: [
+              {
+                title: "Kristoffer",
+                numberOfVotes: 0
+              },
+              {
+                title: "John",
+                numberOfVotes: 0
+              }
+            ],
+            hasVoted: [],
+            multipleAnswers: false,
+            isActive: true,
+          };
+
+          votes.insert(vote, function(err, docs) {
+            if(!err) res.send("Vote accepted");
+          });
+
+      } else {
+        res.send("Fel, saknar parametara");
+      }
+    } else {
+      res.send("Det finns redan en aktiv omröstning");
+    }
+  });
+
+});
+
+app.get('/admin/exitcurrentvote', function(req, res, next) {
+
+  votes.update({isActive: true}, {$set: {isActive: false}}, {}, function (err, numreplaced) {
+    if(!err){
+      res.send("Lyckades");
+    } else {
+      res.send("Misslyckades");
+    }
+  });
+
+});
+
+//CLIENT FUNKTIONER
 
 app.get('/client/currentvote', function (req, res, next) {
 
@@ -93,6 +138,46 @@ app.get('/client/currentvote', function (req, res, next) {
 
 });
 
+app.get('/client/vote', function(req, res, next) {
+
+  votes.findOne({ $and: [{ hasVoted: req.query.id } , { isActive: true }] }, function(err, doc) {
+
+    if(!doc){
+
+      res.send(req.query.title);
+
+      votes.findOne({isActive:true}, {options: 1}, function (err, doc) {
+
+        var pos;
+
+        for (var i = 0; i < doc.options.length; i++) {
+          if(doc.options[i].title == req.query.title){
+            pos = i;
+          }
+        }
+
+        console.log(pos);
+
+        votes.update({isActive:true}, {$inc: {options[0]: 1}}, function(err, numreplaced) {
+
+        });
+
+      });
+
+      /*votes.update({isActive: true}, {$push: {hasVoted: req.query.id}}, {}, function() {
+
+        res.send("Röst mottagen");
+      });*/
+
+
+
+    } else {
+      res.send("Användare har redan röstat");
+    }
+
+  });
+});
+
 app.get('/results', function (req, res) {
 
   var currentVote = {
@@ -101,43 +186,6 @@ app.get('/results', function (req, res) {
   };
 
   res.json(currentVote);
-
-});
-
-app.get('/admin/newvote', function (req, res, next) {
-
-  votes.findOne({isActive:true}, function(err, doc) {
-    if(!doc){
-      if(req.query.title){
-
-          vote = {
-            title: req.query.title,
-            options: [
-              {
-                title: "Kristoffer",
-                numberOfVotes: 0
-              },
-              {
-                title: "John",
-                numberOfVotes: 0
-              }
-            ],
-            hasVoted: null,
-            multipleAnswers: false,
-            isActive: true,
-          };
-
-          votes.insert(vote, function(err, docs) {
-            if(!err) res.send("Vote accepted");
-          });
-
-      } else {
-        res.send("Fel, saknar parametara");
-      }
-    } else {
-      res.send("Det finns redan en aktiv omröstning");
-    }
-  });
 
 });
 
