@@ -1,15 +1,31 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var MongoClient = require('mongodb').MongoClient;
+
 var app = express();
 
-var db = require('nedb');
-codes = new db({ filename: 'data.db', autoload: true });
-votes = new db({filename: 'votes.db', autoload: true});
+var db;
 
-/*or (var i = 0; i < 10; i++) {
-  codes.insert({code: Math.floor((Math.random() * 500) + 100)}, function (err, docs) {
+app.listen(8080, function () {
+
+  MongoClient.connect('mongodb://kristoffer:evote@ds035036.mlab.com:35036/ivote', function(err, database) {
+
+    if(err) console.log(err);
+    db = database;
+
   });
-}*/
+
+  console.log('Example app listening on port 3000!');
+});
+
+
+//db.collection("codes") = db.collection("db.collection("codes")");
+//db.collection("votes") = db.collection("db.collection("votes")");
+
+//db.collection("codes") = new db({ filename: 'data.db', autoload: true });
+//db.collection("votes") = new db({filename: 'db.collection("votes").db', autoload: true});
+
+
 
 app.use(require('cors')());
 
@@ -23,7 +39,7 @@ var adminPassword = "hej123";
 
 app.use('/client', function(req, res, next) {
 
-    codes.findOne({code:+req.query.id}, function (err, doc) {
+    db.collection("codes").findOne({code:+req.query.id}, function (err, doc) {
 
       if(doc){
         next();
@@ -49,8 +65,10 @@ app.use('/admin', function(req, res, next) {
 
 app.get('/admin/votes', function (req, res, next) {
 
-  votes.find({}, function (err, docs) {
-    res.json(docs);
+  db.collection("votes").find({}).toArray(function (err, docs) {
+
+    res.send(docs);
+
   });
 
 });
@@ -59,7 +77,7 @@ app.get('/admin/votes', function (req, res, next) {
 
 app.get('/admin/newvote', function (req, res, next) {
 
-  votes.findOne({isActive:true}, function(err, doc) {
+  db.collection("votes").findOne({isActive:true}, function(err, doc) {
     if(!doc){
       if(req.query.title){
 
@@ -80,7 +98,7 @@ app.get('/admin/newvote', function (req, res, next) {
             isActive: true,
           };
 
-          votes.insert(vote, function(err, docs) {
+          db.collection("votes").insert(vote, function(err, docs) {
             if(!err) res.send("Vote accepted");
           });
 
@@ -96,7 +114,7 @@ app.get('/admin/newvote', function (req, res, next) {
 
 app.get('/admin/exitcurrentvote', function(req, res, next) {
 
-  votes.update({isActive: true}, {$set: {isActive: false}}, {}, function (err, numreplaced) {
+  db.collection("votes").update({isActive: true}, {$set: {isActive: false}}, {}, function (err, numreplaced) {
     if(!err){
       res.send("Lyckades");
     } else {
@@ -119,7 +137,7 @@ app.get('/client/currentvote', function (req, res, next) {
     allowMultipleChoices: false
   };
 
-  votes.findOne({isActive: true}, function(err, doc) {
+  db.collection("votes").findOne({isActive: true}, function(err, doc) {
     if (doc) {
 
       for (var i = 0; i < doc.options.length; i++) {
@@ -140,36 +158,18 @@ app.get('/client/currentvote', function (req, res, next) {
 
 app.get('/client/vote', function(req, res, next) {
 
-  votes.findOne({ $and: [{ hasVoted: req.query.id } , { isActive: true }] }, function(err, doc) {
+  db.collection("votes").findOne({ $and: [{ hasVoted: req.query.id } , { isActive: true }] }, function(err, doc) {
 
     if(!doc){
+      db.collection("votes").update({isActive: true, "options.title": req.query.title}, {$inc: {"options.$.numberOfVotes": 1}}, function(err, doc) {
 
-      res.send(req.query.title);
+        res.send("Tack för ding röst" + err + doc);
 
-      votes.findOne({isActive:true}, {options: 1}, function (err, doc) {
-
-        var pos;
-
-        for (var i = 0; i < doc.options.length; i++) {
-          if(doc.options[i].title == req.query.title){
-            pos = i;
-          }
-        }
-
-        console.log(pos);
-
-        votes.update({isActive:true}, {$inc: {options[0]: 1}}, function(err, numreplaced) {
+        db.collection("votes").update({isActive: true}, {$push: {hasVoted: req.query.id}}, {}, function() {
 
         });
 
       });
-
-      /*votes.update({isActive: true}, {$push: {hasVoted: req.query.id}}, {}, function() {
-
-        res.send("Röst mottagen");
-      });*/
-
-
 
     } else {
       res.send("Användare har redan röstat");
@@ -187,8 +187,4 @@ app.get('/results', function (req, res) {
 
   res.json(currentVote);
 
-});
-
-app.listen(8080, function () {
-  console.log('Example app listening on port 3000!');
 });
