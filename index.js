@@ -15,22 +15,11 @@ app.listen(8080, function () {
 
   });
 
-  console.log('Example app listening on port 3000!');
 });
-
-
-//db.collection("codes") = db.collection("db.collection("codes")");
-//db.collection("votes") = db.collection("db.collection("votes")");
-
-//db.collection("codes") = new db({ filename: 'data.db', autoload: true });
-//db.collection("votes") = new db({filename: 'db.collection("votes").db', autoload: true});
-
-
 
 app.use(require('cors')());
 
 app.use(express.static('client'));
-//app.use(express.json());
 
 var validCodes = ['123', 'hej'];
 var adminPassword = "hej123";
@@ -63,6 +52,8 @@ app.use('/admin', function(req, res, next) {
 
 });
 
+//ADMIN FUNKTIONER
+
 app.get('/admin/votes', function (req, res, next) {
 
   db.collection("votes").find({}).toArray(function (err, docs) {
@@ -72,8 +63,6 @@ app.get('/admin/votes', function (req, res, next) {
   });
 
 });
-
-//ADMIN FUNKTIONER
 
 app.get('/admin/newvote', function (req, res, next) {
 
@@ -127,15 +116,6 @@ app.get('/admin/exitcurrentvote', function(req, res, next) {
 //CLIENT FUNKTIONER
 
 app.get('/client/currentvote', function (req, res, next) {
-
-  var currentVote = {
-    title: 'Vice ordförande',
-    options: [
-      "Kristoffer",
-      "John"
-    ],
-    allowMultipleChoices: false
-  };
 
   db.collection("votes").findOne({isActive: true}, function(err, doc) {
     if (doc) {
