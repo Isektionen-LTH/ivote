@@ -45,7 +45,7 @@ function setState(newState){
 
   db.collection('state').update({}, {state: newState}, function(err, docs) {
     console.log("error: setState: " + err);
-    io.emit('state', newState);
+    io.to('vote').emit('state', {state: newState});
   });
 
 }
@@ -105,8 +105,9 @@ function endCurrentVote(){
 
   console.log("function: endCurrentVote");
   db.collection("votes").update({isActive: true}, {$set: {isActive: false}}, {}, function (err, numreplaced) {
+
     console.log("function: error: " + err);
-    if(numreplaced.nModified > 0) setState(0);
+    //if(numreplaced.nModified > 0) setState(0);
 
     getVoteResults(function(results){
       io.to('resultRoom').emit('new results', results);
@@ -165,7 +166,7 @@ function getVoteResults(callback){
     docs.toArray(function(err, doc) {
       var resultArray = [];
       for (var i = 0; i < doc.length; i++) {
-        resultArray.push({title: doc[i].title, options: doc[i].options});
+        resultArray.push({id: i, title: doc[i].title, options: doc[i].options});
       }
 
       callback(resultArray);
