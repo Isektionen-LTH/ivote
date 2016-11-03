@@ -10,6 +10,10 @@ var db;
 var validCodes = ['123', 'hej'];
 var adminPassword = "hej123";
 
+app.get('/', function (req, res) {
+  res.sendFile(__dirname + '/client/index.html');
+});
+
 app.use(express.static(__dirname));
 app.use(require('cors')());
 
@@ -209,10 +213,6 @@ app.get('/Hej', function (req, res) {
 
 });
 
-app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/index1.html');
-});
-
 //Kontrollerar kod hos klienten mot databasen
 
 app.use('/client', function(req, res, next) {
@@ -361,5 +361,5 @@ app.get('/results', function (req, res) {
 });
 
 app.get('*', function (req, res) {
-  res.sendFile(__dirname + '/index1.html');
+  res.sendFile(__dirname + '/client/index.html');
 });
