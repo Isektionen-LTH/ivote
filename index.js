@@ -37,7 +37,7 @@ app.get('/app.bundle.js.map', function (req, res) {
   res.sendFile(__dirname + '/client/bin/app.bundle.js.map');
 });
 
-//State: 1 = pågående röstning, 2 = röstning klar,
+//State: 1 = pågående röstning, 0 = waiting,
 
 function setState(newState){
 
@@ -45,7 +45,14 @@ function setState(newState){
 
   db.collection('state').update({}, {state: newState}, function(err, docs) {
     console.log("error: setState: " + err);
-    io.to('vote').emit('state', {state: newState});
+
+    if(newState === 0){
+      io.to('vote').emit('state', {state: 'waiting'});
+    } else {
+      getCurrentVote(function(doc) {
+        io.to('vote').emit('state', doc);
+      });
+    }
   });
 
 }
@@ -70,7 +77,6 @@ function getCurrentVote(callback){
       doc = {state: 'voting', title: doc.title, options:doc.options};
       callback(doc);
       //Multiple options
-    } else {
     }
   });
 
@@ -82,6 +88,7 @@ function addNewVote(vote, callback){
   if(vote.title !== null && vote.options !== null && vote.multipleAnswers !== null){
     vote.isActive = null;
     vote.hasVoted = [];
+    vote.resultOrd = null;
     db.collection("votes").insert(vote, function(err){
       console.log("vote inserted");
       callback(null);
@@ -119,8 +126,17 @@ function endCurrentVote(){
 
 function startVote(voteId){
 
-  db.collection("votes").update({$and: [{isActive: null}, {_id: mongo.ObjectId(voteId)}]}, {$set: {isActive: true}}, function(err, doc) {
-    if(doc) setState(1);
+    db.collection('votes').find({isActive: false}, function(err, votes) {
+
+      docs.toArray(function(err, votesArray) {
+
+        db.collection("votes").update({$and: [{isActive: null}, {_id: mongo.ObjectId(voteId)}]}, {$set: {isActive: true, resultOrd: votesArray.length}}, function(err, doc) {
+          if(doc) setState(1);
+
+      });
+
+    });
+
   });
 
 }
@@ -199,6 +215,7 @@ io.on('connection', function (socket) {
 
     getHasVoted(userID.id, function(hasVoted) {
       console.log(hasVoted);
+
       if(hasVoted){
         socket.join("hasVoted");
         //socket.emit('state', {state: 'voted'});
@@ -215,6 +232,7 @@ io.on('connection', function (socket) {
             socket.emit('state', {state: 'waiting'});
           } else {
             getCurrentVote(function(doc) {
+              console.log(doc);
               socket.emit('state', doc);
             });
           }
@@ -271,8 +289,8 @@ app.get('/Hej', function (req, res) {
   /*io.emit('state', {state:2});
   res.send("skickat");*/
   //startVote("57fbdd7c0f46f92ade412dd4");
-
-  endCurrentVote();
+  setState(0);
+  //endCurrentVote();
   res.send("Skickat");
 
 });
