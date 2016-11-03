@@ -1,0 +1,13 @@
+Admin
+
+
+
+
+Client
+
+1. Få uppdateringar om state
+    on: 'state'
+
+2. Hämta nuvarande omröstning
+    emit: 'getCurrentVote'
+    on: 'currentVote'

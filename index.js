@@ -112,7 +112,7 @@ function vote(userID, option){
 
     if(!doc){
       db.collection("votes").findAndModify({isActive: true, "options.title": option},[['_id',1]], {$inc: {"options.$.numberOfVotes": 1}}, {new:true}, function(err, doc) {
-
+        console.log(hasVoted);
         io.to('hasVoted').emit('numberOfVotes', {numberOfVotes: doc.value.hasVoted.length});
 
         //console.log("Tack för din röst. Error: " + err + " doc: "+ doc);
@@ -136,12 +136,12 @@ io.on('connection', function (socket) {
   Rösta
   */
 
-  socket.on('joinVote', function(userID){
+  socket.on('join vote', function(userID){
 
-    socket.userID = userID;
+    socket.userID = userID.id;
     socket.join('vote');
 
-    getHasVoted(userID, function(hasVoted) {
+    getHasVoted(userID.id, function(hasVoted) {
       if(hasVoted){
         socket.join("hasVoted");
         socket.emit('state', {state: 'voted'});
@@ -210,7 +210,7 @@ app.get('/Hej', function (req, res) {
 });
 
 app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(__dirname + '/index1.html');
 });
 
 //Kontrollerar kod hos klienten mot databasen
@@ -358,4 +358,8 @@ app.get('/results', function (req, res) {
 
   res.json(currentVote);
 
+});
+
+app.get('*', function (req, res) {
+  res.sendFile(__dirname + '/index1.html');
 });
