@@ -3,7 +3,6 @@ import React from 'react';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import { BarChart } from 'react-d3';
 import { Provider, connect } from 'react-redux';
 import socket from '../socket';
 import store from './results.store';
@@ -22,24 +21,6 @@ export default function ResultsRoute() {
 class ResultsClass extends React.Component {
 	componentDidMount() {
 		const { dispatch } = this.props;
-
-		// TODO remove
-		dispatch(updateResults([
-			{
-				title: 'Ordförande',
-				options: [
-					{ name: 'John', votes: 3 },
-					{ name: 'Kristoffer', votes: 1 }
-				]
-			},
-			{
-				title: 'Överphös',
-				options: [
-					{ name: 'John', votes: 32 },
-					{ name: 'Kristoffer', votes: 31 }
-				]
-			}
-		]));
 	
 		this.onResultsUpdate = this.onResultsUpdate.bind(this);
 		
@@ -52,27 +33,28 @@ class ResultsClass extends React.Component {
 		socket.off('new results', this.onResultsUpdate);
 	}
 
-	onResultsUpdate(results) {
+	onResultsUpdate(response) {
 		const { dispatch } = this.props;
-		dispatch(updateResults({
-			title: results.title,
-			options: results.options.map(
+		const results = response.map(({ title, options, id }) => ({
+			title,
+			id,
+			options: options.map(
 				({ title, numberOfVotes }) => ({name: title, votes: numberOfVotes})
 			)
 		}));
+		dispatch(updateResults(results));
 	}
 
 	render() {
 		const { results } = this.props;
+
 		return (
 			<div>
-				{results.map(({ title, options }) =>
-					<Card key={title} className="card">
+				{results.map(({ title, options, id }) =>
+					<Card key={id} className="card">
 						<CardTitle title={title} />
 						<CardText>
-							{options.map(({ name, votes }) =>
-								<div key={name}>{name} {votes}</div>
-							)}
+							<Result options={options}/>
 						</CardText>
 						<CardActions>
 						</CardActions>
@@ -82,6 +64,32 @@ class ResultsClass extends React.Component {
 		);
 	}
 }
+
+const Result = ({ options }) => {
+	// const data = {
+	// 	values: options.map(({ name, votes }) => ({x: name, y: votes}))
+	// };
+	
+	
+	// [{
+	// 	label: 'somethingA',
+	// 	values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
+	// }];
+	const total = options.reduce((sum, option) => sum + option.votes, 0);
+	return (
+		<table className="bar-chart">
+			{options.map(({ name, votes }) => {
+				const width = Math.max(100 * votes / total, 5);
+				return <tr key={name}>
+					<td>{name}</td>
+					<td>
+						<div style={{width: `${width}%`}}>{votes}</div>
+					</td>
+				</tr>;
+			})}
+		</table>
+	);
+};
 
 const Results = connect(
 	(state) => {

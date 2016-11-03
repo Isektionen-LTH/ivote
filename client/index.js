@@ -73,5 +73,34 @@ io.on('connection', function(socket) {
 			}, 3500);
 		});
 	});
+
+	socket.on('join results', function() {
+		socket.emit('new results', [
+			{
+				title: 'Ordförande',
+				options: [
+					{ title: 'John', numberOfVotes: 10 },
+					{ title: 'Kristoffer', numberOfVotes: 3 },
+					{ title: 'Oscar', numberOfVotes: 1 }
+				]
+			},
+			{
+				title: 'Överphös',
+				options: [
+					{ title: 'Kristoffer', numberOfVotes: 15 },
+					{ title: 'John', numberOfVotes: 2 },
+					{ title: 'Oscar', numberOfVotes: 1 }
+				]
+			},
+			{
+				title: 'Sexmästare',
+				options: [
+					{ title: 'John', numberOfVotes: 22 },
+					{ title: 'Kristoffer', numberOfVotes: 15 },
+					{ title: 'Oscar', numberOfVotes: 0 }
+				]
+			}
+		]);
+	});
 	
 });
