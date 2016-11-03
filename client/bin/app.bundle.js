@@ -35227,10 +35227,10 @@
 			}
 		}, {
 			key: 'onVoteUpdate',
-			value: function onVoteUpdate(votes) {
+			value: function onVoteUpdate(ongoingVote) {
 				var dispatch = this.props.dispatch;
 	
-				dispatch((0, _voteActions.updateOngoingVote)(votes));
+				dispatch((0, _voteActions.updateOngoingVote)(ongoingVote));
 			}
 		}, {
 			key: 'render',
@@ -44274,36 +44274,6 @@
 		value: true
 	});
 	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
-	// import {
-	// 	SET_SELECTED,
-	// 	REQUEST_VOTE_STATE,
-	// 	RECIEVE_VOTE_STATE
-	// } from './vote.actions';
-	
-	// function currentVote(state = {}, action) {
-	// 	switch (action.type) {
-	// 	case REQUEST_VOTE_STATE:
-	// 		return {};
-	// 	case RECIEVE_VOTE_STATE:
-	// 		return action.currentVote || {};
-	// 	default:
-	// 		return state;
-	// 	}
-	// }
-	
-	// function currentState(state = 'loading', action) {
-	// 	switch (action.type) {
-	// 	case REQUEST_VOTE_STATE:
-	// 		return 'loading';
-	// 	case RECIEVE_VOTE_STATE:
-	// 		return action.currentState;
-	// 	default:
-	// 		return state;
-	// 	}
-	// }
-	
 	var _redux = __webpack_require__(390);
 	
 	var _reduxThunk = __webpack_require__(484);
@@ -44336,6 +44306,34 @@
 		}
 	}
 	
+	// import {
+	// 	SET_SELECTED,
+	// 	REQUEST_VOTE_STATE,
+	// 	RECIEVE_VOTE_STATE
+	// } from './vote.actions';
+	
+	// function currentVote(state = {}, action) {
+	// 	switch (action.type) {
+	// 	case REQUEST_VOTE_STATE:
+	// 		return {};
+	// 	case RECIEVE_VOTE_STATE:
+	// 		return action.currentVote || {};
+	// 	default:
+	// 		return state;
+	// 	}
+	// }
+	
+	// function currentState(state = 'loading', action) {
+	// 	switch (action.type) {
+	// 	case REQUEST_VOTE_STATE:
+	// 		return 'loading';
+	// 	case RECIEVE_VOTE_STATE:
+	// 		return action.currentState;
+	// 	default:
+	// 		return state;
+	// 	}
+	// }
+	
 	function voteSession() {
 		var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { state: 'waiting' };
 		var action = arguments[1];
@@ -44352,12 +44350,9 @@
 		var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { voted: 0, total: 0 };
 		var action = arguments[1];
 	
-		console.log(action);
 		switch (action.type) {
 			case _vote.UPDATE_ONGOING_VOTE:
-				return _extends({}, state, {
-					voted: action.voted
-				});
+				return action.ongoingVote;
 			case _vote.UPDATE_SESSION:
 				if (action.session.state === 'voted') {
 					return {
@@ -45363,10 +45358,10 @@
 	
 	var UPDATE_ONGOING_VOTE = exports.UPDATE_ONGOING_VOTE = 'UPDATE_ONGOING_VOTE';
 	
-	function updateOngoingVote(voted) {
+	function updateOngoingVote(ongoingVote) {
 		return {
 			type: UPDATE_ONGOING_VOTE,
-			voted: voted
+			ongoingVote: ongoingVote
 		};
 	}
 

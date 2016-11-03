@@ -33,6 +33,9 @@ server.listen(8080, "0.0.0.0", function () {
 app.get('/bundle.js', function (req, res) {
   res.sendFile(__dirname + '/client/bin/app.bundle.js');
 });
+app.get('/app.bundle.js.map', function (req, res) {
+  res.sendFile(__dirname + '/client/bin/app.bundle.js.map');
+});
 
 //State: 1 = pågående röstning, 2 = röstning klar,
 

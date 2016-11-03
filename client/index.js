@@ -11,6 +11,9 @@ var io = require('socket.io')(http);
 app.get('/bundle.js', function(req, res) {
 	res.sendFile(path.resolve(__dirname, 'bin', 'app.bundle.js'));
 });
+app.get('/app.bundle.js.map', function(req, res) {
+	res.sendFile(path.resolve(__dirname, 'bin', 'app.bundle.js.map'));
+});
 
 app.get('*', function(req, res) {
 	res.sendFile(path.resolve(__dirname, 'index.html'));

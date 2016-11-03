@@ -159,9 +159,9 @@ export class OngoingVoteClass extends React.Component {
 		socket.off('new vote', this.onVoteUpdate);
 	}
 
-	onVoteUpdate(votes) {
+	onVoteUpdate(ongoingVote) {
 		const { dispatch } = this.props;
-		dispatch(updateOngoingVote(votes));
+		dispatch(updateOngoingVote(ongoingVote));
 	}
 
 	render() {

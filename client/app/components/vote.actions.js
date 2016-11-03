@@ -70,9 +70,9 @@ export function updateSession(session) {
 
 export const UPDATE_ONGOING_VOTE = 'UPDATE_ONGOING_VOTE';
 
-export function updateOngoingVote(voted) {
+export function updateOngoingVote(ongoingVote) {
 	return {
 		type: UPDATE_ONGOING_VOTE,
-		voted: voted
+		ongoingVote: ongoingVote
 	};
 }
