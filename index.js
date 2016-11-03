@@ -114,6 +114,12 @@ function startVote(voteId){
 
 }
 
+function getVotingStatus(callback){
+  db.collection('votes').findOne({isActive: true}, function(err, doc) {
+    callback({numberOfVotes: doc.hasVoted.length, numberOfUsers: 55});
+  });
+}
+
 function vote(userID, option){
         console.log(userID);
 
@@ -121,11 +127,15 @@ function vote(userID, option){
 
     if(!doc){
       db.collection("votes").findAndModify({isActive: true, "options.title": option},[['_id',1]], {$inc: {"options.$.numberOfVotes": 1}}, {new:true}, function(err, doc) {
-        io.to('has voted').emit('numberOfVotes', {numberOfVotes: doc.value.hasVoted.length});
+
+        getVotingStatus(function(voteStatus) {
+          io.to('hasVoted').emit('numberOfVotes', voteStatus);
+        });
+
         console.log(doc)
         //console.log("Tack för din röst. Error: " + err + " doc: "+ doc);
         db.collection("votes").update({isActive: true}, {$push: {hasVoted: userID}}, {}, function() {
-          
+
         });
 
       });
@@ -133,6 +143,10 @@ function vote(userID, option){
       console.log("Användaren har redan röstat");
     }
   });
+}
+
+function numberOfUsers(callback){
+  callback(1);
 }
 
 //app.use(express.static('/'));
@@ -153,6 +167,9 @@ io.on('connection', function (socket) {
       if(hasVoted){
         socket.join("hasVoted");
         socket.emit('state', {state: 'voted'});
+        getVotingStatus(function(voteStatus) {
+          socket.emit('numberOfVotes', voteStatus);
+        });
       } else {
         db.collection('state').find({}).toArray(function(err, doc) {
           console.log(doc);
@@ -202,6 +219,7 @@ io.on('connection', function (socket) {
 
   socket.on('vote', function(option){
     vote(socket.userID, option);
+    socket.emit('state', {state: 'voted'});
     socket.join('hasVoted');
   });
 
