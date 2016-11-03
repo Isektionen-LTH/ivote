@@ -80,14 +80,11 @@ function ongoingVote(state = {voted: 0, total: 0}, action) {
 }
 
 const reducer = combineReducers({
-	// currentVote,
-	// currentState,
-
 	selected,
 	voteSession,
 	ongoingVote
 });
-// TODO STATE
+// TODO göra state till en egen istället för att ha en session
 
 const store = createStore(reducer, applyMiddleware(
 	thunk
