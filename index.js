@@ -122,7 +122,7 @@ function getVotingStatus(callback){
   });
 }
 
-function vote(userID, option){
+function vote(userID, option, callback){
         console.log(userID);
 
   db.collection("votes").findOne({ $and: [{ hasVoted: userID } , { isActive: true }] }, function(err, doc) {
@@ -130,9 +130,9 @@ function vote(userID, option){
     if(!doc){
       db.collection("votes").findAndModify({isActive: true, "options.title": option},[['_id',1]], {$inc: {"options.$.numberOfVotes": 1}}, {new:true}, function(err, doc) {
         getVotingStatus(function(voteStatus) {
-          io.to('has voted').emit('new vote', voteStatus);
+          io.to('hasVoted').emit('new vote', voteStatus);
+          callback();
         });
-        console.log(doc)
         //console.log("Tack för din röst. Error: " + err + " doc: "+ doc);
         db.collection("votes").update({isActive: true}, {$push: {hasVoted: userID}}, {}, function() {
 
@@ -220,9 +220,14 @@ io.on('connection', function (socket) {
   });
 
   socket.on('vote', function(option){
-    socket.join('hasVoted');
-    vote(socket.userID, option);
-    //socket.emit('state', {state: 'voted'});
+
+    vote(socket.userID, option, function(){
+      getVotingStatus(function(msg) {
+        msg.state = "voted";
+        socket.emit('state', msg);
+        socket.join('hasVoted');
+      });
+    });
   });
 
 });
