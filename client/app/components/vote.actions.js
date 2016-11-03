@@ -62,11 +62,17 @@ export function sendVote(option) {
 export const UPDATE_SESSION = 'UPDATE_SESSION';
 
 export function updateSession(session) {
-	return (dispatch) => {
-		dispatch({
-			type: UPDATE_SESSION,
-			session: session
-		});
+	return {
+		type: UPDATE_SESSION,
+		session: session
+	};
+}
 
+export const UPDATE_ONGOING_VOTE = 'UPDATE_ONGOING_VOTE';
+
+export function updateOngoingVote(voted) {
+	return {
+		type: UPDATE_ONGOING_VOTE,
+		voted: voted
 	};
 }

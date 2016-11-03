@@ -8,7 +8,7 @@ import CircularProgress from 'material-ui/CircularProgress';
 
 import store from './vote.store.js';
 
-import { updateSession, setSelected } from './vote.actions.js';
+import { updateSession, setSelected, updateOngoingVote } from './vote.actions.js';
 // import { setSelected, fetchVoteState, sendVote } from './vote.actions.js';
 
 import socket from '../socket';
@@ -42,8 +42,6 @@ class VoteSessionClass extends React.Component {
 
 	onStateUpdate(session) {
 		const { dispatch } = this.props;
-
-		console.log('update', session);
 		dispatch(updateSession(session));
 	}
 	// {
@@ -72,7 +70,7 @@ class VoteSessionClass extends React.Component {
 const VoteSession = connect(
 	(state) => {
 		return {
-			session: state.session
+			session: state.voteSession
 		};
 	}
 )(VoteSessionClass);
@@ -99,7 +97,7 @@ Vote = connect(
 	(state) => {
 		return {
 			selected: state.selected,
-			title: state.session.title
+			title: state.voteSession.title
 		};
 	}
 )(Vote);
@@ -126,7 +124,7 @@ let VoteList = ({ options, selected, onSelect }) => {
 VoteList = connect(
 	(state) => {
 		return {
-			options: state.session.options,
+			options: state.voteSession.options,
 			selected: state.selected
 		};
 	},
@@ -139,7 +137,7 @@ VoteList = connect(
 	}
 )(VoteList);
 
-const HasVotedClass = () => {
+const HasVoted = () => {
 	return (
 		<div>
 			<div className="has-voted">Du har röstat!</div>
@@ -151,24 +149,19 @@ const HasVotedClass = () => {
 export class OngoingVoteClass extends React.Component {
 	componentDidMount() {
 		const { dispatch } = this.props;
-		dispatch(updateSession({ state: 'waiting' }));
 	
-		this.onStateUpdate = this.onStateUpdate.bind(this);
+		this.onVoteUpdate = this.onVoteUpdate.bind(this);
 		
-		socket.emit('join vote', { id: 123 });
-		socket.on('state', this.onStateUpdate);
+		socket.on('new vote', this.onVoteUpdate);
 	}
 
 	componentWillUnmount() {
-		socket.emit('end vote');
-		socket.off('state', this.onStateUpdate);
+		socket.off('new vote', this.onVoteUpdate);
 	}
 
-	onStateUpdate(session) {
+	onVoteUpdate(votes) {
 		const { dispatch } = this.props;
-
-		console.log('update', session);
-		dispatch(updateSession(session));
+		dispatch(updateOngoingVote(votes));
 	}
 
 	render() {
@@ -181,7 +174,8 @@ export class OngoingVoteClass extends React.Component {
 const OngoingVote = connect(
 	(state) => {
 		return {
-			ongoingVote: state.session
+			voted: state.ongoingVote.voted,
+			total: state.ongoingVote.total
 		};
 	}
-)(OngoingVote);
+)(OngoingVoteClass);

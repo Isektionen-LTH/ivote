@@ -8,8 +8,8 @@ var io = require('socket.io')(http);
 
 ['app', 'bin'].forEach(dir => app.use('/' + dir, express.static(dir)));
 
-app.get('/bootstrap.css', function(req, res) {
-	res.sendFile(path.resolve(__dirname, 'node_modules', 'bootstrap', 'dist', 'css', 'bootstrap.min.css'));
+app.get('/bundle.js', function(req, res) {
+	res.sendFile(path.resolve(__dirname, 'bin', 'app.bundle.js'));
 });
 
 app.get('*', function(req, res) {
@@ -37,14 +37,29 @@ io.on('connection', function(socket) {
 
 		socket.on('vote', function() {
 			socket.emit('state', {
-				state: 'voted'
+				state: 'voted',
+				total: 10,
+				voted: 5
 			});
+
+			setTimeout(function() {
+				socket.emit('new vote', 6);
+			}, 500);
+			setTimeout(function() {
+				socket.emit('new vote', 7);
+			}, 1000);
+			setTimeout(function() {
+				socket.emit('new vote', 9);
+			}, 2000);
+			setTimeout(function() {
+				socket.emit('new vote', 10);
+			}, 2500);
 
 			setTimeout(function() {
 				socket.emit('state', {
 					state: 'waiting'
 				});
-			}, 1000);
+			}, 3000);
 
 			setTimeout(function() {
 				socket.emit('state', {
@@ -52,7 +67,7 @@ io.on('connection', function(socket) {
 					title: 'Ordförande',
 					options: ['Kristoffer', 'John']
 				});
-			}, 1500);
+			}, 3500);
 		});
 	});
 	

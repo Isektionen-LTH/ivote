@@ -121,7 +121,7 @@ function vote(userID, option){
 
     if(!doc){
       db.collection("votes").findAndModify({isActive: true, "options.title": option},[['_id',1]], {$inc: {"options.$.numberOfVotes": 1}}, {new:true}, function(err, doc) {
-        io.to('has voted').emit('numberOfVotes', {numberOfVotes: doc.value.hasVoted.length});
+        io.to('has voted').emit('new vote', {numberOfVotes: doc.value.hasVoted.length});
         console.log(doc)
         //console.log("Tack för din röst. Error: " + err + " doc: "+ doc);
         db.collection("votes").update({isActive: true}, {$push: {hasVoted: userID}}, {}, function() {

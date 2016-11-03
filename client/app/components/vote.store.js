@@ -33,7 +33,8 @@ import createLogger from 'redux-logger';
 
 import {
 	SET_SELECTED,
-	UPDATE_SESSION
+	UPDATE_SESSION,
+	UPDATE_ONGOING_VOTE
 } from './vote.actions';
 
 function selected(state = '', action) {
@@ -61,7 +62,24 @@ function voteSession(state = {state: 'waiting'}, action) {
 }
 
 function ongoingVote(state = {voted: 0, total: 0}, action) {
-	return state;
+	switch (action.type) {
+	case UPDATE_ONGOING_VOTE:
+		return {
+			...state,
+			voted: action.voted
+		};
+	case UPDATE_SESSION:
+		if (action.session.state === 'voted') {
+			return {
+				total: action.session.total,
+				voted: action.session.voted
+			};
+		} else {
+			return state;
+		}
+	default:
+		return state;
+	}
 }
 
 const reducer = combineReducers({
@@ -72,6 +90,7 @@ const reducer = combineReducers({
 	voteSession,
 	ongoingVote
 });
+// TODO STATE
 
 const store = createStore(reducer, applyMiddleware(
 	thunk

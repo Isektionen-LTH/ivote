@@ -35080,8 +35080,6 @@
 			value: function onStateUpdate(session) {
 				var dispatch = this.props.dispatch;
 	
-	
-				console.log('update', session);
 				dispatch((0, _voteActions.updateSession)(session));
 			}
 			// {
@@ -35116,7 +35114,7 @@
 	
 	var VoteSession = (0, _reactRedux.connect)(function (state) {
 		return {
-			session: state.session
+			session: state.voteSession
 		};
 	})(VoteSessionClass);
 	
@@ -35151,7 +35149,7 @@
 	Vote = (0, _reactRedux.connect)(function (state) {
 		return {
 			selected: state.selected,
-			title: state.session.title
+			title: state.voteSession.title
 		};
 	})(Vote);
 	
@@ -35179,7 +35177,7 @@
 	};
 	VoteList = (0, _reactRedux.connect)(function (state) {
 		return {
-			options: state.session.options,
+			options: state.voteSession.options,
 			selected: state.selected
 		};
 	}, function (dispatch) {
@@ -35190,7 +35188,7 @@
 		};
 	})(VoteList);
 	
-	var HasVotedClass = function HasVotedClass() {
+	var HasVoted = function HasVoted() {
 		return _react2.default.createElement(
 			'div',
 			null,
@@ -35217,27 +35215,22 @@
 			value: function componentDidMount() {
 				var dispatch = this.props.dispatch;
 	
-				dispatch((0, _voteActions.updateSession)({ state: 'waiting' }));
 	
-				this.onStateUpdate = this.onStateUpdate.bind(this);
+				this.onVoteUpdate = this.onVoteUpdate.bind(this);
 	
-				_socket2.default.emit('join vote', { id: 123 });
-				_socket2.default.on('state', this.onStateUpdate);
+				_socket2.default.on('new vote', this.onVoteUpdate);
 			}
 		}, {
 			key: 'componentWillUnmount',
 			value: function componentWillUnmount() {
-				_socket2.default.emit('end vote');
-				_socket2.default.off('state', this.onStateUpdate);
+				_socket2.default.off('new vote', this.onVoteUpdate);
 			}
 		}, {
-			key: 'onStateUpdate',
-			value: function onStateUpdate(session) {
+			key: 'onVoteUpdate',
+			value: function onVoteUpdate(votes) {
 				var dispatch = this.props.dispatch;
 	
-	
-				console.log('update', session);
-				dispatch((0, _voteActions.updateSession)(session));
+				dispatch((0, _voteActions.updateOngoingVote)(votes));
 			}
 		}, {
 			key: 'render',
@@ -35259,9 +35252,10 @@
 	
 	var OngoingVote = (0, _reactRedux.connect)(function (state) {
 		return {
-			ongoingVote: state.session
+			voted: state.ongoingVote.voted,
+			total: state.ongoingVote.total
 		};
-	})(OngoingVote);
+	})(OngoingVoteClass);
 
 /***/ },
 /* 383 */
@@ -44276,6 +44270,36 @@
 		value: true
 	});
 	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	// import {
+	// 	SET_SELECTED,
+	// 	REQUEST_VOTE_STATE,
+	// 	RECIEVE_VOTE_STATE
+	// } from './vote.actions';
+	
+	// function currentVote(state = {}, action) {
+	// 	switch (action.type) {
+	// 	case REQUEST_VOTE_STATE:
+	// 		return {};
+	// 	case RECIEVE_VOTE_STATE:
+	// 		return action.currentVote || {};
+	// 	default:
+	// 		return state;
+	// 	}
+	// }
+	
+	// function currentState(state = 'loading', action) {
+	// 	switch (action.type) {
+	// 	case REQUEST_VOTE_STATE:
+	// 		return 'loading';
+	// 	case RECIEVE_VOTE_STATE:
+	// 		return action.currentState;
+	// 	default:
+	// 		return state;
+	// 	}
+	// }
+	
 	var _redux = __webpack_require__(390);
 	
 	var _reduxThunk = __webpack_require__(484);
@@ -44308,34 +44332,6 @@
 		}
 	}
 	
-	// import {
-	// 	SET_SELECTED,
-	// 	REQUEST_VOTE_STATE,
-	// 	RECIEVE_VOTE_STATE
-	// } from './vote.actions';
-	
-	// function currentVote(state = {}, action) {
-	// 	switch (action.type) {
-	// 	case REQUEST_VOTE_STATE:
-	// 		return {};
-	// 	case RECIEVE_VOTE_STATE:
-	// 		return action.currentVote || {};
-	// 	default:
-	// 		return state;
-	// 	}
-	// }
-	
-	// function currentState(state = 'loading', action) {
-	// 	switch (action.type) {
-	// 	case REQUEST_VOTE_STATE:
-	// 		return 'loading';
-	// 	case RECIEVE_VOTE_STATE:
-	// 		return action.currentState;
-	// 	default:
-	// 		return state;
-	// 	}
-	// }
-	
 	function voteSession() {
 		var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { state: 'waiting' };
 		var action = arguments[1];
@@ -44352,7 +44348,23 @@
 		var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { voted: 0, total: 0 };
 		var action = arguments[1];
 	
-		return state;
+		switch (action.type) {
+			case _vote.UPDATE_ONGOING_VOTE:
+				return _extends({}, state, {
+					voted: action.voted
+				});
+			case _vote.UPDATE_SESSION:
+				if (action.session.state === 'voted') {
+					return {
+						total: action.session.total,
+						voted: action.session.voted
+					};
+				} else {
+					return state;
+				}
+			default:
+				return state;
+		}
 	}
 	
 	var reducer = (0, _redux.combineReducers)({
@@ -44363,6 +44375,7 @@
 		voteSession: voteSession,
 		ongoingVote: ongoingVote
 	});
+	// TODO STATE
 	
 	var store = (0, _redux.createStore)(reducer, (0, _redux.applyMiddleware)(_reduxThunk2.default
 	// , createLogger()
@@ -45275,6 +45288,7 @@
 	exports.fetchVoteState = fetchVoteState;
 	exports.sendVote = sendVote;
 	exports.updateSession = updateSession;
+	exports.updateOngoingVote = updateOngoingVote;
 	var SET_SELECTED = exports.SET_SELECTED = 'SET_SELECTED';
 	
 	function setSelected(selected) {
@@ -45336,11 +45350,18 @@
 	var UPDATE_SESSION = exports.UPDATE_SESSION = 'UPDATE_SESSION';
 	
 	function updateSession(session) {
-		return function (dispatch) {
-			dispatch({
-				type: UPDATE_SESSION,
-				session: session
-			});
+		return {
+			type: UPDATE_SESSION,
+			session: session
+		};
+	}
+	
+	var UPDATE_ONGOING_VOTE = exports.UPDATE_ONGOING_VOTE = 'UPDATE_ONGOING_VOTE';
+	
+	function updateOngoingVote(voted) {
+		return {
+			type: UPDATE_ONGOING_VOTE,
+			voted: voted
 		};
 	}
 
