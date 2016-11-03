@@ -15,7 +15,7 @@ import RegisterRoute from './register/app';
 
 import Results from './components/results';
 
-import 'whatwg-fetch';
+// import 'whatwg-fetch';
 
 class NoMatch extends React.Component {
 	render() {

@@ -4,7 +4,7 @@ import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 
-import 'whatwg-fetch';
+// import 'whatwg-fetch';
 
 export default class Admin extends React.Component {
 	constructor(props) {
