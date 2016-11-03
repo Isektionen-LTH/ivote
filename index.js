@@ -291,8 +291,8 @@ app.get('/Hej', function (req, res) {
 
   /*io.emit('state', {state:2});
   res.send("skickat");*/
-  //startVote("57fbdd7c0f46f92ade412dd4");
-  setState(0);
+  startVote("581bbaeb2ac9ae4d5e21aae7");
+  //setState(0);
   //endCurrentVote();
   res.send("Skickat");
 
@@ -318,7 +318,7 @@ app.use('/client', function(req, res, next) {
 
 app.use('/admin', function(req, res, next) {
 
-  if(req.query.pass == adminPassword){
+  if(true){
     next();
   } else {
     res.send("Du måste var inloggad");
