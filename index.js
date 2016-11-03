@@ -182,7 +182,10 @@ function getVoteResults(callback){
     docs.toArray(function(err, doc) {
       var resultArray = [];
       for (var i = 0; i < doc.length; i++) {
-        resultArray.push({id: i, title: doc[i].title, options: doc[i].options});
+        var options = doc[i].options.sort(function(a, b) {
+          return b.numberOfVotes - a.numberOfVotes;
+        });
+        resultArray.push({id: i, title: doc[i].title, options: options});
       }
 
       callback(resultArray);
