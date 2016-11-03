@@ -132,14 +132,17 @@ function vote(userID, option, callback){
 
     if(!doc){
       db.collection("votes").findAndModify({isActive: true, "options.title": option},[['_id',1]], {$inc: {"options.$.numberOfVotes": 1}}, {new:true}, function(err, doc) {
-        getVotingStatus(function(voteStatus) {
-          io.to('hasVoted').emit('new vote', voteStatus);
-          callback();
-        });
-        //console.log("Tack för din röst. Error: " + err + " doc: "+ doc);
+
         db.collection("votes").update({isActive: true}, {$push: {hasVoted: userID}}, {}, function() {
 
+          getVotingStatus(function(voteStatus) {
+            io.to('hasVoted').emit('new vote', voteStatus);
+            callback();
+          });
+
         });
+        //console.log("Tack för din röst. Error: " + err + " doc: "+ doc);
+
 
       });
     } else {
