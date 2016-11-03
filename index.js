@@ -107,6 +107,11 @@ function endCurrentVote(){
   db.collection("votes").update({isActive: true}, {$set: {isActive: false}}, {}, function (err, numreplaced) {
     console.log("function: error: " + err);
     if(numreplaced.nModified > 0) setState(0);
+
+    getVoteResults(function(results){
+      io.to('resultRoom').emit('new results', results);
+    });
+
   });
 
 }
@@ -155,9 +160,31 @@ function numberOfUsers(callback){
   callback(1);
 }
 
+function getVoteResults(callback){
+  db.collection("votes").find({isActive: false}, function(err, docs){
+    docs.toArray(function(err, doc) {
+      var resultArray = [];
+      for (var i = 0; i < doc.length; i++) {
+        resultArray.push({title: doc[i].title, options: doc[i].options});
+      }
+
+      callback(resultArray);
+
+    });
+  });
+}
+
 //app.use(express.static('/'));
 
 io.on('connection', function (socket) {
+
+  socket.on('join results', function() {
+    socket.join('resultRoom');
+    getVoteResults(function(results) {
+      socket.emit("new results", results);
+    });
+
+  });
 
   /*
   Rum
@@ -243,7 +270,8 @@ app.get('/Hej', function (req, res) {
   /*io.emit('state', {state:2});
   res.send("skickat");*/
   //startVote("57fbdd7c0f46f92ade412dd4");
-  io.
+
+  endCurrentVote();
   res.send("Skickat");
 
 });
@@ -322,76 +350,6 @@ app.get('/admin/newvote', function (req, res, next) {
       res.send("Det finns redan en aktiv omröstning");
     }
   });
-
-});
-
-//CLIENT FUNKTIONER
-
-app.get('/client/currentvote', function (req, res, next) {
-
-  getHasVoted(id, function(hasVoted) {
-
-    if(hasVoted){
-
-      db.collection("votes").findOne({isActive: true}, function(err, doc) {
-        if (doc) {
-
-          for (var i = 0; i < doc.options.length; i++) {
-            doc.options[i] = doc.options[i].title;
-          }
-
-          doc = {title: doc.title, options:doc.options};
-
-          //Multiple options
-
-          res.json(doc);
-        } else {
-          res.send("Det finns för närvarande ingen omröstning");
-        }
-      });
-
-    } else {
-
-      res.send(" ");
-
-    }
-
-  });
-
-  //res.json(currentVote);
-
-});
-
-app.get('/client/vote', function(req, res, next) {
-
-  db.collection("votes").findOne({ $and: [{ hasVoted: req.query.id } , { isActive: true }] }, function(err, doc) {
-
-    if(!doc){
-      db.collection("votes").update({isActive: true, "options.title": req.query.title}, {$inc: {"options.$.numberOfVotes": 1}}, function(err, doc) {
-
-        res.send("Tack för ding röst" + err + doc);
-
-        db.collection("votes").update({isActive: true}, {$push: {hasVoted: req.query.id}}, {}, function() {
-
-        });
-
-      });
-
-    } else {
-      res.send("Användare har redan röstat");
-    }
-
-  });
-});
-
-app.get('/results', function (req, res) {
-
-  var currentVote = {
-    title: 'Vice ordförande',
-    winner: 'Kristoffer'
-  };
-
-  res.json(currentVote);
 
 });
 
