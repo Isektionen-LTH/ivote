@@ -51,7 +51,7 @@ function selected(state = '', action) {
 	}
 }
 
-function session(state = {state: 'waiting'}, action) {
+function voteSession(state = {state: 'waiting'}, action) {
 	switch (action.type) {
 	case UPDATE_SESSION:
 		return action.session;
@@ -60,12 +60,17 @@ function session(state = {state: 'waiting'}, action) {
 	}
 }
 
+function ongoingVote(state = {voted: 0, total: 0}, action) {
+	return state;
+}
+
 const reducer = combineReducers({
 	// currentVote,
 	// currentState,
 
 	selected,
-	session
+	voteSession,
+	ongoingVote
 });
 
 const store = createStore(reducer, applyMiddleware(

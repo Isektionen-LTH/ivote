@@ -139,7 +139,16 @@ VoteList = connect(
 	}
 )(VoteList);
 
-class HasVoted extends React.Component {
+const HasVotedClass = () => {
+	return (
+		<div>
+			<div className="has-voted">Du har röstat!</div>
+			<OngoingVote voted={1} total={1}></OngoingVote>
+		</div>
+	);
+};
+
+export class OngoingVoteClass extends React.Component {
 	componentDidMount() {
 		const { dispatch } = this.props;
 		dispatch(updateSession({ state: 'waiting' }));
@@ -162,22 +171,17 @@ class HasVoted extends React.Component {
 		dispatch(updateSession(session));
 	}
 
-
-	render() {
-		return (
-			<div>
-				<div className="has-voted">Du har röstat!</div>
-				<OngoingVote voted={1} total={1}></OngoingVote>
-			</div>
-		);
-	}
-}
-
-
-export class OngoingVote extends React.Component {
 	render() {
 		return (
 			<div>Hittils har {this.props.voted} av {this.props.total} personer röstat!</div>
 		);
 	}
 }
+
+const OngoingVote = connect(
+	(state) => {
+		return {
+			ongoingVote: state.session
+		};
+	}
+)(OngoingVote);

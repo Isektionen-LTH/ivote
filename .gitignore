@@ -37,6 +37,4 @@ jspm_packages
 .node_repl_history
 
 client/node_modules
-client/dist
 client/typings
-client/bin
