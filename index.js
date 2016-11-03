@@ -112,7 +112,7 @@ function vote(userID, option){
 
     if(!doc){
       db.collection("votes").findAndModify({isActive: true, "options.title": option},[['_id',1]], {$inc: {"options.$.numberOfVotes": 1}}, {new:true}, function(err, doc) {
-        console.log(hasVoted);
+        //console.log(hasVoted);
         io.to('hasVoted').emit('numberOfVotes', {numberOfVotes: doc.value.hasVoted.length});
 
         //console.log("Tack för din röst. Error: " + err + " doc: "+ doc);
