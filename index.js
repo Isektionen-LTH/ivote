@@ -30,6 +30,10 @@ server.listen(8080, "0.0.0.0", function () {
 
 });
 
+app.get('/bundle.js', function (req, res) {
+  res.sendFile(__dirname + '/client/bin/app.bundle.js');
+});
+
 //State: 1 = pågående röstning, 2 = röstning klar,
 
 function setState(newState){
@@ -111,17 +115,17 @@ function startVote(voteId){
 }
 
 function vote(userID, option){
+        console.log(userID);
 
   db.collection("votes").findOne({ $and: [{ hasVoted: userID } , { isActive: true }] }, function(err, doc) {
 
     if(!doc){
       db.collection("votes").findAndModify({isActive: true, "options.title": option},[['_id',1]], {$inc: {"options.$.numberOfVotes": 1}}, {new:true}, function(err, doc) {
-        //console.log(hasVoted);
-        io.to('hasVoted').emit('numberOfVotes', {numberOfVotes: doc.value.hasVoted.length});
-
+        io.to('has voted').emit('numberOfVotes', {numberOfVotes: doc.value.hasVoted.length});
+        console.log(doc)
         //console.log("Tack för din röst. Error: " + err + " doc: "+ doc);
         db.collection("votes").update({isActive: true}, {$push: {hasVoted: userID}}, {}, function() {
-
+          
         });
 
       });

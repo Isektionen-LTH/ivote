@@ -22,6 +22,8 @@ export default function VoteRoute() {
 	);
 }
 
+const id = location.search.substr(4);
+
 class VoteSessionClass extends React.Component {
 	componentDidMount() {
 		const { dispatch } = this.props;
@@ -29,7 +31,7 @@ class VoteSessionClass extends React.Component {
 	
 		this.onStateUpdate = this.onStateUpdate.bind(this);
 		
-		socket.emit('join vote', { id: 123 });
+		socket.emit('join vote', { id: id });
 		socket.on('state', this.onStateUpdate);
 	}
 
@@ -87,7 +89,7 @@ let Vote = ({ title, selected, dispatch }) => {
 					className="vote-button"
 					label="Rösta"
 					primary={true}
-					onTouchTap={() => socket.emit('vote', { option: selected})} />
+					onTouchTap={() => socket.emit('vote', selected)} />
 			</CardActions>
 		</Card>
 	);
