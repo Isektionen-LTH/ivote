@@ -35197,7 +35197,7 @@
 				{ className: 'has-voted' },
 				'Du har r\xF6stat!'
 			),
-			_react2.default.createElement(OngoingVote, { voted: 1, total: 1 })
+			_react2.default.createElement(OngoingVote, null)
 		);
 	};
 	
@@ -35235,13 +35235,17 @@
 		}, {
 			key: 'render',
 			value: function render() {
+				var _props = this.props,
+				    voted = _props.voted,
+				    total = _props.total;
+	
 				return _react2.default.createElement(
 					'div',
 					null,
 					'Hittils har ',
-					this.props.voted,
+					voted,
 					' av ',
-					this.props.total,
+					total,
 					' personer r\xF6stat!'
 				);
 			}
@@ -44348,6 +44352,7 @@
 		var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { voted: 0, total: 0 };
 		var action = arguments[1];
 	
+		console.log(action);
 		switch (action.type) {
 			case _vote.UPDATE_ONGOING_VOTE:
 				return _extends({}, state, {

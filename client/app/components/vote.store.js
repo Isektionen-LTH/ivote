@@ -62,6 +62,7 @@ function voteSession(state = {state: 'waiting'}, action) {
 }
 
 function ongoingVote(state = {voted: 0, total: 0}, action) {
+	console.log(action)
 	switch (action.type) {
 	case UPDATE_ONGOING_VOTE:
 		return {

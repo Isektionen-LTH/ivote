@@ -118,11 +118,7 @@ function startVote(voteId){
 
 function getVotingStatus(callback){
   db.collection('votes').findOne({isActive: true}, function(err, doc) {
-<<<<<<< Updated upstream
     callback({voted: doc.hasVoted.length, total: 55});
-=======
-    callback({state: 'voted', numberOfVotes: doc.hasVoted.length, numberOfUsers: 55});
->>>>>>> Stashed changes
   });
 }
 
@@ -173,7 +169,8 @@ io.on('connection', function (socket) {
         socket.join("hasVoted");
         //socket.emit('state', {state: 'voted'});
         getVotingStatus(function(voteStatus) {
-          socket.emit('numberOfVotes', voteStatus);
+          socket.emit('state', {state: 'voted', voted: voteStatus.voted, total: voteStatus.total});
+          // socket.emit('new vote', voteStatus);
         });
       } else {
         db.collection('state').find({}).toArray(function(err, doc) {

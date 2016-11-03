@@ -141,7 +141,7 @@ const HasVoted = () => {
 	return (
 		<div>
 			<div className="has-voted">Du har röstat!</div>
-			<OngoingVote voted={1} total={1}></OngoingVote>
+			<OngoingVote></OngoingVote>
 		</div>
 	);
 };
@@ -165,8 +165,9 @@ export class OngoingVoteClass extends React.Component {
 	}
 
 	render() {
+		const {voted, total} = this.props;
 		return (
-			<div>Hittils har {this.props.voted} av {this.props.total} personer röstat!</div>
+			<div>Hittils har {voted} av {total} personer röstat!</div>
 		);
 	}
 }
