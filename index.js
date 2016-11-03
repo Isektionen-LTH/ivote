@@ -1,12 +1,21 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var MongoClient = require('mongodb').MongoClient;
-
+var mongo = require('mongodb');
+var MongoClient = mongo.MongoClient;
 var app = express();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
 
 var db;
+var validCodes = ['123', 'hej'];
+var adminPassword = "hej123";
 
-app.listen(8080, function () {
+app.use(express.static(__dirname));
+app.use(require('cors')());
+
+server.listen(8080, "0.0.0.0", function () {
+
+  console.log("Lyssnar");
 
   MongoClient.connect('mongodb://kristoffer:evote@ds035036.mlab.com:35036/ivote', function(err, database) {
 
@@ -17,12 +26,192 @@ app.listen(8080, function () {
 
 });
 
-app.use(require('cors')());
+//State: 1 = pågående röstning, 2 = röstning klar,
 
-app.use(express.static('client'));
+function setState(newState){
 
-var validCodes = ['123', 'hej'];
-var adminPassword = "hej123";
+  console.log("function: setState");
+
+  db.collection('state').update({}, {state: newState}, function(err, docs) {
+    console.log("error: setState: " + err);
+    io.emit('state', newState);
+  });
+
+}
+
+function getHasVoted(id, callback) {
+  db.collection("votes").findOne({ $and: [{ hasVoted: id } , { isActive: true }] }, function(err, doc) {
+      callback(doc !== null);
+  });
+}
+
+function getCurrentVote(callback){
+
+  db.collection("votes").findOne({isActive: true}, function(err, doc) {
+    if (doc) {
+
+      for (var i = 0; i < doc.options.length; i++) {
+        doc.options[i] = doc.options[i].title;
+      }
+
+      doc = {state: 'voting', title: doc.title, options:doc.options};
+      callback(doc);
+      //Multiple options
+    } else {
+    }
+  });
+
+}
+
+function addNewVote(vote, callback){
+
+  console.log(vote);
+  if(vote.title !== null && vote.options !== null && vote.multipleAnswers !== null){
+    vote.isActive = null;
+    vote.hasVoted = [];
+    db.collection("votes").insert(vote, function(err){
+      console.log("vote inserted");
+      callback(null);
+    });
+  } else {
+    callback({error: "Missing input"});
+  }
+
+}
+
+function editVote(editedVote, callback){
+  //Går endast att ändra om röstning ej skett, dvs isActive == null
+  db.collection("votes").replaceOne({$and: [{_id: editedVote._id}, {isActive: null}]}, editedVote, function(err, doc) {
+    console.log(err + " Insatt");
+    callback();
+  });
+
+}
+
+function endCurrentVote(){
+
+  console.log("function: endCurrentVote");
+  db.collection("votes").update({isActive: true}, {$set: {isActive: false}}, {}, function (err, numreplaced) {
+    console.log("function: error: " + err);
+    if(numreplaced.nModified > 0) setState(0);
+  });
+
+}
+
+function startVote(voteId){
+
+  db.collection("votes").update({$and: [{isActive: null}, {_id: mongo.ObjectId(voteId)}]}, {$set: {isActive: true}}, function(err, doc) {
+    if(doc) setState(1);
+  });
+
+}
+
+function vote(userID, option){
+
+  db.collection("votes").findOne({ $and: [{ hasVoted: userID } , { isActive: true }] }, function(err, doc) {
+
+    if(!doc){
+      db.collection("votes").findAndModify({isActive: true, "options.title": option},[['_id',1]], {$inc: {"options.$.numberOfVotes": 1}}, {new:true}, function(err, doc) {
+
+        io.to('hasVoted').emit('numberOfVotes', {numberOfVotes: doc.value.hasVoted.length});
+
+        //console.log("Tack för din röst. Error: " + err + " doc: "+ doc);
+        db.collection("votes").update({isActive: true}, {$push: {hasVoted: userID}}, {}, function() {
+
+        });
+
+      });
+    } else {
+      console.log("Användaren har redan röstat");
+    }
+  });
+}
+
+//app.use(express.static('/'));
+
+io.on('connection', function (socket) {
+
+  /*
+  Rum
+  Rösta
+  */
+
+  socket.on('joinVote', function(userID){
+
+    socket.userID = userID;
+    socket.join('vote');
+
+    getHasVoted(userID, function(hasVoted) {
+      if(hasVoted){
+        socket.join("hasVoted");
+        socket.emit('state', {state: 'voted'});
+      } else {
+        db.collection('state').find({}).toArray(function(err, doc) {
+          console.log(doc);
+          //socket.emit('state', doc[0]);
+
+          if(doc[0].state === 0){
+            socket.emit('state', {state: 'waiting'});
+          } else {
+            getCurrentVote(function(doc) {
+              socket.emit('state', doc);
+            });
+          }
+
+        });
+      }
+    });
+
+  });
+
+  socket.on('getID', function() {
+    io.emit('state', socket.userID);
+  });
+
+  socket.on('startVote', function(adminPass, voteId){
+    console.log("hej");
+    startVote("5819a59bd641a035ef7a3a0d");
+  });
+
+  socket.on('endCurrentVote', function(adminPass){
+    endCurrentVote();
+  });
+
+  socket.on('newVote', function(vote){
+    addNewVote(vote, function(err) {
+      console.log(err);
+      socket.emit('state', "Mottaget");
+    });
+  });
+
+  socket.on('getCurrentVote', function(userId){
+
+    getCurrentVote(function(vote) {
+        socket.emit("state", vote);
+    });
+
+  });
+
+  socket.on('vote', function(option){
+    vote(socket.userID, option);
+    socket.join('hasVoted');
+  });
+
+});
+
+app.get('/Hej', function (req, res) {
+
+  /*io.emit('state', {state:2});
+  res.send("skickat");*/
+  //startVote("57fbdd7c0f46f92ade412dd4");
+  io.
+  res.send("Skickat");
+
+});
+
+app.get('/', function (req, res) {
+  res.sendFile(__dirname + '/index.html');
+});
 
 //Kontrollerar kod hos klienten mot databasen
 
@@ -101,35 +290,37 @@ app.get('/admin/newvote', function (req, res, next) {
 
 });
 
-app.get('/admin/exitcurrentvote', function(req, res, next) {
-
-  db.collection("votes").update({isActive: true}, {$set: {isActive: false}}, {}, function (err, numreplaced) {
-    if(!err){
-      res.send("Lyckades");
-    } else {
-      res.send("Misslyckades");
-    }
-  });
-
-});
-
 //CLIENT FUNKTIONER
 
 app.get('/client/currentvote', function (req, res, next) {
 
-  db.collection("votes").findOne({isActive: true}, function(err, doc) {
-    if (doc) {
+  getHasVoted(id, function(hasVoted) {
 
-      for (var i = 0; i < doc.options.length; i++) {
-        doc.options[i] = doc.options[i].title;
-      }
+    if(hasVoted){
 
-      doc = {title: doc.title, options:doc.options};
+      db.collection("votes").findOne({isActive: true}, function(err, doc) {
+        if (doc) {
 
-      res.json(doc);
+          for (var i = 0; i < doc.options.length; i++) {
+            doc.options[i] = doc.options[i].title;
+          }
+
+          doc = {title: doc.title, options:doc.options};
+
+          //Multiple options
+
+          res.json(doc);
+        } else {
+          res.send("Det finns för närvarande ingen omröstning");
+        }
+      });
+
     } else {
-      res.send("Det finns för närvarande ingen omröstning");
+
+      res.send(" ");
+
     }
+
   });
 
   //res.json(currentVote);

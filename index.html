@@ -1,0 +1,15 @@
+<script src="node_modules/socket.io-client/socket.io.js"></script>
+<script>
+  var socket = io();
+
+  socket.on('state', function (data) {
+    console.log(data);
+  });
+
+  socket.on('numberOfVotes', function(data) {
+    console.log(data);
+  });
+
+  socket.emit("room", "vote", "lösenrod");
+
+</script>
