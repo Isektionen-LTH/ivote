@@ -48,7 +48,9 @@ function setState(newState){
 }
 
 function getHasVoted(id, callback) {
+
   db.collection("votes").findOne({ $and: [{ hasVoted: id } , { isActive: true }] }, function(err, doc) {
+
       callback(doc !== null);
   });
 }
@@ -116,7 +118,11 @@ function startVote(voteId){
 
 function getVotingStatus(callback){
   db.collection('votes').findOne({isActive: true}, function(err, doc) {
+<<<<<<< Updated upstream
     callback({voted: doc.hasVoted.length, total: 55});
+=======
+    callback({state: 'voted', numberOfVotes: doc.hasVoted.length, numberOfUsers: 55});
+>>>>>>> Stashed changes
   });
 }
 
@@ -162,9 +168,10 @@ io.on('connection', function (socket) {
     socket.join('vote');
 
     getHasVoted(userID.id, function(hasVoted) {
+      console.log(hasVoted);
       if(hasVoted){
         socket.join("hasVoted");
-        socket.emit('state', {state: 'voted'});
+        //socket.emit('state', {state: 'voted'});
         getVotingStatus(function(voteStatus) {
           socket.emit('numberOfVotes', voteStatus);
         });
@@ -216,9 +223,9 @@ io.on('connection', function (socket) {
   });
 
   socket.on('vote', function(option){
-    vote(socket.userID, option);
-    socket.emit('state', {state: 'voted'});
     socket.join('hasVoted');
+    vote(socket.userID, option);
+    //socket.emit('state', {state: 'voted'});
   });
 
 });
