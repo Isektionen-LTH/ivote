@@ -30,34 +30,22 @@ let VoteActions = ({ status, id, dispatch, existsOngoingVote }) => {
 	case 'completed':
 		return null;
 	case 'waiting':
-		const editButton = (
-			<FlatButton
-				label="Ändra"
-				secondary={true}
-				onTouchTap={() => dispatch(editVote(id))} />
-		);
-		const deleteButton = (
-			<FlatButton
-				label="Ta bort"
-				secondary={true}
-				onTouchTap={() => dispatch(deleteVote(id))} />
-		);
 		if (existsOngoingVote) {
 			return (
-				<div>
-					{deleteButton}
-					{editButton}
-				</div>
+				<FlatButton
+				label="Ändra"
+				onTouchTap={() => dispatch(editVote(id))} />
 			);
 		} else {
 			return (
 				<div>
-					{editButton}
+					<FlatButton
+						label="Ändra"
+						onTouchTap={() => dispatch(editVote(id))} />
 					<FlatButton
 						label="Påbörja"
 						primary={true}
 						onTouchTap={() => dispatch(startVote(id))} />
-					{deleteButton}
 				</div>
 			);
 		}

@@ -35091,7 +35091,11 @@
 				function currentComponent() {
 					switch (session.state) {
 						case 'waiting':
-							return _react2.default.createElement(_CircularProgress2.default, null);
+							return _react2.default.createElement(
+								'div',
+								{ className: 'loading-container' },
+								_react2.default.createElement(_CircularProgress2.default, null)
+							);
 						case 'voting':
 							return _react2.default.createElement(Vote, null);
 						case 'voted':
@@ -45373,6 +45377,9 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
 	exports.default = LoginRoute;
 	
 	var _react = __webpack_require__(3);
@@ -45399,6 +45406,12 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
 	// import store from './vote.store.js';
 	
 	// import { setSelected, fetchVoteState, sendVote } from './vote.actions.js';
@@ -45412,38 +45425,95 @@
 	
 		);
 	}
-	var Login = function Login() {
-		return _react2.default.createElement(
-			_Card.Card,
-			null,
-			_react2.default.createElement(_Card.CardTitle, { title: 'Login' }),
-			_react2.default.createElement(
-				_Card.CardText,
-				null,
-				_react2.default.createElement(
-					'div',
+	
+	var Login = function (_React$Component) {
+		_inherits(Login, _React$Component);
+	
+		function Login(props) {
+			_classCallCheck(this, Login);
+	
+			var _this = _possibleConstructorReturn(this, (Login.__proto__ || Object.getPrototypeOf(Login)).call(this, props));
+	
+			_this.submit = _this.submit.bind(_this);
+			return _this;
+		}
+	
+		_createClass(Login, [{
+			key: 'submit',
+			value: function submit() {
+				var role = this.radioButtons.state.selected;
+				var username = this.usernameInput.input.value;
+				var password = this.passwordInput.input.value;
+	
+				this.login(role, username, password);
+			}
+		}, {
+			key: 'login',
+			value: function login(role, username, password) {
+				window.location = '/login/' + role + '/' + username + '/' + password;
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this2 = this;
+	
+				return _react2.default.createElement(
+					_Card.Card,
 					null,
-					_react2.default.createElement(_TextField2.default, { floatingLabelText: 'Anv\xE4ndarnamn' })
-				),
-				_react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(_TextField2.default, {
-						floatingLabelText: 'L\xF6senord',
-						type: 'password'
-					})
-				)
-			),
-			_react2.default.createElement(
-				_Card.CardActions,
-				{ className: 'card-actions' },
-				_react2.default.createElement(_FlatButton2.default, {
-					label: 'Logga in',
-					primary: true,
-					onTouchTap: function onTouchTap() {} })
-			)
-		);
-	};
+					_react2.default.createElement(_Card.CardTitle, { title: 'Login' }),
+					_react2.default.createElement(
+						_Card.CardText,
+						null,
+						_react2.default.createElement(
+							'div',
+							null,
+							_react2.default.createElement(_TextField2.default, {
+								floatingLabelText: 'Anv\xE4ndarnamn',
+								ref: function ref(el) {
+									return _this2.usernameInput = el;
+								} })
+						),
+						_react2.default.createElement(
+							'div',
+							null,
+							_react2.default.createElement(_TextField2.default, {
+								floatingLabelText: 'L\xF6senord',
+								type: 'password',
+								ref: function ref(el) {
+									return _this2.passwordInput = el;
+								}
+							})
+						),
+						_react2.default.createElement(
+							_RadioButton.RadioButtonGroup,
+							{
+								name: 'selected',
+								defaultSelected: 'admin',
+								ref: function ref(el) {
+									return _this2.radioButtons = el;
+								} },
+							_react2.default.createElement(_RadioButton.RadioButton, {
+								label: 'Admin',
+								value: 'admin' }),
+							_react2.default.createElement(_RadioButton.RadioButton, {
+								label: 'Registrerare',
+								value: 'register' })
+						)
+					),
+					_react2.default.createElement(
+						_Card.CardActions,
+						{ className: 'card-actions' },
+						_react2.default.createElement(_FlatButton2.default, {
+							label: 'Logga in',
+							primary: true,
+							onTouchTap: this.submit })
+					)
+				);
+			}
+		}]);
+	
+		return Login;
+	}(_react2.default.Component);
 	
 	// Login = connect(
 	// 	(state) => {
@@ -47834,6 +47904,10 @@
 	
 	var _clear2 = _interopRequireDefault(_clear);
 	
+	var _delete = __webpack_require__(531);
+	
+	var _delete2 = _interopRequireDefault(_delete);
+	
 	var _Paper = __webpack_require__(439);
 	
 	var _Paper2 = _interopRequireDefault(_Paper);
@@ -47970,11 +48044,19 @@
 					return 'Inaktiv';
 			}
 		};
-	
 		return _react2.default.createElement(
 			_Card.Card,
-			{ className: 'card' },
-			_react2.default.createElement(_Card.CardTitle, { title: title, subtitle: subtitle() }),
+			{ className: 'card admin-vote' },
+			_react2.default.createElement(
+				'div',
+				{ className: 'clearfix' },
+				_react2.default.createElement(_Card.CardTitle, { title: title, subtitle: subtitle(), className: 'title' }),
+				status === 'waiting' ? _react2.default.createElement(
+					_IconButton2.default,
+					{ onTouchTap: function onTouchTap() {}, className: 'delete-button' },
+					_react2.default.createElement(_delete2.default, null)
+				) : null
+			),
 			_react2.default.createElement(
 				_Card.CardText,
 				null,
@@ -49620,7 +49702,7 @@
 						return dispatch((0, _configureVotes.cancelEditing)());
 					} }),
 				_react2.default.createElement(_FlatButton2.default, {
-					label: 'L\xE4gg till',
+					label: id ? 'Ändra' : 'Lägg till',
 					primary: true,
 					disabled: !validate(),
 					tabIndex: 50,
@@ -49707,43 +49789,71 @@
 			case 'completed':
 				return null;
 			case 'waiting':
-				var editButton = _react2.default.createElement(_FlatButton2.default, {
-					label: '\xC4ndra',
-					secondary: true,
-					onTouchTap: function onTouchTap() {
-						return dispatch((0, _configureVotes.editVote)(id));
-					} });
-				var deleteButton = _react2.default.createElement(_FlatButton2.default, {
-					label: 'Ta bort',
-					secondary: true,
-					onTouchTap: function onTouchTap() {
-						return dispatch((0, _configureVotes.deleteVote)(id));
-					} });
 				if (existsOngoingVote) {
-					return _react2.default.createElement(
-						'div',
-						null,
-						deleteButton,
-						editButton
-					);
+					return _react2.default.createElement(_FlatButton2.default, {
+						label: '\xC4ndra',
+						onTouchTap: function onTouchTap() {
+							return dispatch((0, _configureVotes.editVote)(id));
+						} });
 				} else {
 					return _react2.default.createElement(
 						'div',
 						null,
-						editButton,
+						_react2.default.createElement(_FlatButton2.default, {
+							label: '\xC4ndra',
+							onTouchTap: function onTouchTap() {
+								return dispatch((0, _configureVotes.editVote)(id));
+							} }),
 						_react2.default.createElement(_FlatButton2.default, {
 							label: 'P\xE5b\xF6rja',
 							primary: true,
 							onTouchTap: function onTouchTap() {
 								return dispatch((0, _configureVotes.startVote)(id));
-							} }),
-						deleteButton
+							} })
 					);
 				}
 		}
 	};
 	
 	exports.default = VoteActions = (0, _reactRedux.connect)()(VoteActions);
+
+/***/ },
+/* 530 */,
+/* 531 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(3);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _pure = __webpack_require__(443);
+	
+	var _pure2 = _interopRequireDefault(_pure);
+	
+	var _SvgIcon = __webpack_require__(452);
+	
+	var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var ActionDelete = function ActionDelete(props) {
+	  return _react2.default.createElement(
+	    _SvgIcon2.default,
+	    props,
+	    _react2.default.createElement('path', { d: 'M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z' })
+	  );
+	};
+	ActionDelete = (0, _pure2.default)(ActionDelete);
+	ActionDelete.displayName = 'ActionDelete';
+	ActionDelete.muiName = 'SvgIcon';
+	
+	exports.default = ActionDelete;
 
 /***/ }
 /******/ ]);

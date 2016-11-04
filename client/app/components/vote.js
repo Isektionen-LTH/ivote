@@ -55,7 +55,11 @@ class VoteSessionClass extends React.Component {
 		function currentComponent() {
 			switch (session.state) {
 			case 'waiting':
-				return <CircularProgress />;
+				return (
+					<div className="loading-container">
+						<CircularProgress />
+					</div>
+				);
 			case 'voting':
 				return <Vote />;
 			case 'voted':

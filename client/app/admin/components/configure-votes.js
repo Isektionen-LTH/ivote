@@ -8,6 +8,7 @@ import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'mat
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import ContentClear from 'material-ui/svg-icons/content/clear';
+import ActionDelete from 'material-ui/svg-icons/action/delete';
 import Paper from 'material-ui/Paper';
 import CircularProgress from 'material-ui/CircularProgress';
 
@@ -95,17 +96,22 @@ const AdminVote = ({ title, options, status, id, existsOngoingVote }) => {
 			return 'Inaktiv';
 		}
 	};
-	
-
 	return (
-		<Card className="card">
-			<CardTitle title={title} subtitle={subtitle()} />
-			<CardText>
-			<div>
-				{options.map((name => 
-					<div key={name}>{name}</div>
-				))}
+		<Card className="card admin-vote">
+			<div className="clearfix">
+				<CardTitle title={title} subtitle={subtitle()} className="title" />
+				{status === 'waiting'
+					? <IconButton onTouchTap={() => {}} className="delete-button">
+						<ActionDelete />
+					</IconButton>
+					: null}
 			</div>
+			<CardText>
+				<div>
+					{options.map((name => 
+						<div key={name}>{name}</div>
+					))}
+				</div>
 			</CardText>
 			<CardActions className="card-actions">
 				<VoteActions status={status} id={id} existsOngoingVote={existsOngoingVote} />

@@ -84,7 +84,7 @@ let EditVote = ({ editing, dispatch }) => {
 					tabIndex={50}
 					onTouchTap={() => dispatch(cancelEditing())} />
 				<FlatButton
-					label="Lägg till"
+					label={id ? 'Ändra' : 'Lägg till'}
 					primary={true}
 					disabled={!validate()}
 					tabIndex={50}
