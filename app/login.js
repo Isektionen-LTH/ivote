@@ -12,10 +12,11 @@ router.get('/voter/:id', function(req, res) {
 });
 
 router.get('/admin', function(req, res) {
+	console.log('login admin!')
 	if(matchingCredentials(req.cookie, credentials.admin)) {
 		res.redirect('/admin');
 	} else {
-		res.redirect('/login/register');
+		res.redirect('/login');
 	}
 })
 
@@ -23,7 +24,7 @@ router.get('/register', function(req, res) {
 	if(matchingCredentials(req.cookie, credentials.register)) {
 		res.redirect('/register');
 	} else {
-		res.redirect('/login/register');
+		res.redirect('/login');
 	}
 	
 });
@@ -56,7 +57,7 @@ function hash(string) {
     hash |= 0; // Convert to 32bit integer
   }
   return hash;
-};
+}
 
 module.exports = {
 	router: router,

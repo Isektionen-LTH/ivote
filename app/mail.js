@@ -3,7 +3,7 @@ var nodemailer = require('nodemailer');
 var uuid = require('node-uuid');
 var fs = require('fs');
 
-var password = fs.readFileSync('./mail-password.txt');
+// var password = fs.readFileSync('./mail-password.txt');
 
 module.exports = function(email, callback) {
 

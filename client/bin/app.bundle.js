@@ -529,15 +529,15 @@
 	
 	var _app4 = _interopRequireDefault(_app3);
 	
-	var _app5 = __webpack_require__(517);
+	var _app5 = __webpack_require__(520);
 	
 	var _app6 = _interopRequireDefault(_app5);
 	
-	var _results = __webpack_require__(519);
+	var _results = __webpack_require__(522);
 	
 	var _results2 = _interopRequireDefault(_results);
 	
-	var _reactTapEventPlugin = __webpack_require__(522);
+	var _reactTapEventPlugin = __webpack_require__(525);
 	
 	var _reactTapEventPlugin2 = _interopRequireDefault(_reactTapEventPlugin);
 	
@@ -45425,6 +45425,33 @@
 	
 		);
 	}
+	// TODO move
+	function createCookie(name, value) {
+		var days = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1000000;
+	
+		var expires;
+		if (days) {
+			var date = new Date();
+			date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+			expires = '; expires=' + date.toGMTString();
+		} else expires = '';
+		document.cookie = name + '=' + value + expires + '; path=/';
+	}
+	
+	function hash(string) {
+		var hash = 0,
+		    i,
+		    chr,
+		    len;
+		if (string.length === 0) return hash;
+		for (i = 0, len = string.length; i < len; i++) {
+			chr = string.charCodeAt(i);
+			hash = (hash << 5) - hash + chr;
+			hash |= 0; // Convert to 32bit integer
+		}
+		return hash;
+	}
+	var salt = 'ivote';
 	
 	var Login = function (_React$Component) {
 		_inherits(Login, _React$Component);
@@ -45450,7 +45477,9 @@
 		}, {
 			key: 'login',
 			value: function login(role, username, password) {
-				window.location = '/login/' + role + '/' + username + '/' + password;
+				createCookie('username', username);
+				createCookie('hash', hash(password + salt));
+				window.location = '/login/' + role;
 			}
 		}, {
 			key: 'render',
@@ -47904,7 +47933,7 @@
 	
 	var _clear2 = _interopRequireDefault(_clear);
 	
-	var _delete = __webpack_require__(531);
+	var _delete = __webpack_require__(515);
 	
 	var _delete2 = _interopRequireDefault(_delete);
 	
@@ -47916,17 +47945,17 @@
 	
 	var _CircularProgress2 = _interopRequireDefault(_CircularProgress);
 	
-	var _editVote = __webpack_require__(528);
+	var _editVote = __webpack_require__(516);
 	
 	var _editVote2 = _interopRequireDefault(_editVote);
 	
-	var _voteActions = __webpack_require__(529);
+	var _voteActions = __webpack_require__(518);
 	
 	var _voteActions2 = _interopRequireDefault(_voteActions);
 	
-	var _configureVotes = __webpack_require__(515);
+	var _configureVotes = __webpack_require__(517);
 	
-	var _configureVotes2 = __webpack_require__(516);
+	var _configureVotes2 = __webpack_require__(519);
 	
 	var _configureVotes3 = _interopRequireDefault(_configureVotes2);
 	
@@ -48560,6 +48589,211 @@
 
 /***/ },
 /* 515 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(3);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _pure = __webpack_require__(443);
+	
+	var _pure2 = _interopRequireDefault(_pure);
+	
+	var _SvgIcon = __webpack_require__(452);
+	
+	var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var ActionDelete = function ActionDelete(props) {
+	  return _react2.default.createElement(
+	    _SvgIcon2.default,
+	    props,
+	    _react2.default.createElement('path', { d: 'M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z' })
+	  );
+	};
+	ActionDelete = (0, _pure2.default)(ActionDelete);
+	ActionDelete.displayName = 'ActionDelete';
+	ActionDelete.muiName = 'SvgIcon';
+	
+	exports.default = ActionDelete;
+
+/***/ },
+/* 516 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _react = __webpack_require__(3);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(383);
+	
+	var _TextField = __webpack_require__(494);
+	
+	var _TextField2 = _interopRequireDefault(_TextField);
+	
+	var _IconButton = __webpack_require__(469);
+	
+	var _IconButton2 = _interopRequireDefault(_IconButton);
+	
+	var _FlatButton = __webpack_require__(456);
+	
+	var _FlatButton2 = _interopRequireDefault(_FlatButton);
+	
+	var _Card = __webpack_require__(464);
+	
+	var _FloatingActionButton = __webpack_require__(511);
+	
+	var _FloatingActionButton2 = _interopRequireDefault(_FloatingActionButton);
+	
+	var _add = __webpack_require__(513);
+	
+	var _add2 = _interopRequireDefault(_add);
+	
+	var _clear = __webpack_require__(514);
+	
+	var _clear2 = _interopRequireDefault(_clear);
+	
+	var _Paper = __webpack_require__(439);
+	
+	var _Paper2 = _interopRequireDefault(_Paper);
+	
+	var _CircularProgress = __webpack_require__(481);
+	
+	var _CircularProgress2 = _interopRequireDefault(_CircularProgress);
+	
+	var _configureVotes = __webpack_require__(517);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var EditVote = function EditVote(_ref) {
+		var editing = _ref.editing,
+		    dispatch = _ref.dispatch;
+	
+		if (editing === null) {
+			return null;
+		}
+	
+		var title = editing.title,
+		    options = editing.options,
+		    id = editing.id;
+	
+	
+		var validate = function validate() {
+			if (!title) {
+				return false;
+			}
+	
+			if (options.length < 2) {
+				return false;
+			}
+	
+			var validOptions = options.filter(function (option) {
+				return option;
+			});
+			if (validOptions.length !== options.length) {
+				return false;
+			}
+	
+			return true;
+		};
+	
+		return _react2.default.createElement(
+			_Paper2.default,
+			{ className: 'card', style: { padding: 16 } },
+			_react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(_TextField2.default, {
+					hintText: 'Titel',
+					value: title,
+					tabIndex: -1,
+					className: 'big-textfield',
+					onChange: function onChange(e) {
+						return dispatch((0, _configureVotes.editTitleChanged)(e.target.value));
+					} })
+			),
+			_react2.default.createElement(
+				'div',
+				{ className: 'subtitle' },
+				id ? 'Ändra omröstning' : 'Ny omröstning'
+			),
+			_react2.default.createElement(
+				'div',
+				null,
+				options.map(function (option, i) {
+					return _react2.default.createElement(
+						'div',
+						{ key: i },
+						_react2.default.createElement(_TextField2.default, {
+							floatingLabelText: 'Alternativ ' + (i + 1),
+							value: option,
+							tabIndex: i,
+							onChange: function onChange(e) {
+								return dispatch((0, _configureVotes.editOptionChanged)(e.target.value, i));
+							} }),
+						_react2.default.createElement(
+							_IconButton2.default,
+							{ tabIndex: 100, onTouchTap: function onTouchTap() {
+									return dispatch((0, _configureVotes.removeEditOption)(i));
+								} },
+							_react2.default.createElement(_clear2.default, null)
+						)
+					);
+				})
+			),
+			_react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(_FlatButton2.default, {
+					label: 'L\xE4gg till alternativ',
+					primary: true,
+					tabIndex: 50,
+					onTouchTap: function onTouchTap() {
+						return dispatch((0, _configureVotes.addEditOption)());
+					} })
+			),
+			_react2.default.createElement(
+				'div',
+				{ className: 'card-actions' },
+				_react2.default.createElement(_FlatButton2.default, {
+					label: 'Avbryt',
+					secondary: true,
+					tabIndex: 50,
+					onTouchTap: function onTouchTap() {
+						return dispatch((0, _configureVotes.cancelEditing)());
+					} }),
+				_react2.default.createElement(_FlatButton2.default, {
+					label: id ? 'Ändra' : 'Lägg till',
+					primary: true,
+					disabled: !validate(),
+					tabIndex: 50,
+					onTouchTap: function onTouchTap() {
+						return dispatch((0, _configureVotes.saveVote)({ title: title, options: options, id: id }));
+					} })
+			)
+		);
+	};
+	exports.default = EditVote = (0, _reactRedux.connect)(function (state) {
+		return {
+			editing: state.editing
+		};
+	})(EditVote);
+
+/***/ },
+/* 517 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -48732,7 +48966,106 @@
 	}
 
 /***/ },
-/* 516 */
+/* 518 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _react = __webpack_require__(3);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(383);
+	
+	var _TextField = __webpack_require__(494);
+	
+	var _TextField2 = _interopRequireDefault(_TextField);
+	
+	var _IconButton = __webpack_require__(469);
+	
+	var _IconButton2 = _interopRequireDefault(_IconButton);
+	
+	var _FlatButton = __webpack_require__(456);
+	
+	var _FlatButton2 = _interopRequireDefault(_FlatButton);
+	
+	var _Card = __webpack_require__(464);
+	
+	var _FloatingActionButton = __webpack_require__(511);
+	
+	var _FloatingActionButton2 = _interopRequireDefault(_FloatingActionButton);
+	
+	var _add = __webpack_require__(513);
+	
+	var _add2 = _interopRequireDefault(_add);
+	
+	var _clear = __webpack_require__(514);
+	
+	var _clear2 = _interopRequireDefault(_clear);
+	
+	var _Paper = __webpack_require__(439);
+	
+	var _Paper2 = _interopRequireDefault(_Paper);
+	
+	var _CircularProgress = __webpack_require__(481);
+	
+	var _CircularProgress2 = _interopRequireDefault(_CircularProgress);
+	
+	var _configureVotes = __webpack_require__(517);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var VoteActions = function VoteActions(_ref) {
+		var status = _ref.status,
+		    id = _ref.id,
+		    dispatch = _ref.dispatch,
+		    existsOngoingVote = _ref.existsOngoingVote;
+	
+		switch (status) {
+			case 'ongoing':
+				return _react2.default.createElement(_FlatButton2.default, {
+					label: 'Avsluta',
+					primary: true,
+					onTouchTap: function onTouchTap() {
+						return dispatch((0, _configureVotes.cancelCurrent)());
+					} });
+			case 'completed':
+				return null;
+			case 'waiting':
+				if (existsOngoingVote) {
+					return _react2.default.createElement(_FlatButton2.default, {
+						label: '\xC4ndra',
+						onTouchTap: function onTouchTap() {
+							return dispatch((0, _configureVotes.editVote)(id));
+						} });
+				} else {
+					return _react2.default.createElement(
+						'div',
+						null,
+						_react2.default.createElement(_FlatButton2.default, {
+							label: '\xC4ndra',
+							onTouchTap: function onTouchTap() {
+								return dispatch((0, _configureVotes.editVote)(id));
+							} }),
+						_react2.default.createElement(_FlatButton2.default, {
+							label: 'P\xE5b\xF6rja',
+							primary: true,
+							onTouchTap: function onTouchTap() {
+								return dispatch((0, _configureVotes.startVote)(id));
+							} })
+					);
+				}
+		}
+	};
+	
+	exports.default = VoteActions = (0, _reactRedux.connect)()(VoteActions);
+
+/***/ },
+/* 519 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48749,7 +49082,7 @@
 	
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 	
-	var _configureVotes = __webpack_require__(515);
+	var _configureVotes = __webpack_require__(517);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -48820,7 +49153,7 @@
 	exports.default = store;
 
 /***/ },
-/* 517 */
+/* 520 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48841,7 +49174,7 @@
 	
 	var _reactRouter = __webpack_require__(174);
 	
-	var _registerForm = __webpack_require__(518);
+	var _registerForm = __webpack_require__(521);
 	
 	var _registerForm2 = _interopRequireDefault(_registerForm);
 	
@@ -48877,7 +49210,7 @@
 	exports.default = route;
 
 /***/ },
-/* 518 */
+/* 521 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48939,7 +49272,7 @@
 	exports.default = RegisterForm;
 
 /***/ },
-/* 519 */
+/* 522 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48972,11 +49305,11 @@
 	
 	var _socket2 = _interopRequireDefault(_socket);
 	
-	var _results = __webpack_require__(520);
+	var _results = __webpack_require__(523);
 	
 	var _results2 = _interopRequireDefault(_results);
 	
-	var _results3 = __webpack_require__(521);
+	var _results3 = __webpack_require__(524);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -49123,7 +49456,7 @@
 	})(ResultsClass);
 
 /***/ },
-/* 520 */
+/* 523 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -49142,7 +49475,7 @@
 	
 	var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
 	
-	var _results = __webpack_require__(521);
+	var _results = __webpack_require__(524);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -49169,7 +49502,7 @@
 	exports.default = store;
 
 /***/ },
-/* 521 */
+/* 524 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -49188,11 +49521,11 @@
 	}
 
 /***/ },
-/* 522 */
+/* 525 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {var invariant = __webpack_require__(523);
-	var defaultClickRejectionStrategy = __webpack_require__(524);
+	/* WEBPACK VAR INJECTION */(function(process) {var invariant = __webpack_require__(526);
+	var defaultClickRejectionStrategy = __webpack_require__(527);
 	
 	var alreadyInjected = false;
 	
@@ -49214,14 +49547,14 @@
 	  alreadyInjected = true;
 	
 	  __webpack_require__(45).injection.injectEventPluginsByName({
-	    'TapEventPlugin':       __webpack_require__(525)(shouldRejectClick)
+	    'TapEventPlugin':       __webpack_require__(528)(shouldRejectClick)
 	  });
 	};
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 523 */
+/* 526 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -49276,7 +49609,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 524 */
+/* 527 */
 /***/ function(module, exports) {
 
 	module.exports = function(lastTouchEvent, clickTimestamp) {
@@ -49287,7 +49620,7 @@
 
 
 /***/ },
-/* 525 */
+/* 528 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -49315,10 +49648,10 @@
 	var EventPluginUtils = __webpack_require__(47);
 	var EventPropagators = __webpack_require__(44);
 	var SyntheticUIEvent = __webpack_require__(78);
-	var TouchEventUtils = __webpack_require__(526);
+	var TouchEventUtils = __webpack_require__(529);
 	var ViewportMetrics = __webpack_require__(79);
 	
-	var keyOf = __webpack_require__(527);
+	var keyOf = __webpack_require__(530);
 	var topLevelTypes = EventConstants.topLevelTypes;
 	
 	var isStartish = EventPluginUtils.isStartish;
@@ -49463,7 +49796,7 @@
 
 
 /***/ },
-/* 526 */
+/* 529 */
 /***/ function(module, exports) {
 
 	/**
@@ -49511,7 +49844,7 @@
 
 
 /***/ },
-/* 527 */
+/* 530 */
 /***/ function(module, exports) {
 
 	/**
@@ -49549,311 +49882,6 @@
 	};
 	
 	module.exports = keyOf;
-
-/***/ },
-/* 528 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	
-	var _react = __webpack_require__(3);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRedux = __webpack_require__(383);
-	
-	var _TextField = __webpack_require__(494);
-	
-	var _TextField2 = _interopRequireDefault(_TextField);
-	
-	var _IconButton = __webpack_require__(469);
-	
-	var _IconButton2 = _interopRequireDefault(_IconButton);
-	
-	var _FlatButton = __webpack_require__(456);
-	
-	var _FlatButton2 = _interopRequireDefault(_FlatButton);
-	
-	var _Card = __webpack_require__(464);
-	
-	var _FloatingActionButton = __webpack_require__(511);
-	
-	var _FloatingActionButton2 = _interopRequireDefault(_FloatingActionButton);
-	
-	var _add = __webpack_require__(513);
-	
-	var _add2 = _interopRequireDefault(_add);
-	
-	var _clear = __webpack_require__(514);
-	
-	var _clear2 = _interopRequireDefault(_clear);
-	
-	var _Paper = __webpack_require__(439);
-	
-	var _Paper2 = _interopRequireDefault(_Paper);
-	
-	var _CircularProgress = __webpack_require__(481);
-	
-	var _CircularProgress2 = _interopRequireDefault(_CircularProgress);
-	
-	var _configureVotes = __webpack_require__(515);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var EditVote = function EditVote(_ref) {
-		var editing = _ref.editing,
-		    dispatch = _ref.dispatch;
-	
-		if (editing === null) {
-			return null;
-		}
-	
-		var title = editing.title,
-		    options = editing.options,
-		    id = editing.id;
-	
-	
-		var validate = function validate() {
-			if (!title) {
-				return false;
-			}
-	
-			if (options.length < 2) {
-				return false;
-			}
-	
-			var validOptions = options.filter(function (option) {
-				return option;
-			});
-			if (validOptions.length !== options.length) {
-				return false;
-			}
-	
-			return true;
-		};
-	
-		return _react2.default.createElement(
-			_Paper2.default,
-			{ className: 'card', style: { padding: 16 } },
-			_react2.default.createElement(
-				'div',
-				null,
-				_react2.default.createElement(_TextField2.default, {
-					hintText: 'Titel',
-					value: title,
-					tabIndex: -1,
-					className: 'big-textfield',
-					onChange: function onChange(e) {
-						return dispatch((0, _configureVotes.editTitleChanged)(e.target.value));
-					} })
-			),
-			_react2.default.createElement(
-				'div',
-				{ className: 'subtitle' },
-				id ? 'Ändra omröstning' : 'Ny omröstning'
-			),
-			_react2.default.createElement(
-				'div',
-				null,
-				options.map(function (option, i) {
-					return _react2.default.createElement(
-						'div',
-						{ key: i },
-						_react2.default.createElement(_TextField2.default, {
-							floatingLabelText: 'Alternativ ' + (i + 1),
-							value: option,
-							tabIndex: i,
-							onChange: function onChange(e) {
-								return dispatch((0, _configureVotes.editOptionChanged)(e.target.value, i));
-							} }),
-						_react2.default.createElement(
-							_IconButton2.default,
-							{ tabIndex: 100, onTouchTap: function onTouchTap() {
-									return dispatch((0, _configureVotes.removeEditOption)(i));
-								} },
-							_react2.default.createElement(_clear2.default, null)
-						)
-					);
-				})
-			),
-			_react2.default.createElement(
-				'div',
-				null,
-				_react2.default.createElement(_FlatButton2.default, {
-					label: 'L\xE4gg till alternativ',
-					primary: true,
-					tabIndex: 50,
-					onTouchTap: function onTouchTap() {
-						return dispatch((0, _configureVotes.addEditOption)());
-					} })
-			),
-			_react2.default.createElement(
-				'div',
-				{ className: 'card-actions' },
-				_react2.default.createElement(_FlatButton2.default, {
-					label: 'Avbryt',
-					secondary: true,
-					tabIndex: 50,
-					onTouchTap: function onTouchTap() {
-						return dispatch((0, _configureVotes.cancelEditing)());
-					} }),
-				_react2.default.createElement(_FlatButton2.default, {
-					label: id ? 'Ändra' : 'Lägg till',
-					primary: true,
-					disabled: !validate(),
-					tabIndex: 50,
-					onTouchTap: function onTouchTap() {
-						return dispatch((0, _configureVotes.saveVote)({ title: title, options: options, id: id }));
-					} })
-			)
-		);
-	};
-	exports.default = EditVote = (0, _reactRedux.connect)(function (state) {
-		return {
-			editing: state.editing
-		};
-	})(EditVote);
-
-/***/ },
-/* 529 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	
-	var _react = __webpack_require__(3);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRedux = __webpack_require__(383);
-	
-	var _TextField = __webpack_require__(494);
-	
-	var _TextField2 = _interopRequireDefault(_TextField);
-	
-	var _IconButton = __webpack_require__(469);
-	
-	var _IconButton2 = _interopRequireDefault(_IconButton);
-	
-	var _FlatButton = __webpack_require__(456);
-	
-	var _FlatButton2 = _interopRequireDefault(_FlatButton);
-	
-	var _Card = __webpack_require__(464);
-	
-	var _FloatingActionButton = __webpack_require__(511);
-	
-	var _FloatingActionButton2 = _interopRequireDefault(_FloatingActionButton);
-	
-	var _add = __webpack_require__(513);
-	
-	var _add2 = _interopRequireDefault(_add);
-	
-	var _clear = __webpack_require__(514);
-	
-	var _clear2 = _interopRequireDefault(_clear);
-	
-	var _Paper = __webpack_require__(439);
-	
-	var _Paper2 = _interopRequireDefault(_Paper);
-	
-	var _CircularProgress = __webpack_require__(481);
-	
-	var _CircularProgress2 = _interopRequireDefault(_CircularProgress);
-	
-	var _configureVotes = __webpack_require__(515);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var VoteActions = function VoteActions(_ref) {
-		var status = _ref.status,
-		    id = _ref.id,
-		    dispatch = _ref.dispatch,
-		    existsOngoingVote = _ref.existsOngoingVote;
-	
-		switch (status) {
-			case 'ongoing':
-				return _react2.default.createElement(_FlatButton2.default, {
-					label: 'Avsluta',
-					primary: true,
-					onTouchTap: function onTouchTap() {
-						return dispatch((0, _configureVotes.cancelCurrent)());
-					} });
-			case 'completed':
-				return null;
-			case 'waiting':
-				if (existsOngoingVote) {
-					return _react2.default.createElement(_FlatButton2.default, {
-						label: '\xC4ndra',
-						onTouchTap: function onTouchTap() {
-							return dispatch((0, _configureVotes.editVote)(id));
-						} });
-				} else {
-					return _react2.default.createElement(
-						'div',
-						null,
-						_react2.default.createElement(_FlatButton2.default, {
-							label: '\xC4ndra',
-							onTouchTap: function onTouchTap() {
-								return dispatch((0, _configureVotes.editVote)(id));
-							} }),
-						_react2.default.createElement(_FlatButton2.default, {
-							label: 'P\xE5b\xF6rja',
-							primary: true,
-							onTouchTap: function onTouchTap() {
-								return dispatch((0, _configureVotes.startVote)(id));
-							} })
-					);
-				}
-		}
-	};
-	
-	exports.default = VoteActions = (0, _reactRedux.connect)()(VoteActions);
-
-/***/ },
-/* 530 */,
-/* 531 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(3);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _pure = __webpack_require__(443);
-	
-	var _pure2 = _interopRequireDefault(_pure);
-	
-	var _SvgIcon = __webpack_require__(452);
-	
-	var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var ActionDelete = function ActionDelete(props) {
-	  return _react2.default.createElement(
-	    _SvgIcon2.default,
-	    props,
-	    _react2.default.createElement('path', { d: 'M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z' })
-	  );
-	};
-	ActionDelete = (0, _pure2.default)(ActionDelete);
-	ActionDelete.displayName = 'ActionDelete';
-	ActionDelete.muiName = 'SvgIcon';
-	
-	exports.default = ActionDelete;
 
 /***/ }
 /******/ ]);
