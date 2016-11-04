@@ -1,24 +1,16 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var mongo = require('mongodb');
-var nodemailer = require('nodemailer');
-var MongoClient = mongo.MongoClient;
-var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
-
+var mail = require('./app/mail.js');
 var db;
 var validCodes = ['123', 'hej'];
 var adminPassword = 'hej123';
 
-var router = express.Router();
-app.use('/sayHello', router);
-router.post('/', handleSayHello);
-
-function handleSayHello() {
-  console.log("hej");
-
-}
+var MongoClient = mongo.MongoClient;
+var app = express();
+//var router = express.Router();
 
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/client/index.html');
@@ -26,9 +18,11 @@ app.get('/', function (req, res) {
 
 app.use(express.static(__dirname));
 app.use(require('cors')());
+app.use(bodyParser.json());
 
 server.listen(8080, '0.0.0.0', function () {
 
+  //mail("kristoffder.ipod@gmaasdadil.com");
   console.log('Lyssnar');
 
   MongoClient.connect('mongodb://kristoffer:evote@ds035036.mlab.com:35036/ivote', function(err, database) {
@@ -136,9 +130,11 @@ function getVoteResults(callback){
         var options = doc[i].options.sort(function(a, b) {
           return b.numberOfVotes - a.numberOfVotes;
         });
-        resultArray.push({id: i, title: doc[i].title, options: options});
+        resultArray.push({id: i, title: doc[i].title, options: options, resultOrd: doc[i].resultOrd});
       }
-
+      resultArray.sort(function(a, b){
+        return b.resultOrd - a.resultOrd;
+      });
       callback(resultArray);
 
     });
@@ -155,8 +151,13 @@ function returnVotesAdmin(res){
         options: vote.options.map(function(option) {
           return option.title;
         }),
-        status: vote.isActive === null ? 'waiting' : vote.isActive ? 'ongoing' : 'completed'
+        status: vote.isActive === null ? 'waiting' : vote.isActive ? 'ongoing' : 'completed',
+        statusOrd: vote.isActive === null ? 1 : vote.isActive ? 0 : 2
       }
+
+    }).sort(function(a, b){
+
+      return a.statusOrd - b.statusOrd;
 
     });
     res.send(votes);
@@ -164,30 +165,16 @@ function returnVotesAdmin(res){
   });
 }
 
-function mail() {
-  var transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-            user: 'kristoffer.nordstrom@isek.se', // Your email id
-            pass: '****' // Your password
-        }
-    });
+function validateUser(userID, callback){
 
-    var mailOptions = {
-      from: 'kristoffer.nordstrom@isek.se', // sender address
-      to: 'johnrappfarnes@gmail.com', // list of receivers
-      subject: 'Email Example', // Subject line
-      text: "hej" //, // plaintext body
-      // html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
-    };
+  db.collection('codes').findOne({id: userID}, function(err, doc) {
+    if(doc){
+      callback(true);
+    } else {
+      callback(false);
+    }
+  });
 
-    transporter.sendMail(mailOptions, function(error, info){
-      if(error){
-          console.log(error);
-      }else{
-          console.log('Message sent: ' + info.response);
-      }
-    });
 }
 
 //app.use(express.static('/'));
@@ -210,34 +197,46 @@ io.on('connection', function (socket) {
   socket.on('join vote', function(userID){
 
     socket.userID = userID.id;
-    socket.join('vote');
 
-    getHasVoted(userID.id, function(hasVoted) {
-      console.log(hasVoted);
+    validateUser(userID, function(userIsValid){
 
-      if(hasVoted){
-        socket.join('hasVoted');
-        //socket.emit('state', {state: 'voted'});
-        getVotingStatus(function(voteStatus) {
-          socket.emit('state', {state: 'voted', voted: voteStatus.voted, total: voteStatus.total});
-          // socket.emit('new vote', voteStatus);
-        });
-      } else {
-        db.collection('state').find({}).toArray(function(err, doc) {
-          console.log(doc);
-          //socket.emit('state', doc[0]);
+      socket.valid = userIsValid;
 
-          if(doc[0].state === 0){
-            socket.emit('state', {state: 'waiting'});
+      if(userIsValid){
+        socket.join('vote');
+
+        getHasVoted(userID.id, function(hasVoted) {
+
+          console.log(hasVoted);
+
+          if(hasVoted){
+            socket.join('hasVoted');
+            //socket.emit('state', {state: 'voted'});
+            getVotingStatus(function(voteStatus) {
+              socket.emit('state', {state: 'voted', voted: voteStatus.voted, total: voteStatus.total});
+              // socket.emit('new vote', voteStatus);
+            });
           } else {
-            getCurrentVote(function(doc) {
+            db.collection('state').find({}).toArray(function(err, doc) {
               console.log(doc);
-              socket.emit('state', doc);
+              //socket.emit('state', doc[0]);
+
+              if(doc[0].state === 0){
+                socket.emit('state', {state: 'waiting'});
+              } else {
+                getCurrentVote(function(doc) {
+                  console.log(doc);
+                  socket.emit('state', doc);
+                });
+              }
+
             });
           }
-
         });
+      } else {
+        socket.emit('state', {state: 'wrong id'});
       }
+
     });
 
   });
@@ -328,15 +327,18 @@ app.get('/admin/votes', function (req, res, next) {
 
 app.post('/admin/vote/new', function (req, res, next) {
 
+  console.log(req.body);
+
   var vote = {};
 
-  if(typeof req.title !== 'undefined' && typeof req.options !== 'undefined'){
+  if(typeof req.body.title !== 'undefined' && typeof req.body.options !== 'undefined'){
 
     vote.isActive = null;
     vote.hasVoted = [];
     vote.resultOrd = null;
+    vote.title = req.body.title;
 
-    vote.options = options.map(function(title) {
+    vote.options = req.body.options.map(function(title) {
       return {title: title, numberOfVotes: 0};
     });
 
@@ -352,7 +354,9 @@ app.post('/admin/vote/new', function (req, res, next) {
 
 app.put('/admin/vote/:id', function(req, res) {
   //Går endast att ändra om röstning ej skett, dvs isActive == null
-  db.collection('votes').replaceOne({$and: [{_id: mongo.ObjectId(req.params.id)}, {isActive: null}]}, editedVote, function(err, doc) {
+  db.collection('votes').update({$and: [{_id: mongo.ObjectId(req.body.id)}, {isActive: null}]}, {$set: {title: req.body.title, options: req.body.options.map(function(option) {
+    return {title: option, numberOfVotes: 0};
+  })}}, function(err, doc) {
     console.log(err + ' Insatt');
     returnVotesAdmin(res);
 
@@ -365,7 +369,6 @@ app.delete('/admin/vote/:id', function(req, res) {
   db.collection('votes').deleteOne({$and: [{_id: mongo.ObjectId(req.params.id)}, {isActive: null}]}, function (err, doc) {
 
     returnVotesAdmin(res);
-
   });
 
 });
@@ -400,6 +403,16 @@ app.post('/admin/vote/:id/start', function(req, res) {
 
     });
 
+  });
+
+});
+
+app.post('/register/user', function(req, res) {
+
+  email(req.body.email, function(uid) {
+    db.collection('codes').insert({name: req.body.name, email: req.body.email, id: uid}, function(err) {
+
+    });
   });
 
 });
