@@ -47846,6 +47846,10 @@
 	
 	var _editVote2 = _interopRequireDefault(_editVote);
 	
+	var _voteActions = __webpack_require__(529);
+	
+	var _voteActions2 = _interopRequireDefault(_voteActions);
+	
 	var _configureVotes = __webpack_require__(515);
 	
 	var _configureVotes2 = __webpack_require__(516);
@@ -47989,64 +47993,10 @@
 			_react2.default.createElement(
 				_Card.CardActions,
 				{ className: 'card-actions' },
-				_react2.default.createElement(VoteActions, { status: status, id: id, existsOngoingVote: existsOngoingVote })
+				_react2.default.createElement(_voteActions2.default, { status: status, id: id, existsOngoingVote: existsOngoingVote })
 			)
 		);
 	};
-	
-	var VoteActions = function VoteActions(_ref4) {
-		var status = _ref4.status,
-		    id = _ref4.id,
-		    dispatch = _ref4.dispatch,
-		    existsOngoingVote = _ref4.existsOngoingVote;
-	
-		switch (status) {
-			case 'ongoing':
-				return _react2.default.createElement(_FlatButton2.default, {
-					label: 'Avsluta',
-					primary: true,
-					onTouchTap: function onTouchTap() {
-						return dispatch((0, _configureVotes.cancelCurrent)());
-					} });
-			case 'completed':
-				return null;
-			case 'waiting':
-				var editButton = _react2.default.createElement(_FlatButton2.default, {
-					label: '\xC4ndra',
-					secondary: true,
-					onTouchTap: function onTouchTap() {
-						return dispatch((0, _configureVotes.editVote)(id));
-					} });
-				var deleteButton = _react2.default.createElement(_FlatButton2.default, {
-					label: 'Ta bort',
-					secondary: true,
-					onTouchTap: function onTouchTap() {
-						return dispatch((0, _configureVotes.deleteVote)(id));
-					} });
-				if (existsOngoingVote) {
-					return _react2.default.createElement(
-						'div',
-						null,
-						deleteButton,
-						editButton
-					);
-				} else {
-					return _react2.default.createElement(
-						'div',
-						null,
-						_react2.default.createElement(_FlatButton2.default, {
-							label: 'P\xE5b\xF6rja',
-							primary: true,
-							onTouchTap: function onTouchTap() {
-								return dispatch((0, _configureVotes.startVote)(id));
-							} }),
-						deleteButton
-					);
-				}
-		}
-	};
-	
-	VoteActions = (0, _reactRedux.connect)()(VoteActions);
 
 /***/ },
 /* 511 */
@@ -49684,6 +49634,115 @@
 			editing: state.editing
 		};
 	})(EditVote);
+
+/***/ },
+/* 529 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _react = __webpack_require__(3);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(383);
+	
+	var _TextField = __webpack_require__(494);
+	
+	var _TextField2 = _interopRequireDefault(_TextField);
+	
+	var _IconButton = __webpack_require__(469);
+	
+	var _IconButton2 = _interopRequireDefault(_IconButton);
+	
+	var _FlatButton = __webpack_require__(456);
+	
+	var _FlatButton2 = _interopRequireDefault(_FlatButton);
+	
+	var _Card = __webpack_require__(464);
+	
+	var _FloatingActionButton = __webpack_require__(511);
+	
+	var _FloatingActionButton2 = _interopRequireDefault(_FloatingActionButton);
+	
+	var _add = __webpack_require__(513);
+	
+	var _add2 = _interopRequireDefault(_add);
+	
+	var _clear = __webpack_require__(514);
+	
+	var _clear2 = _interopRequireDefault(_clear);
+	
+	var _Paper = __webpack_require__(439);
+	
+	var _Paper2 = _interopRequireDefault(_Paper);
+	
+	var _CircularProgress = __webpack_require__(481);
+	
+	var _CircularProgress2 = _interopRequireDefault(_CircularProgress);
+	
+	var _configureVotes = __webpack_require__(515);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var VoteActions = function VoteActions(_ref) {
+		var status = _ref.status,
+		    id = _ref.id,
+		    dispatch = _ref.dispatch,
+		    existsOngoingVote = _ref.existsOngoingVote;
+	
+		switch (status) {
+			case 'ongoing':
+				return _react2.default.createElement(_FlatButton2.default, {
+					label: 'Avsluta',
+					primary: true,
+					onTouchTap: function onTouchTap() {
+						return dispatch((0, _configureVotes.cancelCurrent)());
+					} });
+			case 'completed':
+				return null;
+			case 'waiting':
+				var editButton = _react2.default.createElement(_FlatButton2.default, {
+					label: '\xC4ndra',
+					secondary: true,
+					onTouchTap: function onTouchTap() {
+						return dispatch((0, _configureVotes.editVote)(id));
+					} });
+				var deleteButton = _react2.default.createElement(_FlatButton2.default, {
+					label: 'Ta bort',
+					secondary: true,
+					onTouchTap: function onTouchTap() {
+						return dispatch((0, _configureVotes.deleteVote)(id));
+					} });
+				if (existsOngoingVote) {
+					return _react2.default.createElement(
+						'div',
+						null,
+						deleteButton,
+						editButton
+					);
+				} else {
+					return _react2.default.createElement(
+						'div',
+						null,
+						editButton,
+						_react2.default.createElement(_FlatButton2.default, {
+							label: 'P\xE5b\xF6rja',
+							primary: true,
+							onTouchTap: function onTouchTap() {
+								return dispatch((0, _configureVotes.startVote)(id));
+							} }),
+						deleteButton
+					);
+				}
+		}
+	};
+	
+	exports.default = VoteActions = (0, _reactRedux.connect)()(VoteActions);
 
 /***/ }
 /******/ ]);

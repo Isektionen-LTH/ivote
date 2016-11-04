@@ -58,6 +58,7 @@ let EditVote = ({ editing, dispatch }) => {
 							value={option}
 							tabIndex={i}
 							onChange={(e) => dispatch(editOptionChanged(e.target.value, i))} />
+						{/* TODO bara kunna ta bort om man har mer än 2*/}
 						<IconButton tabIndex={100} onTouchTap={() => dispatch(removeEditOption(i))}>
 							<ContentClear />
 						</IconButton>

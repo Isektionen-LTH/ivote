@@ -12,15 +12,13 @@ import Paper from 'material-ui/Paper';
 import CircularProgress from 'material-ui/CircularProgress';
 
 import EditVote from './edit-vote';
+import VoteActions from './vote-actions';
 
 import { 
 	fetchVotes,
-	startVote,
-	deleteVote,
-	cancelCurrent,
-	addNewVote,
-	editVote
+	addNewVote
 } from './configure-votes.actions';
+
 import store from './configure-votes.store';
 
 import 'whatwg-fetch';
@@ -115,50 +113,3 @@ const AdminVote = ({ title, options, status, id, existsOngoingVote }) => {
 		</Card>
 	);
 };
-
-let VoteActions = ({ status, id, dispatch, existsOngoingVote }) => {
-	switch (status) {
-	case 'ongoing':
-		return (
-			<FlatButton
-				label="Avsluta"
-				primary={true}
-				onTouchTap={() => dispatch(cancelCurrent())} />
-		);
-	case 'completed':
-		return null;
-	case 'waiting':
-		const editButton = (
-			<FlatButton
-				label="Ändra"
-				secondary={true}
-				onTouchTap={() => dispatch(editVote(id))} />
-		);
-		const deleteButton = (
-			<FlatButton
-				label="Ta bort"
-				secondary={true}
-				onTouchTap={() => dispatch(deleteVote(id))} />
-		);
-		if (existsOngoingVote) {
-			return (
-				<div>
-					{deleteButton}
-					{editButton}
-				</div>
-			);
-		} else {
-			return (
-				<div>
-					<FlatButton
-						label="Påbörja"
-						primary={true}
-						onTouchTap={() => dispatch(startVote(id))} />
-					{deleteButton}
-				</div>
-			);
-		}
-	}
-};
-
-VoteActions = connect()(VoteActions);
