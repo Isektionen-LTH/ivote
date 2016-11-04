@@ -66,28 +66,21 @@ class ResultsClass extends React.Component {
 }
 
 const Result = ({ options }) => {
-	// const data = {
-	// 	values: options.map(({ name, votes }) => ({x: name, y: votes}))
-	// };
-	
-	
-	// [{
-	// 	label: 'somethingA',
-	// 	values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
-	// }];
 	const total = options.reduce((sum, option) => sum + option.votes, 0);
 
 	return (
 		<table className="bar-chart">
-			{options.map(({ name, votes }) => {
-				const width = Math.max(100 * votes / total, 5);
-				return <tr key={name}>
-					<td>{name}</td>
-					<td>
-						<div style={{width: `${width}%`}}>{votes}</div>
-					</td>
-				</tr>;
-			})}
+			<tbody>
+				{options.map(({ name, votes }) => {
+					const width = Math.max(100 * votes / total, 5);
+					return <tr key={name}>
+						<td>{name}</td>
+						<td>
+							<div style={{width: `${width}%`}}>{votes}</div>
+						</td>
+					</tr>;
+				})}
+			</tbody>
 		</table>
 	);
 };

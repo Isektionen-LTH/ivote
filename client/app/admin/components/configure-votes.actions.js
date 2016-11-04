@@ -125,8 +125,13 @@ export function editOptionChanged(option, index) {
 	};
 }
 
+export const SAVE_VOTE = 'SAVE_VOTE';
+
 export function saveVote(vote) {
 	return (dispatch) => {
+		dispatch({
+			type: SAVE_VOTE
+		});
 		// Allow id = 0 (falsey)
 		const headers = new window.Headers({'Content-Type': 'application/json'});
 		if (vote.id != null) {

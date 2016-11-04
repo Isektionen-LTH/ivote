@@ -8,6 +8,7 @@ import {
 
 	ADD_NEW_VOTE,
 	EDIT_VOTE,
+	SAVE_VOTE,
 	CANCEL_EDITING,
 	ADD_EDIT_OPTION,
 
@@ -22,7 +23,8 @@ function editing(state = null, action) {
 		return {title: '', options: ['', '']};
 	case EDIT_VOTE:
 		return action.vote;
-	case CANCEL_EDITING:
+	case CANCEL_EDITING: // Fallthrough
+	case SAVE_VOTE:
 		return null;
 	case ADD_EDIT_OPTION:
 		return {

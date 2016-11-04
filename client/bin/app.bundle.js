@@ -48624,8 +48624,13 @@
 		};
 	}
 	
+	var SAVE_VOTE = exports.SAVE_VOTE = 'SAVE_VOTE';
+	
 	function saveVote(vote) {
 		return function (dispatch) {
+			dispatch({
+				type: SAVE_VOTE
+			});
 			// Allow id = 0 (falsey)
 			var headers = new window.Headers({ 'Content-Type': 'application/json' });
 			if (vote.id != null) {
@@ -48677,7 +48682,8 @@
 				return { title: '', options: ['', ''] };
 			case _configureVotes.EDIT_VOTE:
 				return action.vote;
-			case _configureVotes.CANCEL_EDITING:
+			case _configureVotes.CANCEL_EDITING: // Fallthrough
+			case _configureVotes.SAVE_VOTE:
 				return null;
 			case _configureVotes.ADD_EDIT_OPTION:
 				return _extends({}, state, {
@@ -48990,15 +48996,6 @@
 	var Result = function Result(_ref4) {
 		var options = _ref4.options;
 	
-		// const data = {
-		// 	values: options.map(({ name, votes }) => ({x: name, y: votes}))
-		// };
-	
-	
-		// [{
-		// 	label: 'somethingA',
-		// 	values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
-		// }];
 		var total = options.reduce(function (sum, option) {
 			return sum + option.votes;
 		}, 0);
@@ -49006,30 +49003,34 @@
 		return _react2.default.createElement(
 			'table',
 			{ className: 'bar-chart' },
-			options.map(function (_ref5) {
-				var name = _ref5.name,
-				    votes = _ref5.votes;
+			_react2.default.createElement(
+				'tbody',
+				null,
+				options.map(function (_ref5) {
+					var name = _ref5.name,
+					    votes = _ref5.votes;
 	
-				var width = Math.max(100 * votes / total, 5);
-				return _react2.default.createElement(
-					'tr',
-					{ key: name },
-					_react2.default.createElement(
-						'td',
-						null,
-						name
-					),
-					_react2.default.createElement(
-						'td',
-						null,
+					var width = Math.max(100 * votes / total, 5);
+					return _react2.default.createElement(
+						'tr',
+						{ key: name },
 						_react2.default.createElement(
-							'div',
-							{ style: { width: width + '%' } },
-							votes
+							'td',
+							null,
+							name
+						),
+						_react2.default.createElement(
+							'td',
+							null,
+							_react2.default.createElement(
+								'div',
+								{ style: { width: width + '%' } },
+								votes
+							)
 						)
-					)
-				);
-			})
+					);
+				})
+			)
 		);
 	};
 	
