@@ -1,24 +1,16 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var mongo = require('mongodb');
-var nodemailer = require('nodemailer');
-var MongoClient = mongo.MongoClient;
-var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
-
+var mail = require('./app/mail.js');
 var db;
 var validCodes = ['123', 'hej'];
 var adminPassword = 'hej123';
 
+var MongoClient = mongo.MongoClient;
+var app = express();
 var router = express.Router();
-app.use('/sayHello', router);
-router.post('/', handleSayHello);
-
-function handleSayHello() {
-  console.log("hej");
-
-}
 
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/client/index.html');
@@ -30,6 +22,7 @@ app.use(bodyParser.json());
 
 server.listen(8080, '0.0.0.0', function () {
 
+  mail("kristoffer.ipod@gmail.com");
   console.log('Lyssnar');
 
   MongoClient.connect('mongodb://kristoffer:evote@ds035036.mlab.com:35036/ivote', function(err, database) {
@@ -170,32 +163,6 @@ function returnVotesAdmin(res){
     res.send(votes);
 
   });
-}
-
-function mail() {
-  var transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-            user: 'kristoffer.nordstrom@isek.se', // Your email id
-            pass: '****' // Your password
-        }
-    });
-
-    var mailOptions = {
-      from: 'kristoffer.nordstrom@isek.se', // sender address
-      to: 'johnrappfarnes@gmail.com', // list of receivers
-      subject: 'Email Example', // Subject line
-      text: "hej" //, // plaintext body
-      // html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
-    };
-
-    transporter.sendMail(mailOptions, function(error, info){
-      if(error){
-          console.log(error);
-      }else{
-          console.log('Message sent: ' + info.response);
-      }
-    });
 }
 
 //app.use(express.static('/'));
@@ -363,7 +330,6 @@ app.post('/admin/vote/new', function (req, res, next) {
 
 app.put('/admin/vote/:id', function(req, res) {
   //Går endast att ändra om röstning ej skett, dvs isActive == null
-  console.log(req.body);
   db.collection('votes').update({$and: [{_id: mongo.ObjectId(req.body.id)}, {isActive: null}]}, {$set: {title: req.body.title, options: req.body.options.map(function(option) {
     return {title: option, numberOfVotes: 0};
   })}}, function(err, doc) {
