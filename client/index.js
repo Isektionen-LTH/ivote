@@ -21,12 +21,6 @@ http.listen(port, function() {
 
 app.get('/admin/votes', function(req, res) {
 	setTimeout(function() {
-		res.sendFile(path.resolve(__dirname, 'mock-data/admin.json'));
-	}, 500);
-});
-
-app.get('/admin/vote/cancelcurrent', function(req, res) {
-	setTimeout(function() {
 		res.sendFile(path.resolve(__dirname, 'mock-data/admin.votes.json'));
 	}, 500);
 });

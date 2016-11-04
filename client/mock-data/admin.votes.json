@@ -2,35 +2,35 @@
     "id": 1,
     "title": "Ordförande",
     "options": ["Kristoffer", "John"],
-    "isActive": "ongoing"
+    "status": "ongoing"
 }, {
     "id": 12,
     "title": "Direktör",
     "options": ["Kristoffer", "John"],
-    "isActive": "waiting"
+    "status": "waiting"
 }, {
     "id": 13,
     "title": "VD",
     "options": ["Kristoffer", "John"],
-    "isActive": "completed"
+    "status": "completed"
 }, {
     "id": 14,
     "title": "Vice VD",
     "options": ["Kristoffer", "John"],
-    "isActive": "completed"
+    "status": "completed"
 }, {
     "id": 15,
     "title": "Överphös",
     "options": ["Kristoffer", "John"],
-    "isActive": "completed"
+    "status": "completed"
 }, {
     "id": 16,
     "title": "Sexmästare",
     "options": ["Kristoffer", "John"],
-    "isActive": "completed"
+    "status": "completed"
 }, {
     "id": 17,
     "title": "Ölmästare",
     "options": ["Kristoffer", "John"],
-    "isActive": "completed"
+    "status": "completed"
 }]

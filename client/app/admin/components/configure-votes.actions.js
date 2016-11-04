@@ -63,14 +63,25 @@ export function cancelCurrent() {
 export const ADD_NEW_VOTE = 'ADD_NEW_VOTE';
 
 export function addNewVote() {
-	return editVote({});
+	return editVote(null);
 }
 
 export const EDIT_VOTE = 'EDIT_VOTE';
 
-export function editVote(vote) {
+export function editVote(id) {
+	return (dispatch, getState) => {
+		const vote = getState().votes.filter(vote => id === vote.id)[0] || {};
+		dispatch({
+			type: EDIT_VOTE,
+			vote
+		});
+	};
+}
+
+export const CANCEL_EDITING = 'CANCEL_EDITING';
+
+export function cancelEditing() {
 	return {
-		type: EDIT_VOTE,
-		vote
+		type: CANCEL_EDITING
 	};
 }

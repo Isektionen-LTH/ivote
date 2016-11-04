@@ -47884,6 +47884,7 @@
 			value: function render() {
 				var _props = this.props,
 				    votes = _props.votes,
+				    editing = _props.editing,
 				    dispatch = _props.dispatch;
 	
 	
@@ -47900,17 +47901,19 @@
 					return status === 'ongoing';
 				}).length > 0;
 	
-				return _react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(
+				var addButton = function addButton() {
+					return _react2.default.createElement(
 						_FloatingActionButton2.default,
 						{ className: 'add-vote', onTouchTap: function onTouchTap() {
 								return dispatch((0, _configureVotes.addNewVote)());
 							} },
 						_react2.default.createElement(_add2.default, null)
-					),
-					_react2.default.createElement(EditVote, null),
+					);
+				};
+				return _react2.default.createElement(
+					'div',
+					null,
+					editing === null ? addButton() : _react2.default.createElement(EditVote, null),
 					votes.map(function (_ref2) {
 						var title = _ref2.title,
 						    id = _ref2.id,
@@ -47933,7 +47936,8 @@
 	
 	var ConfigureVotes = (0, _reactRedux.connect)(function (state) {
 		return {
-			votes: state.votes
+			votes: state.votes,
+			editing: state.editing
 		};
 	})(ConfigureVotesClass);
 	
@@ -47988,6 +47992,12 @@
 			case 'completed':
 				return null;
 			case 'waiting':
+				var editButton = _react2.default.createElement(_FlatButton2.default, {
+					label: '\xC4ndra',
+					secondary: true,
+					onTouchTap: function onTouchTap() {
+						return dispatch((0, _configureVotes.editVote)(id));
+					} });
 				var deleteButton = _react2.default.createElement(_FlatButton2.default, {
 					label: 'Ta bort',
 					secondary: true,
@@ -47995,14 +48005,19 @@
 						return dispatch((0, _configureVotes.deleteVote)(id));
 					} });
 				if (existsOngoingVote) {
-					return deleteButton;
+					return _react2.default.createElement(
+						'div',
+						null,
+						deleteButton,
+						editButton
+					);
 				} else {
 					return _react2.default.createElement(
 						'div',
 						null,
 						_react2.default.createElement(_FlatButton2.default, {
 							label: 'P\xE5b\xF6rja',
-							secondary: true,
+							primary: true,
 							onTouchTap: function onTouchTap() {
 								return dispatch((0, _configureVotes.startVote)(id));
 							} }),
@@ -48015,7 +48030,8 @@
 	VoteActions = (0, _reactRedux.connect)()(VoteActions);
 	
 	var EditVote = function EditVote(_ref5) {
-		var editing = _ref5.editing;
+		var editing = _ref5.editing,
+		    dispatch = _ref5.dispatch;
 	
 		if (editing === null) {
 			return null;
@@ -48027,14 +48043,12 @@
 			_react2.default.createElement(
 				'div',
 				null,
-				_react2.default.createElement(_TextField2.default, { floatingLabelText: 'Titel', ref: function ref(el) {
-						undefined.title = el;
-					} })
+				_react2.default.createElement(_TextField2.default, { floatingLabelText: 'Titel', value: editing.title })
 			),
 			_react2.default.createElement(
 				'div',
 				null,
-				_react2.default.createElement(_TextField2.default, { floatingLabelText: 'Alternativ' })
+				_react2.default.createElement(_TextField2.default, { floatingLabelText: 'Alternativ 1' })
 			),
 			_react2.default.createElement(
 				'div',
@@ -48049,11 +48063,15 @@
 				'div',
 				{ className: 'card-actions' },
 				_react2.default.createElement(_FlatButton2.default, {
+					label: 'Avbryt',
+					secondary: true,
+					onTouchTap: function onTouchTap() {
+						return dispatch((0, _configureVotes.cancelEditing)());
+					} }),
+				_react2.default.createElement(_FlatButton2.default, {
 					label: 'L\xE4gg till',
 					primary: true,
-					onTouchTap: function onTouchTap() {
-						return undefined.addFoReal(undefined.title.input.value);
-					} })
+					onTouchTap: function onTouchTap() {} })
 			)
 		);
 	};
@@ -48519,6 +48537,7 @@
 	exports.cancelCurrent = cancelCurrent;
 	exports.addNewVote = addNewVote;
 	exports.editVote = editVote;
+	exports.cancelEditing = cancelEditing;
 	var FETCH_VOTES = exports.FETCH_VOTES = 'FETCH_VOTES';
 	
 	function fetchVotes() {
@@ -48583,15 +48602,28 @@
 	var ADD_NEW_VOTE = exports.ADD_NEW_VOTE = 'ADD_NEW_VOTE';
 	
 	function addNewVote() {
-		return editVote({});
+		return editVote(null);
 	}
 	
 	var EDIT_VOTE = exports.EDIT_VOTE = 'EDIT_VOTE';
 	
-	function editVote(vote) {
+	function editVote(id) {
+		return function (dispatch, getState) {
+			var vote = getState().votes.filter(function (vote) {
+				return id === vote.id;
+			})[0] || {};
+			dispatch({
+				type: EDIT_VOTE,
+				vote: vote
+			});
+		};
+	}
+	
+	var CANCEL_EDITING = exports.CANCEL_EDITING = 'CANCEL_EDITING';
+	
+	function cancelEditing() {
 		return {
-			type: EDIT_VOTE,
-			vote: vote
+			type: CANCEL_EDITING
 		};
 	}
 
@@ -48622,6 +48654,8 @@
 		switch (action.type) {
 			case _configureVotes.EDIT_VOTE:
 				return action.vote;
+			case _configureVotes.CANCEL_EDITING:
+				return null;
 			default:
 				return state;
 		}

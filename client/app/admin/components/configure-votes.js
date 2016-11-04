@@ -10,7 +10,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import Paper from 'material-ui/Paper';
 import CircularProgress from 'material-ui/CircularProgress';
 
-import { fetchVotes, startVote, deleteVote, cancelCurrent, addNewVote, startEditing } from './configure-votes.actions';
+import { fetchVotes, startVote, deleteVote, cancelCurrent, addNewVote, editVote, cancelEditing } from './configure-votes.actions';
 import store from './configure-votes.store';
 
 import 'whatwg-fetch';
@@ -31,7 +31,7 @@ class ConfigureVotesClass extends React.Component {
 	}
 
 	render() {
-		const { votes, dispatch } = this.props;
+		const { votes, editing, dispatch } = this.props;		
 
 		if (votes === null) {
 			return (
@@ -43,13 +43,16 @@ class ConfigureVotesClass extends React.Component {
 
 		const existsOngoingVote = votes.filter(({ status }) => status === 'ongoing').length > 0;
 
+		const addButton = () => (
+			<FloatingActionButton className="add-vote" onTouchTap={() => dispatch(addNewVote())}>
+				<ContentAdd />
+			</FloatingActionButton>
+		);
 		return (
 			<div>
-				{}
-				<FloatingActionButton className="add-vote" onTouchTap={() => dispatch(addNewVote())}>
-					<ContentAdd />
-				</FloatingActionButton>
-				<EditVote />
+				{editing === null
+					? addButton()
+					: <EditVote />}
 				{votes.map(({ title, id, options, status }) =>
 					<AdminVote
 						key={id}
@@ -67,7 +70,8 @@ class ConfigureVotesClass extends React.Component {
 const ConfigureVotes = connect(
 	(state) => {
 		return {
-			votes: state.votes
+			votes: state.votes,
+			editing: state.editing
 		};
 	}
 )(ConfigureVotesClass);
@@ -102,6 +106,12 @@ let VoteActions = ({ status, id, dispatch, existsOngoingVote }) => {
 	case 'completed':
 		return null;
 	case 'waiting':
+		const editButton = (
+			<FlatButton
+				label="Ändra"
+				secondary={true}
+				onTouchTap={() => dispatch(editVote(id))} />
+		);
 		const deleteButton = (
 			<FlatButton
 				label="Ta bort"
@@ -109,13 +119,18 @@ let VoteActions = ({ status, id, dispatch, existsOngoingVote }) => {
 				onTouchTap={() => dispatch(deleteVote(id))} />
 		);
 		if (existsOngoingVote) {
-			return deleteButton;
+			return (
+				<div>
+					{deleteButton}
+					{editButton}
+				</div>
+			);
 		} else {
 			return (
 				<div>
 					<FlatButton
 						label="Påbörja"
-						secondary={true}
+						primary={true}
 						onTouchTap={() => dispatch(startVote(id))} />
 					{deleteButton}
 				</div>
@@ -126,7 +141,7 @@ let VoteActions = ({ status, id, dispatch, existsOngoingVote }) => {
 
 VoteActions = connect()(VoteActions);
 
-let EditVote = ({ editing }) => {
+let EditVote = ({ editing, dispatch }) => {
 	if (editing === null) {
 		return null;
 	}
@@ -134,11 +149,11 @@ let EditVote = ({ editing }) => {
 	return (
 		<Paper className="card" style={{padding: 16}}>
 			<div>
-				<TextField floatingLabelText="Titel" ref={(el) => {this.title = el;}} />
+				<TextField floatingLabelText="Titel" value={editing.title} />
 			</div>
 			
 			<div>
-				<TextField floatingLabelText="Alternativ" />
+				<TextField floatingLabelText="Alternativ 1" />
 			</div>
 			<div>
 				<IconButton>
@@ -147,17 +162,19 @@ let EditVote = ({ editing }) => {
 			</div>
 			<div className="card-actions">
 				<FlatButton
+					label="Avbryt"
+					secondary={true}
+					onTouchTap={() => dispatch(cancelEditing())} />
+				<FlatButton
 					label="Lägg till"
 					primary={true}
-					onTouchTap={() => this.addFoReal(this.title.input.value)} />
+					onTouchTap={() => {}} />
 			</div>
 		</Paper>
 	);
 };
 EditVote = connect(
-	(state) => {
-		return {
-			editing: state.editing
-		};
-	}
+	(state) => ({
+		editing: state.editing
+	})
 )(EditVote);

@@ -6,13 +6,16 @@ import {
 	REQUEST_VOTES,
 	RECIEVE_VOTES,
 
-	EDIT_VOTE
+	EDIT_VOTE,
+	CANCEL_EDITING
 } from './configure-votes.actions';
 
 function editing(state = null, action) {
 	switch (action.type) {
 	case EDIT_VOTE:
 		return action.vote;
+	case CANCEL_EDITING:
+		return null;
 	default:
 		return state;
 	}
