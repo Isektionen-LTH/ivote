@@ -47952,10 +47952,21 @@
 		    id = _ref3.id,
 		    existsOngoingVote = _ref3.existsOngoingVote;
 	
+		var subtitle = function subtitle() {
+			switch (status) {
+				case 'ongoing':
+					return 'Pågående';
+				case 'completed':
+					return 'Avslutad';
+				case 'waiting':
+					return 'Inaktiv';
+			}
+		};
+	
 		return _react2.default.createElement(
 			_Card.Card,
 			{ className: 'card' },
-			_react2.default.createElement(_Card.CardTitle, { title: title, subtitle: status }),
+			_react2.default.createElement(_Card.CardTitle, { title: title, subtitle: subtitle() }),
 			_react2.default.createElement(
 				_Card.CardText,
 				null,
@@ -48072,12 +48083,18 @@
 				'div',
 				null,
 				_react2.default.createElement(_TextField2.default, {
-					floatingLabelText: 'Titel',
+					hintText: 'Titel',
 					value: title,
 					tabIndex: -1,
+					className: 'big-textfield',
 					onChange: function onChange(e) {
 						return dispatch((0, _configureVotes.editTitleChanged)(e.target.value));
 					} })
+			),
+			_react2.default.createElement(
+				'div',
+				{ className: 'subtitle' },
+				id ? 'Ändra omröstning' : 'Ny omröstning'
 			),
 			_react2.default.createElement(
 				'div',

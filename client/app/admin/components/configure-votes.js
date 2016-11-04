@@ -92,9 +92,21 @@ const ConfigureVotes = connect(
 )(ConfigureVotesClass);
 
 const AdminVote = ({ title, options, status, id, existsOngoingVote }) => {
+	const subtitle = () => {
+		switch (status) {
+		case 'ongoing':
+			return 'Pågående';
+		case 'completed':
+			return 'Avslutad';
+		case 'waiting':
+			return 'Inaktiv';
+		}
+	};
+	
+
 	return (
 		<Card className="card">
-			<CardTitle title={title} subtitle={status} />
+			<CardTitle title={title} subtitle={subtitle()} />
 			<CardText>
 			<div>
 				{options.map((name => 
@@ -178,11 +190,13 @@ let EditVote = ({ editing, dispatch }) => {
 		<Paper className="card" style={{padding: 16}}>
 			<div>
 				<TextField
-					floatingLabelText="Titel"
+					hintText="Titel"
 					value={title}
 					tabIndex={-1}
+					className="big-textfield"
 					onChange={(e) => dispatch(editTitleChanged(e.target.value))}/>
 			</div>
+			<div className="subtitle">{id ? 'Ändra omröstning' : 'Ny omröstning'}</div>
 			
 			<div>
 				{options.map((option, i) =>
