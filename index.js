@@ -8,6 +8,8 @@ var mail = require('./app/mail.js');
 var db;
 var validCodes = ['123', 'hej'];
 var adminPassword = 'hej123';
+var cookieParser = require('cookie-parser');
+var login = require('login');
 
 var MongoClient = mongo.MongoClient;
 
@@ -20,6 +22,10 @@ app.get('/', function (req, res) {
 app.use(express.static(__dirname));
 app.use(require('cors')());
 app.use(bodyParser.json());
+app.use(cookieParser());
+
+app.use(login.auth);
+app.use('/login', login.router);
 
 server.listen(8080, '0.0.0.0', function () {
 
@@ -400,6 +406,17 @@ app.post('/register/user', function(req, res) {
     });
   });
 
+});
+
+app.get('/login/voter/:id', function(req, res){
+  validateUser(req.params.id, function(valid){
+    if(valid){
+      res.cookie('ivote', req.params.id).send('Cookie is sent');
+      res.sendFile(__dirname + '/client/index.html');
+    } else {
+      res.send('fel lösenord');
+    }
+  });
 });
 
 app.get('*', function (req, res) {
