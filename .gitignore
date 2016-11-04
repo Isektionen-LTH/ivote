@@ -40,3 +40,4 @@ client/node_modules
 client/typings
 
 mail-password.txt
+credentials.json
