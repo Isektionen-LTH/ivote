@@ -9,7 +9,7 @@ var db;
 var validCodes = ['123', 'hej'];
 var adminPassword = 'hej123';
 var cookieParser = require('cookie-parser');
-var login = require('login');
+var login = require('./app/login');
 
 var MongoClient = mongo.MongoClient;
 
@@ -26,6 +26,16 @@ app.use(cookieParser());
 
 app.use(login.auth);
 app.use('/login', login.router);
+
+app.use(function(req, res, next) {
+  validateUser(req.userId, function(exists) {
+    if(!exists) {
+      req.userId = null;
+      req.role = null;
+      next();
+    }
+  })
+})
 
 server.listen(8080, '0.0.0.0', function () {
 

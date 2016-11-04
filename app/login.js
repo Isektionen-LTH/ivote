@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const credentials = require('./credentials.json');
+const credentials = require('../credentials.json');
 const salt = 'ivote';
 
 router.get('/voter/:id', function(req, res) {
@@ -25,10 +25,11 @@ router.get('/register', function(req, res) {
 	} else {
 		res.redirect('/login/register');
 	}
-	
+
 });
 
 function auth(req, res, next) {
+	if (!req.cookie) { return next(); }
 	if(req.cookie.voteId) {
 		req.voteId = req.cookie.voteId;
 		req.role = 'voter';
