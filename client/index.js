@@ -15,12 +15,14 @@ app.get('/app.bundle.js.map', function(req, res) {
 	res.sendFile(path.resolve(__dirname, 'bin', 'app.bundle.js.map'));
 });
 
-app.get('*', function(req, res) {
-	res.sendFile(path.resolve(__dirname, 'index.html'));
-});
-
 http.listen(port, function() {
 	console.log(`Server started on port ${port}`);
+});
+
+app.get('/admin/votes', function(req, res) {
+	setTimeout(function() {
+		res.sendFile(path.resolve(__dirname, 'mock-data/admin.json'));
+	}, 500);
 });
 
 io.on('connection', function(socket) {
@@ -103,4 +105,8 @@ io.on('connection', function(socket) {
 		]);
 	});
 	
+});
+
+app.get('*', function(req, res) {
+	res.sendFile(path.resolve(__dirname, 'index.html'));
 });

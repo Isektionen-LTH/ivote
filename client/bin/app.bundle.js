@@ -541,10 +541,6 @@
 	
 	var _reactTapEventPlugin2 = _interopRequireDefault(_reactTapEventPlugin);
 	
-	var _fetchMock = __webpack_require__(523);
-	
-	var _fetchMock2 = _interopRequireDefault(_fetchMock);
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -582,28 +578,26 @@
 	// http://stackoverflow.com/a/34015469/988941
 	(0, _reactTapEventPlugin2.default)();
 	
-	_fetchMock2.default.get('/currentvote', new Promise(function (resolve) {
-		setTimeout(function () {
-			return resolve({
-				currentState: 'voting',
-				currentVote: {
-					title: 'I-sektionens VD',
-					options: ['John', 'Kristoffer']
-				}
-			});
-		}, 300);
-	}));
+	// import fetchMock from 'fetch-mock';
 	
-	_fetchMock2.default.post('/vote', function (url, options) {
-		console.log('voted for', options.body);
-		return new Promise(function (resolve) {
-			setTimeout(function () {
-				return resolve({
-					currentState: 'voted'
-				});
-			}, 500);
-		});
-	});
+	// fetchMock.get('/currentvote', new Promise((resolve) => {
+	// 	setTimeout(() => resolve({
+	// 		currentState: 'voting',
+	// 		currentVote: {
+	// 			title: 'I-sektionens VD',
+	// 			options: ['John', 'Kristoffer']
+	// 		}
+	// 	}), 300);
+	// }));
+	
+	// fetchMock.post('/vote', function(url, options) {
+	// 	console.log('voted for', options.body);
+	// 	return new Promise((resolve) => {
+	// 		setTimeout(() => resolve({
+	// 			currentState: 'voted'
+	// 		}), 500);
+	// 	});
+	// });
 	
 	_reactDom2.default.render(_react2.default.createElement(
 		_MuiThemeProvider2.default,
@@ -47763,7 +47757,7 @@
 	
 	var _AppBar2 = _interopRequireDefault(_AppBar);
 	
-	var _configureVotes = __webpack_require__(510);
+	var _configureVotes = __webpack_require__(606);
 	
 	var _configureVotes2 = _interopRequireDefault(_configureVotes);
 	
@@ -47800,208 +47794,7 @@
 	exports.default = route;
 
 /***/ },
-/* 510 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(3);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _TextField = __webpack_require__(494);
-	
-	var _TextField2 = _interopRequireDefault(_TextField);
-	
-	var _IconButton = __webpack_require__(469);
-	
-	var _IconButton2 = _interopRequireDefault(_IconButton);
-	
-	var _FlatButton = __webpack_require__(456);
-	
-	var _FlatButton2 = _interopRequireDefault(_FlatButton);
-	
-	var _Card = __webpack_require__(464);
-	
-	var _FloatingActionButton = __webpack_require__(511);
-	
-	var _FloatingActionButton2 = _interopRequireDefault(_FloatingActionButton);
-	
-	var _add = __webpack_require__(513);
-	
-	var _add2 = _interopRequireDefault(_add);
-	
-	var _Paper = __webpack_require__(439);
-	
-	var _Paper2 = _interopRequireDefault(_Paper);
-	
-	__webpack_require__(1);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var Admin = function (_React$Component) {
-		_inherits(Admin, _React$Component);
-	
-		function Admin(props) {
-			_classCallCheck(this, Admin);
-	
-			var _this = _possibleConstructorReturn(this, (Admin.__proto__ || Object.getPrototypeOf(Admin)).call(this, props));
-	
-			_this.state = {
-				votes: [{ title: 'Ordförande', result: null }, { title: 'Överphös', result: 'Adhara' }, { title: 'Sexmästare', result: 'Sofia' }],
-				editing: false
-			};
-	
-			_this.onAdd = _this.onAdd.bind(_this);
-			_this.addFoReal = _this.addFoReal.bind(_this);
-			return _this;
-		}
-	
-		_createClass(Admin, [{
-			key: 'cancelVote',
-			value: function cancelVote(vote) {
-				this.setState({
-					votes: this.state.votes.filter(function (v) {
-						return v !== vote;
-					})
-				});
-			}
-		}, {
-			key: 'onAdd',
-			value: function onAdd() {
-	
-				this.setState({
-					editing: true
-				});
-			}
-		}, {
-			key: 'addFoReal',
-			value: function addFoReal(title) {
-				this.setState({
-					votes: [{ title: title, result: null }].concat(this.state.votes)
-				});
-	
-				this.setState({
-					editing: false
-				});
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _this2 = this;
-	
-				var editingComponent = function editingComponent() {
-					if (_this2.state.editing) {
-						return _react2.default.createElement(
-							_Paper2.default,
-							{ className: 'card', style: { padding: 16 } },
-							_react2.default.createElement(
-								'div',
-								null,
-								_react2.default.createElement(_TextField2.default, { floatingLabelText: 'Titel', ref: function ref(el) {
-										_this2.title = el;
-									} })
-							),
-							_react2.default.createElement(
-								'div',
-								null,
-								_react2.default.createElement(_TextField2.default, { floatingLabelText: 'Alternativ' })
-							),
-							_react2.default.createElement(
-								'div',
-								null,
-								_react2.default.createElement(
-									_IconButton2.default,
-									null,
-									_react2.default.createElement(_add2.default, null)
-								)
-							),
-							_react2.default.createElement(
-								'div',
-								{ className: 'card-actions' },
-								_react2.default.createElement(_FlatButton2.default, {
-									label: 'L\xE4gg till',
-									primary: true,
-									onTouchTap: function onTouchTap() {
-										return _this2.addFoReal(_this2.title.input.value);
-									} })
-							)
-						);
-					}
-				};
-				return _react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(
-						_FloatingActionButton2.default,
-						{ className: 'add-vote', onTouchTap: this.onAdd },
-						_react2.default.createElement(_add2.default, null)
-					),
-					editingComponent(),
-					this.state.votes.map(function (vote) {
-						return _react2.default.createElement(AdminVote, { key: vote.title, title: vote.title, result: vote.result, onCancel: function onCancel() {
-								return _this2.cancelVote(vote);
-							} });
-					})
-				);
-			}
-		}]);
-	
-		return Admin;
-	}(_react2.default.Component);
-	// : <OngoingVote voted={0} total={1}></OngoingVote>}
-	
-	
-	exports.default = Admin;
-	var AdminVote = function AdminVote(_ref) {
-		var title = _ref.title,
-		    result = _ref.result;
-	
-		return _react2.default.createElement(
-			_Card.Card,
-			{ className: 'card' },
-			_react2.default.createElement(_Card.CardTitle, { title: title, subtitle: 'AKA bäst på isek' }),
-			_react2.default.createElement(
-				_Card.CardText,
-				null,
-				_react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(
-						'div',
-						null,
-						'Resultat: ',
-						result
-					)
-				)
-			),
-			_react2.default.createElement(
-				_Card.CardActions,
-				null,
-				result ? _react2.default.createElement(_FlatButton2.default, {
-					label: 'Ta bort',
-					secondary: true,
-					onTouchTap: function onTouchTap() {} }) : _react2.default.createElement(_FlatButton2.default, {
-					label: 'Avsluta',
-					primary: true,
-					onTouchTap: function onTouchTap() {} })
-			)
-		);
-	};
-
-/***/ },
+/* 510 */,
 /* 511 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -48713,6 +48506,7 @@
 		var total = options.reduce(function (sum, option) {
 			return sum + option.votes;
 		}, 0);
+	
 		return _react2.default.createElement(
 			'table',
 			{ className: 'bar-chart' },
@@ -49113,567 +48907,10 @@
 	module.exports = keyOf;
 
 /***/ },
-/* 523 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var fetchMock = __webpack_require__(524);
-	var statusTextMap = __webpack_require__(526);
-	var theGlobal = typeof window !== 'undefined' ? window : self;
-	
-	module.exports = fetchMock({
-		global: theGlobal,
-		Request: theGlobal.Request,
-		Response: theGlobal.Response,
-		Headers: theGlobal.Headers,
-		statusTextMap: statusTextMap
-	});
-
-/***/ },
-/* 524 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var compileRoute = __webpack_require__(525);
-	
-	var FetchMock = function () {
-		function FetchMock(opts) {
-			_classCallCheck(this, FetchMock);
-	
-			this.config = {
-				sendAsJson: true
-			};
-			this.Headers = opts.Headers;
-			this.Request = opts.Request;
-			this.Response = opts.Response;
-			this.stream = opts.stream;
-			this.global = opts.global;
-			this.statusTextMap = opts.statusTextMap;
-			this.routes = [];
-			this._calls = {};
-			this._matchedCalls = [];
-			this._unmatchedCalls = [];
-			this.fetchMock = this.fetchMock.bind(this);
-			this.restore = this.restore.bind(this);
-			this.reset = this.reset.bind(this);
-		}
-	
-		_createClass(FetchMock, [{
-			key: 'mock',
-			value: function mock(matcher, response, options) {
-	
-				var route = void 0;
-	
-				// Handle the variety of parameters accepted by mock (see README)
-	
-				// Old method matching signature
-				if (options && /^[A-Z]+$/.test(response)) {
-					throw new Error('The API for method matching has changed.\n\t\t\t\tNow use .get(), .post(), .put(), .delete() and .head() shorthand methods,\n\t\t\t\tor pass in, e.g. {method: \'PATCH\'} as a third paramter');
-				} else if (options) {
-					route = _extends({
-						matcher: matcher,
-						response: response
-					}, options);
-				} else if (matcher && response) {
-					route = {
-						matcher: matcher,
-						response: response
-					};
-				} else if (matcher && matcher.matcher) {
-					route = matcher;
-				} else {
-					throw new Error('Invalid parameters passed to fetch-mock');
-				}
-	
-				this.addRoute(route);
-	
-				return this._mock();
-			}
-		}, {
-			key: 'once',
-			value: function once(matcher, response, options) {
-				return this.mock(matcher, response, _extends({}, options, { times: 1 }));
-			}
-		}, {
-			key: '_mock',
-			value: function _mock() {
-				// Do this here rather than in the constructor to ensure it's scoped to the test
-				this.realFetch = this.realFetch || this.global.fetch;
-				this.global.fetch = this.fetchMock;
-				return this;
-			}
-		}, {
-			key: '_unMock',
-			value: function _unMock() {
-				if (this.realFetch) {
-					this.global.fetch = this.realFetch;
-					this.realFetch = null;
-				}
-				this.fallbackResponse = null;
-				return this;
-			}
-		}, {
-			key: 'catch',
-			value: function _catch(response) {
-				if (this.fallbackResponse) {
-					console.warn('calling fetchMock.catch() twice - are you sure you want to overwrite the previous fallback response');
-				}
-				this.fallbackResponse = response || 'ok';
-				return this._mock();
-			}
-		}, {
-			key: 'spy',
-			value: function spy() {
-				this._mock();
-				return this.catch(this.realFetch);
-			}
-		}, {
-			key: 'fetchMock',
-			value: function fetchMock(url, opts) {
-				var _this = this;
-	
-				var response = this.router(url, opts);
-	
-				if (!response) {
-					console.warn('unmatched call to ' + url);
-					this.push(null, [url, opts]);
-	
-					if (this.fallbackResponse) {
-						response = this.fallbackResponse;
-					} else {
-						throw new Error('unmatched call to ' + url);
-					}
-				}
-	
-				if (typeof response === 'function') {
-					response = response(url, opts);
-				}
-	
-				if (typeof response.then === 'function') {
-					return response.then(function (response) {
-						return _this.mockResponse(url, response, opts);
-					});
-				} else {
-					return this.mockResponse(url, response, opts);
-				}
-			}
-		}, {
-			key: 'router',
-			value: function router(url, opts) {
-				var route = void 0;
-				for (var i = 0, il = this.routes.length; i < il; i++) {
-					route = this.routes[i];
-					if (route.matcher(url, opts)) {
-						this.push(route.name, [url, opts]);
-						return route.response;
-					}
-				}
-			}
-		}, {
-			key: 'addRoute',
-			value: function addRoute(route) {
-	
-				if (!route) {
-					throw new Error('.mock() must be passed configuration for a route');
-				}
-	
-				// Allows selective application of some of the preregistered routes
-				this.routes.push(compileRoute(route, this.Request));
-			}
-		}, {
-			key: 'mockResponse',
-			value: function mockResponse(url, responseConfig, fetchOpts) {
-				// It seems odd to call this in here even though it's already called within fetchMock
-				// It's to handle the fact that because we want to support making it very easy to add a
-				// delay to any sort of response (including responses which are defined with a function)
-				// while also allowing function responses to return a Promise for a response config.
-				if (typeof responseConfig === 'function') {
-					responseConfig = responseConfig(url, fetchOpts);
-				}
-	
-				if (this.Response.prototype.isPrototypeOf(responseConfig)) {
-					return Promise.resolve(responseConfig);
-				}
-	
-				if (responseConfig.throws) {
-					return Promise.reject(responseConfig.throws);
-				}
-	
-				if (typeof responseConfig === 'number') {
-					responseConfig = {
-						status: responseConfig
-					};
-				} else if (typeof responseConfig === 'string' || !(responseConfig.body || responseConfig.headers || responseConfig.throws || responseConfig.status)) {
-					responseConfig = {
-						body: responseConfig
-					};
-				}
-	
-				var opts = responseConfig.opts || {};
-				opts.url = url;
-				opts.sendAsJson = responseConfig.sendAsJson === undefined ? this.config.sendAsJson : responseConfig.sendAsJson;
-				if (responseConfig.status && (typeof responseConfig.status !== 'number' || parseInt(responseConfig.status, 10) !== responseConfig.status || responseConfig.status < 200 || responseConfig.status > 599)) {
-					throw new TypeError('Invalid status ' + responseConfig.status + ' passed on response object.\nTo respond with a JSON object that has status as a property assign the object to body\ne.g. {"body": {"status: "registered"}}');
-				}
-				opts.status = responseConfig.status || 200;
-				opts.statusText = this.statusTextMap['' + opts.status];
-				// The ternary operator is to cope with new Headers(undefined) throwing in Chrome
-				// https://code.google.com/p/chromium/issues/detail?id=335871
-				opts.headers = responseConfig.headers ? new this.Headers(responseConfig.headers) : new this.Headers();
-	
-				var body = responseConfig.body;
-				if (opts.sendAsJson && responseConfig.body != null && (typeof body === 'undefined' ? 'undefined' : _typeof(body)) === 'object') {
-					//eslint-disable-line
-					body = JSON.stringify(body);
-				}
-	
-				if (this.stream) {
-					var s = new this.stream.Readable();
-					if (body != null) {
-						//eslint-disable-line
-						s.push(body, 'utf-8');
-					}
-					s.push(null);
-					body = s;
-				}
-	
-				return Promise.resolve(new this.Response(body, opts));
-			}
-		}, {
-			key: 'push',
-			value: function push(name, call) {
-				if (name) {
-					this._calls[name] = this._calls[name] || [];
-					this._calls[name].push(call);
-					this._matchedCalls.push(call);
-				} else {
-					this._unmatchedCalls.push(call);
-				}
-			}
-		}, {
-			key: 'restore',
-			value: function restore() {
-				this._unMock();
-				this.reset();
-				this.routes = [];
-				return this;
-			}
-		}, {
-			key: 'reset',
-			value: function reset() {
-				this._calls = {};
-				this._matchedCalls = [];
-				this._unmatchedCalls = [];
-				this.routes.forEach(function (route) {
-					return route.reset && route.reset();
-				});
-				return this;
-			}
-		}, {
-			key: 'calls',
-			value: function calls(name) {
-				return name ? this._calls[name] || [] : {
-					matched: this._matchedCalls,
-					unmatched: this._unmatchedCalls
-				};
-			}
-		}, {
-			key: 'lastCall',
-			value: function lastCall(name) {
-				var calls = name ? this.calls(name) : this.calls().matched;
-				if (calls && calls.length) {
-					return calls[calls.length - 1];
-				} else {
-					return undefined;
-				}
-			}
-		}, {
-			key: 'lastUrl',
-			value: function lastUrl(name) {
-				var call = this.lastCall(name);
-				return call && call[0];
-			}
-		}, {
-			key: 'lastOptions',
-			value: function lastOptions(name) {
-				var call = this.lastCall(name);
-				return call && call[1];
-			}
-		}, {
-			key: 'called',
-			value: function called(name) {
-				if (!name) {
-					return !!(this._matchedCalls.length || this._unmatchedCalls.length);
-				}
-				return !!(this._calls[name] && this._calls[name].length);
-			}
-		}, {
-			key: 'done',
-			value: function done(name) {
-				var _this2 = this;
-	
-				var names = name ? [name] : this.routes.map(function (r) {
-					return r.name;
-				});
-				// Ideally would use array.every, but not widely supported
-				return names.map(function (name) {
-					if (!_this2.called(name)) {
-						return false;
-					}
-					// would use array.find... but again not so widely supported
-					var expectedTimes = (_this2.routes.filter(function (r) {
-						return r.name === name;
-					}) || [{}])[0].times;
-					return !expectedTimes || expectedTimes <= _this2.calls(name).length;
-				}).filter(function (bool) {
-					return !bool;
-				}).length === 0;
-			}
-		}, {
-			key: 'configure',
-			value: function configure(opts) {
-				_extends(this.config, opts);
-			}
-		}]);
-	
-		return FetchMock;
-	}();
-	
-	['get', 'post', 'put', 'delete', 'head', 'patch'].forEach(function (method) {
-		FetchMock.prototype[method] = function (matcher, response, options) {
-			return this.mock(matcher, response, _extends({}, options, { method: method.toUpperCase() }));
-		};
-		FetchMock.prototype[method + 'Once'] = function (matcher, response, options) {
-			return this.once(matcher, response, _extends({}, options, { method: method.toUpperCase() }));
-		};
-	});
-	
-	module.exports = function (opts) {
-		return new FetchMock(opts);
-	};
-
-/***/ },
-/* 525 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
-	function getHeaderMatcher(expectedHeaders) {
-		var expectation = Object.keys(expectedHeaders).map(function (k) {
-			return { key: k.toLowerCase(), val: expectedHeaders[k] };
-		});
-		return function (headers) {
-			if (!headers) {
-				headers = {};
-			}
-			var lowerCaseHeaders = Object.keys(headers).reduce(function (obj, k) {
-				obj[k.toLowerCase()] = headers[k];
-				return obj;
-			}, {});
-			return expectation.every(function (header) {
-				return lowerCaseHeaders[header.key] === header.val;
-			});
-		};
-	}
-	
-	function normalizeRequest(url, options, Request) {
-		if (Request.prototype.isPrototypeOf(url)) {
-			return {
-				url: url.url,
-				method: url.method,
-				headers: function () {
-					var headers = {};
-					url.headers.forEach(function (name) {
-						return headers[name] = url.headers.name;
-					});
-					return headers;
-				}()
-			};
-		} else {
-			return {
-				url: url,
-				method: options && options.method || 'GET',
-				headers: options && options.headers
-			};
-		}
-	}
-	
-	module.exports = function (route, Request) {
-		route = _extends({}, route);
-	
-		if (typeof route.response === 'undefined') {
-			throw new Error('Each route must define a response');
-		}
-	
-		if (!route.matcher) {
-			throw new Error('each route must specify a string, regex or function to match calls to fetch');
-		}
-	
-		if (!route.name) {
-			route.name = route.matcher.toString();
-			route.__unnamed = true;
-		}
-	
-		// If user has provided a function as a matcher we assume they are handling all the
-		// matching logic they need
-		if (typeof route.matcher === 'function') {
-			return route;
-		}
-	
-		var expectedMethod = route.method && route.method.toLowerCase();
-	
-		function matchMethod(method) {
-			return !expectedMethod || expectedMethod === (method ? method.toLowerCase() : 'get');
-		};
-	
-		var matchHeaders = route.headers ? getHeaderMatcher(route.headers) : function () {
-			return true;
-		};
-	
-		var matchUrl = void 0;
-	
-		if (typeof route.matcher === 'string') {
-	
-			if (route.matcher === '*') {
-				matchUrl = function matchUrl() {
-					return true;
-				};
-			} else if (route.matcher.indexOf('^') === 0) {
-				(function () {
-					var expectedUrl = route.matcher.substr(1);
-					matchUrl = function matchUrl(url) {
-						return url.indexOf(expectedUrl) === 0;
-					};
-				})();
-			} else {
-				(function () {
-					var expectedUrl = route.matcher;
-					matchUrl = function matchUrl(url) {
-						return url === expectedUrl;
-					};
-				})();
-			}
-		} else if (route.matcher instanceof RegExp) {
-			(function () {
-				var urlRX = route.matcher;
-				matchUrl = function matchUrl(url) {
-					return urlRX.test(url);
-				};
-			})();
-		}
-	
-		var matcher = function matcher(url, options) {
-			var req = normalizeRequest(url, options, Request);
-			return matchHeaders(req.headers) && matchMethod(req.method) && matchUrl(req.url);
-		};
-	
-		if (route.times) {
-			(function () {
-				var timesLeft = route.times;
-				route.matcher = function (url, options) {
-					var match = timesLeft && matcher(url, options);
-					if (match) {
-						timesLeft--;
-						return true;
-					}
-				};
-				route.reset = function () {
-					return timesLeft = route.times;
-				};
-			})();
-		} else {
-			route.matcher = matcher;
-		}
-	
-		return route;
-	};
-
-/***/ },
-/* 526 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	var statusTextMap = {
-	  '100': 'Continue',
-	  '101': 'Switching Protocols',
-	  '102': 'Processing',
-	  '200': 'OK',
-	  '201': 'Created',
-	  '202': 'Accepted',
-	  '203': 'Non-Authoritative Information',
-	  '204': 'No Content',
-	  '205': 'Reset Content',
-	  '206': 'Partial Content',
-	  '207': 'Multi-Status',
-	  '208': 'Already Reported',
-	  '226': 'IM Used',
-	  '300': 'Multiple Choices',
-	  '301': 'Moved Permanently',
-	  '302': 'Found',
-	  '303': 'See Other',
-	  '304': 'Not Modified',
-	  '305': 'Use Proxy',
-	  '307': 'Temporary Redirect',
-	  '308': 'Permanent Redirect',
-	  '400': 'Bad Request',
-	  '401': 'Unauthorized',
-	  '402': 'Payment Required',
-	  '403': 'Forbidden',
-	  '404': 'Not Found',
-	  '405': 'Method Not Allowed',
-	  '406': 'Not Acceptable',
-	  '407': 'Proxy Authentication Required',
-	  '408': 'Request Timeout',
-	  '409': 'Conflict',
-	  '410': 'Gone',
-	  '411': 'Length Required',
-	  '412': 'Precondition Failed',
-	  '413': 'Payload Too Large',
-	  '414': 'URI Too Long',
-	  '415': 'Unsupported Media Type',
-	  '416': 'Range Not Satisfiable',
-	  '417': 'Expectation Failed',
-	  '418': 'I\'m a teapot',
-	  '421': 'Misdirected Request',
-	  '422': 'Unprocessable Entity',
-	  '423': 'Locked',
-	  '424': 'Failed Dependency',
-	  '425': 'Unordered Collection',
-	  '426': 'Upgrade Required',
-	  '428': 'Precondition Required',
-	  '429': 'Too Many Requests',
-	  '431': 'Request Header Fields Too Large',
-	  '451': 'Unavailable For Legal Reasons',
-	  '500': 'Internal Server Error',
-	  '501': 'Not Implemented',
-	  '502': 'Bad Gateway',
-	  '503': 'Service Unavailable',
-	  '504': 'Gateway Timeout',
-	  '505': 'HTTP Version Not Supported',
-	  '506': 'Variant Also Negotiates',
-	  '507': 'Insufficient Storage',
-	  '508': 'Loop Detected',
-	  '509': 'Bandwidth Limit Exceeded',
-	  '510': 'Not Extended',
-	  '511': 'Network Authentication Required'
-	};
-	
-	module.exports = statusTextMap;
-
-/***/ },
+/* 523 */,
+/* 524 */,
+/* 525 */,
+/* 526 */,
 /* 527 */,
 /* 528 */,
 /* 529 */,
@@ -49787,6 +49024,370 @@
 	var reducer = (0, _redux.combineReducers)({
 		results: results
 	});
+	
+	var store = (0, _redux.createStore)(reducer, (0, _redux.applyMiddleware)(_reduxThunk2.default
+	// , createLogger()
+	));
+	
+	exports.default = store;
+
+/***/ },
+/* 585 */,
+/* 586 */,
+/* 587 */,
+/* 588 */,
+/* 589 */,
+/* 590 */,
+/* 591 */,
+/* 592 */,
+/* 593 */,
+/* 594 */,
+/* 595 */,
+/* 596 */,
+/* 597 */,
+/* 598 */,
+/* 599 */,
+/* 600 */,
+/* 601 */,
+/* 602 */,
+/* 603 */,
+/* 604 */,
+/* 605 */,
+/* 606 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	exports.default = ConfigureVotesRoute;
+	
+	var _react = __webpack_require__(3);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(383);
+	
+	var _TextField = __webpack_require__(494);
+	
+	var _TextField2 = _interopRequireDefault(_TextField);
+	
+	var _IconButton = __webpack_require__(469);
+	
+	var _IconButton2 = _interopRequireDefault(_IconButton);
+	
+	var _FlatButton = __webpack_require__(456);
+	
+	var _FlatButton2 = _interopRequireDefault(_FlatButton);
+	
+	var _Card = __webpack_require__(464);
+	
+	var _FloatingActionButton = __webpack_require__(511);
+	
+	var _FloatingActionButton2 = _interopRequireDefault(_FloatingActionButton);
+	
+	var _add = __webpack_require__(513);
+	
+	var _add2 = _interopRequireDefault(_add);
+	
+	var _Paper = __webpack_require__(439);
+	
+	var _Paper2 = _interopRequireDefault(_Paper);
+	
+	var _CircularProgress = __webpack_require__(481);
+	
+	var _CircularProgress2 = _interopRequireDefault(_CircularProgress);
+	
+	var _configureVotes = __webpack_require__(607);
+	
+	var _configureVotes2 = __webpack_require__(608);
+	
+	var _configureVotes3 = _interopRequireDefault(_configureVotes2);
+	
+	__webpack_require__(1);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	function ConfigureVotesRoute() {
+	
+		return _react2.default.createElement(
+			_reactRedux.Provider,
+			{ store: _configureVotes3.default },
+			_react2.default.createElement(ConfigureVotes, null)
+		);
+	}
+	
+	var ConfigureVotesClass = function (_React$Component) {
+		_inherits(ConfigureVotesClass, _React$Component);
+	
+		function ConfigureVotesClass() {
+			_classCallCheck(this, ConfigureVotesClass);
+	
+			return _possibleConstructorReturn(this, (ConfigureVotesClass.__proto__ || Object.getPrototypeOf(ConfigureVotesClass)).apply(this, arguments));
+		}
+	
+		_createClass(ConfigureVotesClass, [{
+			key: 'componentDidMount',
+			value: function componentDidMount() {
+				var dispatch = this.props.dispatch;
+	
+				dispatch((0, _configureVotes.fetchVotes)());
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var votes = this.props.votes;
+	
+	
+				if (votes === null) {
+					return _react2.default.createElement(
+						'div',
+						{ className: 'loading-container' },
+						_react2.default.createElement(_CircularProgress2.default, null)
+					);
+				}
+	
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						_FloatingActionButton2.default,
+						{ className: 'add-vote' },
+						_react2.default.createElement(_add2.default, null)
+					),
+					_react2.default.createElement(EditVote, null),
+					votes.map(function (_ref) {
+						var title = _ref.title,
+						    id = _ref.id,
+						    options = _ref.options,
+						    status = _ref.status;
+						return _react2.default.createElement(AdminVote, { key: id, title: title, options: options, status: status });
+					})
+				);
+			}
+		}]);
+	
+		return ConfigureVotesClass;
+	}(_react2.default.Component);
+	
+	var ConfigureVotes = (0, _reactRedux.connect)(function (state) {
+		return {
+			votes: state.votes
+		};
+	})(ConfigureVotesClass);
+	
+	var AdminVote = function AdminVote(_ref2) {
+		var title = _ref2.title,
+		    options = _ref2.options,
+		    status = _ref2.status;
+	
+		var buttons = function buttons() {
+			switch (status) {
+				case 'ongoing':
+					return _react2.default.createElement(_FlatButton2.default, {
+						label: 'Avsluta',
+						primary: true,
+						onTouchTap: function onTouchTap() {} });
+				case 'completed':
+					return _react2.default.createElement(_FlatButton2.default, {
+						label: 'Ta bort',
+						secondary: true,
+						onTouchTap: function onTouchTap() {} });
+				case 'waiting':
+					return _react2.default.createElement(_FlatButton2.default, {
+						label: 'Ta bort',
+						secondary: true,
+						onTouchTap: function onTouchTap() {} });
+			}
+		};
+		return _react2.default.createElement(
+			_Card.Card,
+			{ className: 'card' },
+			_react2.default.createElement(_Card.CardTitle, { title: title }),
+			_react2.default.createElement(
+				_Card.CardText,
+				null,
+				_react2.default.createElement(
+					'div',
+					null,
+					options.map(function (name) {
+						return _react2.default.createElement(
+							'div',
+							{ key: name },
+							name
+						);
+					})
+				)
+			),
+			_react2.default.createElement(
+				_Card.CardActions,
+				null,
+				buttons()
+			)
+		);
+	};
+	
+	var EditVote = function EditVote(_ref3) {
+		var editing = _ref3.editing;
+	
+		if (editing === null) {
+			return null;
+		}
+	
+		return _react2.default.createElement(
+			_Paper2.default,
+			{ className: 'card', style: { padding: 16 } },
+			_react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(_TextField2.default, { floatingLabelText: 'Titel', ref: function ref(el) {
+						undefined.title = el;
+					} })
+			),
+			_react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(_TextField2.default, { floatingLabelText: 'Alternativ' })
+			),
+			_react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					_IconButton2.default,
+					null,
+					_react2.default.createElement(_add2.default, null)
+				)
+			),
+			_react2.default.createElement(
+				'div',
+				{ className: 'card-actions' },
+				_react2.default.createElement(_FlatButton2.default, {
+					label: 'L\xE4gg till',
+					primary: true,
+					onTouchTap: function onTouchTap() {
+						return undefined.addFoReal(undefined.title.input.value);
+					} })
+			)
+		);
+	};
+	EditVote = (0, _reactRedux.connect)(function (state) {
+		return {
+			editing: state.editing
+		};
+	})(EditVote);
+
+/***/ },
+/* 607 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.setSelected = setSelected;
+	exports.fetchVotes = fetchVotes;
+	var SET_SELECTED = exports.SET_SELECTED = 'SET_SELECTED';
+	
+	function setSelected(selected) {
+		return {
+			type: SET_SELECTED,
+			selected: selected
+		};
+	}
+	
+	var FETCH_VOTES = exports.FETCH_VOTES = 'FETCH_VOTES';
+	
+	function fetchVotes() {
+		return function (dispatch) {
+			dispatch(requestVotes());
+	
+			return fetch('/admin/votes').then(function (response) {
+				return response.json();
+			}).then(function (json) {
+				dispatch(recieveVotes(json));
+			});
+		};
+	}
+	
+	var REQUEST_VOTES = exports.REQUEST_VOTES = 'REQUEST_VOTES';
+	
+	function requestVotes() {
+		return {
+			type: REQUEST_VOTES
+		};
+	}
+	
+	var RECIEVE_VOTES = exports.RECIEVE_VOTES = 'RECIEVE_VOTES';
+	
+	function recieveVotes(json) {
+		return {
+			type: RECIEVE_VOTES,
+			votes: json
+		};
+	}
+
+/***/ },
+/* 608 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _redux = __webpack_require__(390);
+	
+	var _reduxThunk = __webpack_require__(484);
+	
+	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
+	
+	var _configureVotes = __webpack_require__(607);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function editing() {
+		var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+		var action = arguments[1];
+	
+		switch (action.type) {
+			// case UPDATE_SESSION:
+			// 	return action.session;
+			default:
+				return state;
+		}
+	}
+	
+	function votes() {
+		var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+		var action = arguments[1];
+	
+		switch (action.type) {
+			case _configureVotes.REQUEST_VOTES:
+				return null;
+			case _configureVotes.RECIEVE_VOTES:
+				return action.votes;
+			default:
+				return state;
+		}
+	}
+	
+	var reducer = (0, _redux.combineReducers)({
+		editing: editing,
+		votes: votes
+	});
+	// TODO göra state till en egen istället för att ha en session
 	
 	var store = (0, _redux.createStore)(reducer, (0, _redux.applyMiddleware)(_reduxThunk2.default
 	// , createLogger()

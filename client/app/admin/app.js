@@ -8,7 +8,7 @@ import { Route, IndexRoute } from 'react-router';
 
 import AppBar from 'material-ui/AppBar';
 
-import ConfigureVotes from './configure-votes';
+import ConfigureVotes from './components/configure-votes';
 
 let AppComponent = ({ router, children }) => {
 	return (

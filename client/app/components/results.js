@@ -76,6 +76,7 @@ const Result = ({ options }) => {
 	// 	values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
 	// }];
 	const total = options.reduce((sum, option) => sum + option.votes, 0);
+
 	return (
 		<table className="bar-chart">
 			{options.map(({ name, votes }) => {

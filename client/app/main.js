@@ -29,26 +29,26 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
 
-import fetchMock from 'fetch-mock';
+// import fetchMock from 'fetch-mock';
 
-fetchMock.get('/currentvote', new Promise((resolve) => {
-	setTimeout(() => resolve({
-		currentState: 'voting',
-		currentVote: {
-			title: 'I-sektionens VD',
-			options: ['John', 'Kristoffer']
-		}
-	}), 300);
-}));
+// fetchMock.get('/currentvote', new Promise((resolve) => {
+// 	setTimeout(() => resolve({
+// 		currentState: 'voting',
+// 		currentVote: {
+// 			title: 'I-sektionens VD',
+// 			options: ['John', 'Kristoffer']
+// 		}
+// 	}), 300);
+// }));
 
-fetchMock.post('/vote', function(url, options) {
-	console.log('voted for', options.body);
-	return new Promise((resolve) => {
-		setTimeout(() => resolve({
-			currentState: 'voted'
-		}), 500);
-	});
-});
+// fetchMock.post('/vote', function(url, options) {
+// 	console.log('voted for', options.body);
+// 	return new Promise((resolve) => {
+// 		setTimeout(() => resolve({
+// 			currentState: 'voted'
+// 		}), 500);
+// 	});
+// });
 
 ReactDOM.render(
 	<MuiThemeProvider>
