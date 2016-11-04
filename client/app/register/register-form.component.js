@@ -4,26 +4,44 @@ import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 
-const RegisterForm = ({ title, selected, dispatch }) => {
-	return (
-		<Card>
-			<CardTitle title={'Registrera'} />
-			<CardText>
-			<div>
-				<TextField floatingLabelText="Namn" />
-			</div>
-			<div>
-				<TextField floatingLabelText="E-mail" />
-			</div>
-			</CardText>
-			<CardActions className="card-actions">
-				<FlatButton
-					label="Skicka"
-					primary={true}
-					onTouchTap={() => {}} />
-			</CardActions>
-		</Card>
-	);
-};
+class RegisterForm extends React.Component {
+	copnstructor(props) {
+		super(props);
+
+		this.register = this.register.bind(this);
+	}
+	register() {
+		const name = this.nameInput.input.value;
+		const email = this.emailInput.input.value;
+		window.loaction = `register/voter?name=${name}&email=${email}`;
+	}
+	render() {
+		return (
+			<Card>
+				<CardTitle title={'Registrera'} />
+				<CardText>
+				<div>
+					<TextField
+						floatingLabelText="Namn"
+						ref={(el) => this.nameInput = el} />
+				</div>
+				<div>
+					<TextField
+						floatingLabelText="E-mail"
+						type="email"
+						ref={(el) => this.emailInput = el} />
+				</div>
+				</CardText>
+				<CardActions className="card-actions">
+					<FlatButton
+						label="Skicka"
+						primary={true}
+						onTouchTap={this.register} />
+				</CardActions>
+			</Card>
+		);
+	}
+	
+}
 
 export default RegisterForm;

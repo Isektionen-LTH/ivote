@@ -49174,7 +49174,7 @@
 	
 	var _reactRouter = __webpack_require__(174);
 	
-	var _registerForm = __webpack_require__(521);
+	var _registerForm = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./register-form.component\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 	
 	var _registerForm2 = _interopRequireDefault(_registerForm);
 	
@@ -49210,68 +49210,7 @@
 	exports.default = route;
 
 /***/ },
-/* 521 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	
-	var _react = __webpack_require__(3);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _TextField = __webpack_require__(494);
-	
-	var _TextField2 = _interopRequireDefault(_TextField);
-	
-	var _FlatButton = __webpack_require__(456);
-	
-	var _FlatButton2 = _interopRequireDefault(_FlatButton);
-	
-	var _Card = __webpack_require__(464);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var RegisterForm = function RegisterForm(_ref) {
-		var title = _ref.title,
-		    selected = _ref.selected,
-		    dispatch = _ref.dispatch;
-	
-		return _react2.default.createElement(
-			_Card.Card,
-			null,
-			_react2.default.createElement(_Card.CardTitle, { title: 'Registrera' }),
-			_react2.default.createElement(
-				_Card.CardText,
-				null,
-				_react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(_TextField2.default, { floatingLabelText: 'Namn' })
-				),
-				_react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(_TextField2.default, { floatingLabelText: 'E-mail' })
-				)
-			),
-			_react2.default.createElement(
-				_Card.CardActions,
-				{ className: 'card-actions' },
-				_react2.default.createElement(_FlatButton2.default, {
-					label: 'Skicka',
-					primary: true,
-					onTouchTap: function onTouchTap() {} })
-			)
-		);
-	};
-	
-	exports.default = RegisterForm;
-
-/***/ },
+/* 521 */,
 /* 522 */
 /***/ function(module, exports, __webpack_require__) {
 

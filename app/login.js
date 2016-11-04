@@ -12,8 +12,7 @@ router.get('/voter/:id', function(req, res) {
 });
 
 router.get('/admin', function(req, res) {
-	console.log('login admin!')
-	if(matchingCredentials(req.cookie, credentials.admin)) {
+	if(matchingCredentials(req.cookies, credentials.admin)) {
 		res.redirect('/admin');
 	} else {
 		res.redirect('/login');
@@ -21,7 +20,7 @@ router.get('/admin', function(req, res) {
 })
 
 router.get('/register', function(req, res) {
-	if(matchingCredentials(req.cookie, credentials.register)) {
+	if(matchingCredentials(req.cookies, credentials.register)) {
 		res.redirect('/register');
 	} else {
 		res.redirect('/login');
@@ -30,14 +29,14 @@ router.get('/register', function(req, res) {
 });
 
 function auth(req, res, next) {
-	if (!req.cookie) { return next(); }
-	if(req.cookie.voteId) {
-		req.voteId = req.cookie.voteId;
+	if (!req.cookies) { return next(); }
+	if(req.cookies.voteId) {
+		req.voteId = req.cookies.voteId;
 		req.role = 'voter';
-	} else if(req.cookie.username && req.cookie.hash) {
-		if(matchingCredentials(req.cookie, credentials.admin)) {
+	} else if(req.cookies.username && req.cookies.hash) {
+		if(matchingCredentials(req.cookies, credentials.admin)) {
 			req.role = 'admin';
-		} else if(matchingCredentials(req.cookie, credentials.register)) {
+		} else if(matchingCredentials(req.cookies, credentials.register)) {
 			req.role = 'register';
 		}
 	}
@@ -46,7 +45,7 @@ function auth(req, res, next) {
 
 function matchingCredentials(cookie, credentials) {
 	return cookie.username === credentials.username
-		&& cookie.hash === hash(credentials.password + salt);
+		&& +cookie.hash === hash(credentials.password + salt);
 }
 
 function hash(string) {
