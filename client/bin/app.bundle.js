@@ -45325,11 +45325,6 @@
 		return function (dispatch) {
 			dispatch(requestVoteState());
 	
-			// return fetch({
-			// 	url: '/vote',
-			// 	method: 'POST',
-			// 	body: option
-			// })
 			return fetch('/vote', { method: 'POST', body: option }).then(function (response) {
 				return response.json();
 			}).then(function (json) {
@@ -47908,7 +47903,9 @@
 					null,
 					_react2.default.createElement(
 						_FloatingActionButton2.default,
-						{ className: 'add-vote' },
+						{ className: 'add-vote', onTouchTap: function onTouchTap() {
+								return console.log('Hej!');
+							} },
 						_react2.default.createElement(_add2.default, null)
 					),
 					_react2.default.createElement(EditVote, null),
@@ -47919,6 +47916,7 @@
 						    status = _ref2.status;
 						return _react2.default.createElement(AdminVote, {
 							key: id,
+							id: id,
 							title: title,
 							options: options,
 							status: status,
@@ -48544,18 +48542,7 @@
 	function recieveVotes(json) {
 		return {
 			type: RECIEVE_VOTES,
-			votes: json.map(function (_ref) {
-				var _id = _ref._id,
-				    title = _ref.title,
-				    options = _ref.options,
-				    isActive = _ref.isActive;
-				return {
-					id: _id,
-					title: title,
-					options: options,
-					status: isActive === null ? 'waiting' : isActive ? 'ongoing' : 'completed'
-				};
-			})
+			votes: json
 		};
 	}
 	

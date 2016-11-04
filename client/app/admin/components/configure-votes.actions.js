@@ -26,12 +26,7 @@ export const RECIEVE_VOTES = 'RECIEVE_VOTES';
 function recieveVotes(json) {
 	return {
 		type: RECIEVE_VOTES,
-		votes: json.map(({ _id, title, options, isActive}) => ({
-			id: _id,
-			title,
-			options,
-			status: isActive === null ? 'waiting' : isActive ? 'ongoing' : 'completed'
-		}))
+		votes: json
 	};
 }
 

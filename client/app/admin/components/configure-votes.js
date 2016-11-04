@@ -45,13 +45,14 @@ class ConfigureVotesClass extends React.Component {
 
 		return (
 			<div>
-				<FloatingActionButton className="add-vote">
+				<FloatingActionButton className="add-vote" onTouchTap={() => console.log('Hej!')}>
 					<ContentAdd />
 				</FloatingActionButton>
 				<EditVote />
 				{votes.map(({ title, id, options, status }) =>
 					<AdminVote
 						key={id}
+						id={id}
 						title={title}
 						options={options}
 						status={status}

@@ -45,11 +45,6 @@ export function sendVote(option) {
 	return (dispatch) => {
 		dispatch(requestVoteState());
 
-		// return fetch({
-		// 	url: '/vote',
-		// 	method: 'POST',
-		// 	body: option
-		// })
 		return fetch('/vote', { method: 'POST', body: option })
 		.then(response => response.json())
 		.then((json) => {
