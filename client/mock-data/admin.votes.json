@@ -1,35 +1,35 @@
 [{
-    "id": 1,
+    "_id": 1,
     "title": "Ordförande",
     "options": ["Kristoffer", "John"],
     "isActive": true
 }, {
-    "id": 12,
+    "_id": 12,
     "title": "Direktör",
     "options": ["Kristoffer", "John"],
     "isActive": null
 }, {
-    "id": 13,
+    "_id": 13,
     "title": "VD",
     "options": ["Kristoffer", "John"],
     "isActive": false
 }, {
-    "id": 14,
+    "_id": 14,
     "title": "Vice VD",
     "options": ["Kristoffer", "John"],
     "isActive": false
 }, {
-    "id": 15,
+    "_id": 15,
     "title": "Överphös",
     "options": ["Kristoffer", "John"],
     "isActive": false
 }, {
-    "id": 16,
+    "_id": 16,
     "title": "Sexmästare",
     "options": ["Kristoffer", "John"],
     "isActive": false
 }, {
-    "id": 17,
+    "_id": 17,
     "title": "Ölmästare",
     "options": ["Kristoffer", "John"],
     "isActive": false

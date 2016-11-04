@@ -529,15 +529,15 @@
 	
 	var _app4 = _interopRequireDefault(_app3);
 	
-	var _app5 = __webpack_require__(514);
+	var _app5 = __webpack_require__(516);
 	
 	var _app6 = _interopRequireDefault(_app5);
 	
-	var _results = __webpack_require__(516);
+	var _results = __webpack_require__(518);
 	
 	var _results2 = _interopRequireDefault(_results);
 	
-	var _reactTapEventPlugin = __webpack_require__(517);
+	var _reactTapEventPlugin = __webpack_require__(521);
 	
 	var _reactTapEventPlugin2 = _interopRequireDefault(_reactTapEventPlugin);
 	
@@ -47757,7 +47757,7 @@
 	
 	var _AppBar2 = _interopRequireDefault(_AppBar);
 	
-	var _configureVotes = __webpack_require__(606);
+	var _configureVotes = __webpack_require__(510);
 	
 	var _configureVotes2 = _interopRequireDefault(_configureVotes);
 	
@@ -47794,7 +47794,276 @@
 	exports.default = route;
 
 /***/ },
-/* 510 */,
+/* 510 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	exports.default = ConfigureVotesRoute;
+	
+	var _react = __webpack_require__(3);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(383);
+	
+	var _TextField = __webpack_require__(494);
+	
+	var _TextField2 = _interopRequireDefault(_TextField);
+	
+	var _IconButton = __webpack_require__(469);
+	
+	var _IconButton2 = _interopRequireDefault(_IconButton);
+	
+	var _FlatButton = __webpack_require__(456);
+	
+	var _FlatButton2 = _interopRequireDefault(_FlatButton);
+	
+	var _Card = __webpack_require__(464);
+	
+	var _FloatingActionButton = __webpack_require__(511);
+	
+	var _FloatingActionButton2 = _interopRequireDefault(_FloatingActionButton);
+	
+	var _add = __webpack_require__(513);
+	
+	var _add2 = _interopRequireDefault(_add);
+	
+	var _Paper = __webpack_require__(439);
+	
+	var _Paper2 = _interopRequireDefault(_Paper);
+	
+	var _CircularProgress = __webpack_require__(481);
+	
+	var _CircularProgress2 = _interopRequireDefault(_CircularProgress);
+	
+	var _configureVotes = __webpack_require__(514);
+	
+	var _configureVotes2 = __webpack_require__(515);
+	
+	var _configureVotes3 = _interopRequireDefault(_configureVotes2);
+	
+	__webpack_require__(1);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	function ConfigureVotesRoute() {
+	
+		return _react2.default.createElement(
+			_reactRedux.Provider,
+			{ store: _configureVotes3.default },
+			_react2.default.createElement(ConfigureVotes, null)
+		);
+	}
+	
+	var ConfigureVotesClass = function (_React$Component) {
+		_inherits(ConfigureVotesClass, _React$Component);
+	
+		function ConfigureVotesClass() {
+			_classCallCheck(this, ConfigureVotesClass);
+	
+			return _possibleConstructorReturn(this, (ConfigureVotesClass.__proto__ || Object.getPrototypeOf(ConfigureVotesClass)).apply(this, arguments));
+		}
+	
+		_createClass(ConfigureVotesClass, [{
+			key: 'componentDidMount',
+			value: function componentDidMount() {
+				var dispatch = this.props.dispatch;
+	
+				dispatch((0, _configureVotes.fetchVotes)());
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var votes = this.props.votes;
+	
+	
+				if (votes === null) {
+					return _react2.default.createElement(
+						'div',
+						{ className: 'loading-container' },
+						_react2.default.createElement(_CircularProgress2.default, null)
+					);
+				}
+	
+				var existsOngoingVote = votes.filter(function (_ref) {
+					var status = _ref.status;
+					return status === 'ongoing';
+				}).length > 0;
+	
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						_FloatingActionButton2.default,
+						{ className: 'add-vote' },
+						_react2.default.createElement(_add2.default, null)
+					),
+					_react2.default.createElement(EditVote, null),
+					votes.map(function (_ref2) {
+						var title = _ref2.title,
+						    id = _ref2.id,
+						    options = _ref2.options,
+						    status = _ref2.status;
+						return _react2.default.createElement(AdminVote, {
+							key: id,
+							title: title,
+							options: options,
+							status: status,
+							existsOngoingVote: existsOngoingVote });
+					})
+				);
+			}
+		}]);
+	
+		return ConfigureVotesClass;
+	}(_react2.default.Component);
+	
+	var ConfigureVotes = (0, _reactRedux.connect)(function (state) {
+		return {
+			votes: state.votes
+		};
+	})(ConfigureVotesClass);
+	
+	var AdminVote = function AdminVote(_ref3) {
+		var title = _ref3.title,
+		    options = _ref3.options,
+		    status = _ref3.status,
+		    id = _ref3.id,
+		    existsOngoingVote = _ref3.existsOngoingVote;
+	
+		return _react2.default.createElement(
+			_Card.Card,
+			{ className: 'card' },
+			_react2.default.createElement(_Card.CardTitle, { title: title, subtitle: status }),
+			_react2.default.createElement(
+				_Card.CardText,
+				null,
+				_react2.default.createElement(
+					'div',
+					null,
+					options.map(function (name) {
+						return _react2.default.createElement(
+							'div',
+							{ key: name },
+							name
+						);
+					})
+				)
+			),
+			_react2.default.createElement(
+				_Card.CardActions,
+				{ className: 'card-actions' },
+				_react2.default.createElement(VoteActions, { status: status, id: id, existsOngoingVote: existsOngoingVote })
+			)
+		);
+	};
+	
+	var VoteActions = function VoteActions(_ref4) {
+		var status = _ref4.status,
+		    id = _ref4.id,
+		    dispatch = _ref4.dispatch,
+		    existsOngoingVote = _ref4.existsOngoingVote;
+	
+		switch (status) {
+			case 'ongoing':
+				return _react2.default.createElement(_FlatButton2.default, {
+					label: 'Avsluta',
+					primary: true,
+					onTouchTap: function onTouchTap() {
+						return dispatch((0, _configureVotes.cancelCurrent)());
+					} });
+			case 'completed':
+				return null;
+			case 'waiting':
+				var deleteButton = _react2.default.createElement(_FlatButton2.default, {
+					label: 'Ta bort',
+					secondary: true,
+					onTouchTap: function onTouchTap() {
+						return dispatch((0, _configureVotes.deleteVote)(id));
+					} });
+				if (existsOngoingVote) {
+					return deleteButton;
+				} else {
+					return _react2.default.createElement(
+						'div',
+						null,
+						_react2.default.createElement(_FlatButton2.default, {
+							label: 'P\xE5b\xF6rja',
+							secondary: true,
+							onTouchTap: function onTouchTap() {
+								return dispatch((0, _configureVotes.startVote)(id));
+							} }),
+						deleteButton
+					);
+				}
+		}
+	};
+	
+	VoteActions = (0, _reactRedux.connect)()(VoteActions);
+	
+	var EditVote = function EditVote(_ref5) {
+		var editing = _ref5.editing;
+	
+		if (editing === null) {
+			return null;
+		}
+	
+		return _react2.default.createElement(
+			_Paper2.default,
+			{ className: 'card', style: { padding: 16 } },
+			_react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(_TextField2.default, { floatingLabelText: 'Titel', ref: function ref(el) {
+						undefined.title = el;
+					} })
+			),
+			_react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(_TextField2.default, { floatingLabelText: 'Alternativ' })
+			),
+			_react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					_IconButton2.default,
+					null,
+					_react2.default.createElement(_add2.default, null)
+				)
+			),
+			_react2.default.createElement(
+				'div',
+				{ className: 'card-actions' },
+				_react2.default.createElement(_FlatButton2.default, {
+					label: 'L\xE4gg till',
+					primary: true,
+					onTouchTap: function onTouchTap() {
+						return undefined.addFoReal(undefined.title.input.value);
+					} })
+			)
+		);
+	};
+	EditVote = (0, _reactRedux.connect)(function (state) {
+		return {
+			editing: state.editing
+		};
+	})(EditVote);
+
+/***/ },
 /* 511 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -48237,6 +48506,149 @@
 
 /***/ },
 /* 514 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.fetchVotes = fetchVotes;
+	exports.startVote = startVote;
+	exports.deleteVote = deleteVote;
+	exports.cancelCurrent = cancelCurrent;
+	var FETCH_VOTES = exports.FETCH_VOTES = 'FETCH_VOTES';
+	
+	function fetchVotes() {
+		return function (dispatch) {
+			dispatch(requestVotes());
+	
+			return fetch('/admin/votes').then(function (response) {
+				return response.json();
+			}).then(function (json) {
+				dispatch(recieveVotes(json));
+			});
+		};
+	}
+	
+	var REQUEST_VOTES = exports.REQUEST_VOTES = 'REQUEST_VOTES';
+	
+	function requestVotes() {
+		return {
+			type: REQUEST_VOTES
+		};
+	}
+	
+	var RECIEVE_VOTES = exports.RECIEVE_VOTES = 'RECIEVE_VOTES';
+	
+	function recieveVotes(json) {
+		return {
+			type: RECIEVE_VOTES,
+			votes: json.map(function (_ref) {
+				var _id = _ref._id,
+				    title = _ref.title,
+				    options = _ref.options,
+				    isActive = _ref.isActive;
+				return {
+					id: _id,
+					title: title,
+					options: options,
+					status: isActive === null ? 'waiting' : isActive ? 'ongoing' : 'completed'
+				};
+			})
+		};
+	}
+	
+	function startVote(id) {
+		return function (dispatch) {
+			return fetch('/admin/vote/' + id + '/start', { method: 'POST' }).then(function (response) {
+				return response.json();
+			}).then(function (json) {
+				dispatch(recieveVotes(json));
+			});
+		};
+	}
+	
+	function deleteVote(id) {
+		return function (dispatch) {
+			return fetch('/admin/vote/' + id, { method: 'DELETE' }).then(function (response) {
+				return response.json();
+			}).then(function (json) {
+				dispatch(recieveVotes(json));
+			});
+		};
+	}
+	
+	function cancelCurrent() {
+		return function (dispatch) {
+			return fetch('/admin/vote/cancelcurrent', { method: 'DELETE' }).then(function (response) {
+				return response.json();
+			}).then(function (json) {
+				dispatch(recieveVotes(json));
+			});
+		};
+	}
+
+/***/ },
+/* 515 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _redux = __webpack_require__(390);
+	
+	var _reduxThunk = __webpack_require__(484);
+	
+	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
+	
+	var _configureVotes = __webpack_require__(514);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function editing() {
+		var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+		var action = arguments[1];
+	
+		switch (action.type) {
+			// case UPDATE_SESSION:
+			// 	return action.session;
+			default:
+				return state;
+		}
+	}
+	
+	function votes() {
+		var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+		var action = arguments[1];
+	
+		switch (action.type) {
+			case _configureVotes.REQUEST_VOTES:
+				return null;
+			case _configureVotes.RECIEVE_VOTES:
+				return action.votes;
+			default:
+				return state;
+		}
+	}
+	
+	var reducer = (0, _redux.combineReducers)({
+		editing: editing,
+		votes: votes
+	});
+	// TODO göra state till en egen istället för att ha en session
+	
+	var store = (0, _redux.createStore)(reducer, (0, _redux.applyMiddleware)(_reduxThunk2.default
+	// , createLogger()
+	));
+	
+	exports.default = store;
+
+/***/ },
+/* 516 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48257,7 +48669,7 @@
 	
 	var _reactRouter = __webpack_require__(174);
 	
-	var _registerForm = __webpack_require__(515);
+	var _registerForm = __webpack_require__(517);
 	
 	var _registerForm2 = _interopRequireDefault(_registerForm);
 	
@@ -48293,7 +48705,7 @@
 	exports.default = route;
 
 /***/ },
-/* 515 */
+/* 517 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48355,7 +48767,7 @@
 	exports.default = RegisterForm;
 
 /***/ },
-/* 516 */
+/* 518 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48388,11 +48800,11 @@
 	
 	var _socket2 = _interopRequireDefault(_socket);
 	
-	var _results = __webpack_require__(584);
+	var _results = __webpack_require__(519);
 	
 	var _results2 = _interopRequireDefault(_results);
 	
-	var _results3 = __webpack_require__(583);
+	var _results3 = __webpack_require__(520);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -48544,11 +48956,76 @@
 	})(ResultsClass);
 
 /***/ },
-/* 517 */
+/* 519 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {var invariant = __webpack_require__(518);
-	var defaultClickRejectionStrategy = __webpack_require__(519);
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _redux = __webpack_require__(390);
+	
+	var _reduxThunk = __webpack_require__(484);
+	
+	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
+	
+	var _reduxLogger = __webpack_require__(485);
+	
+	var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
+	
+	var _results = __webpack_require__(520);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function results() {
+		var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+		var action = arguments[1];
+	
+		switch (action.type) {
+			case _results.UPDATE_RESULTS:
+				return action.results;
+			default:
+				return state;
+		}
+	}
+	
+	var reducer = (0, _redux.combineReducers)({
+		results: results
+	});
+	
+	var store = (0, _redux.createStore)(reducer, (0, _redux.applyMiddleware)(_reduxThunk2.default
+	// , createLogger()
+	));
+	
+	exports.default = store;
+
+/***/ },
+/* 520 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.updateResults = updateResults;
+	var UPDATE_RESULTS = exports.UPDATE_RESULTS = 'UPDATE_RESULTS';
+	
+	function updateResults(results) {
+		return {
+			type: UPDATE_RESULTS,
+			results: results
+		};
+	}
+
+/***/ },
+/* 521 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {var invariant = __webpack_require__(522);
+	var defaultClickRejectionStrategy = __webpack_require__(523);
 	
 	var alreadyInjected = false;
 	
@@ -48570,14 +49047,14 @@
 	  alreadyInjected = true;
 	
 	  __webpack_require__(45).injection.injectEventPluginsByName({
-	    'TapEventPlugin':       __webpack_require__(520)(shouldRejectClick)
+	    'TapEventPlugin':       __webpack_require__(524)(shouldRejectClick)
 	  });
 	};
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 518 */
+/* 522 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -48632,7 +49109,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 519 */
+/* 523 */
 /***/ function(module, exports) {
 
 	module.exports = function(lastTouchEvent, clickTimestamp) {
@@ -48643,7 +49120,7 @@
 
 
 /***/ },
-/* 520 */
+/* 524 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -48671,10 +49148,10 @@
 	var EventPluginUtils = __webpack_require__(47);
 	var EventPropagators = __webpack_require__(44);
 	var SyntheticUIEvent = __webpack_require__(78);
-	var TouchEventUtils = __webpack_require__(521);
+	var TouchEventUtils = __webpack_require__(525);
 	var ViewportMetrics = __webpack_require__(79);
 	
-	var keyOf = __webpack_require__(522);
+	var keyOf = __webpack_require__(526);
 	var topLevelTypes = EventConstants.topLevelTypes;
 	
 	var isStartish = EventPluginUtils.isStartish;
@@ -48819,7 +49296,7 @@
 
 
 /***/ },
-/* 521 */
+/* 525 */
 /***/ function(module, exports) {
 
 	/**
@@ -48867,7 +49344,7 @@
 
 
 /***/ },
-/* 522 */
+/* 526 */
 /***/ function(module, exports) {
 
 	/**
@@ -48905,495 +49382,6 @@
 	};
 	
 	module.exports = keyOf;
-
-/***/ },
-/* 523 */,
-/* 524 */,
-/* 525 */,
-/* 526 */,
-/* 527 */,
-/* 528 */,
-/* 529 */,
-/* 530 */,
-/* 531 */,
-/* 532 */,
-/* 533 */,
-/* 534 */,
-/* 535 */,
-/* 536 */,
-/* 537 */,
-/* 538 */,
-/* 539 */,
-/* 540 */,
-/* 541 */,
-/* 542 */,
-/* 543 */,
-/* 544 */,
-/* 545 */,
-/* 546 */,
-/* 547 */,
-/* 548 */,
-/* 549 */,
-/* 550 */,
-/* 551 */,
-/* 552 */,
-/* 553 */,
-/* 554 */,
-/* 555 */,
-/* 556 */,
-/* 557 */,
-/* 558 */,
-/* 559 */,
-/* 560 */,
-/* 561 */,
-/* 562 */,
-/* 563 */,
-/* 564 */,
-/* 565 */,
-/* 566 */,
-/* 567 */,
-/* 568 */,
-/* 569 */,
-/* 570 */,
-/* 571 */,
-/* 572 */,
-/* 573 */,
-/* 574 */,
-/* 575 */,
-/* 576 */,
-/* 577 */,
-/* 578 */,
-/* 579 */,
-/* 580 */,
-/* 581 */,
-/* 582 */,
-/* 583 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	exports.updateResults = updateResults;
-	var UPDATE_RESULTS = exports.UPDATE_RESULTS = 'UPDATE_RESULTS';
-	
-	function updateResults(results) {
-		return {
-			type: UPDATE_RESULTS,
-			results: results
-		};
-	}
-
-/***/ },
-/* 584 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	
-	var _redux = __webpack_require__(390);
-	
-	var _reduxThunk = __webpack_require__(484);
-	
-	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
-	
-	var _reduxLogger = __webpack_require__(485);
-	
-	var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
-	
-	var _results = __webpack_require__(583);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function results() {
-		var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-		var action = arguments[1];
-	
-		switch (action.type) {
-			case _results.UPDATE_RESULTS:
-				return action.results;
-			default:
-				return state;
-		}
-	}
-	
-	var reducer = (0, _redux.combineReducers)({
-		results: results
-	});
-	
-	var store = (0, _redux.createStore)(reducer, (0, _redux.applyMiddleware)(_reduxThunk2.default
-	// , createLogger()
-	));
-	
-	exports.default = store;
-
-/***/ },
-/* 585 */,
-/* 586 */,
-/* 587 */,
-/* 588 */,
-/* 589 */,
-/* 590 */,
-/* 591 */,
-/* 592 */,
-/* 593 */,
-/* 594 */,
-/* 595 */,
-/* 596 */,
-/* 597 */,
-/* 598 */,
-/* 599 */,
-/* 600 */,
-/* 601 */,
-/* 602 */,
-/* 603 */,
-/* 604 */,
-/* 605 */,
-/* 606 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	exports.default = ConfigureVotesRoute;
-	
-	var _react = __webpack_require__(3);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRedux = __webpack_require__(383);
-	
-	var _TextField = __webpack_require__(494);
-	
-	var _TextField2 = _interopRequireDefault(_TextField);
-	
-	var _IconButton = __webpack_require__(469);
-	
-	var _IconButton2 = _interopRequireDefault(_IconButton);
-	
-	var _FlatButton = __webpack_require__(456);
-	
-	var _FlatButton2 = _interopRequireDefault(_FlatButton);
-	
-	var _Card = __webpack_require__(464);
-	
-	var _FloatingActionButton = __webpack_require__(511);
-	
-	var _FloatingActionButton2 = _interopRequireDefault(_FloatingActionButton);
-	
-	var _add = __webpack_require__(513);
-	
-	var _add2 = _interopRequireDefault(_add);
-	
-	var _Paper = __webpack_require__(439);
-	
-	var _Paper2 = _interopRequireDefault(_Paper);
-	
-	var _CircularProgress = __webpack_require__(481);
-	
-	var _CircularProgress2 = _interopRequireDefault(_CircularProgress);
-	
-	var _configureVotes = __webpack_require__(607);
-	
-	var _configureVotes2 = __webpack_require__(608);
-	
-	var _configureVotes3 = _interopRequireDefault(_configureVotes2);
-	
-	__webpack_require__(1);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	function ConfigureVotesRoute() {
-	
-		return _react2.default.createElement(
-			_reactRedux.Provider,
-			{ store: _configureVotes3.default },
-			_react2.default.createElement(ConfigureVotes, null)
-		);
-	}
-	
-	var ConfigureVotesClass = function (_React$Component) {
-		_inherits(ConfigureVotesClass, _React$Component);
-	
-		function ConfigureVotesClass() {
-			_classCallCheck(this, ConfigureVotesClass);
-	
-			return _possibleConstructorReturn(this, (ConfigureVotesClass.__proto__ || Object.getPrototypeOf(ConfigureVotesClass)).apply(this, arguments));
-		}
-	
-		_createClass(ConfigureVotesClass, [{
-			key: 'componentDidMount',
-			value: function componentDidMount() {
-				var dispatch = this.props.dispatch;
-	
-				dispatch((0, _configureVotes.fetchVotes)());
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var votes = this.props.votes;
-	
-	
-				if (votes === null) {
-					return _react2.default.createElement(
-						'div',
-						{ className: 'loading-container' },
-						_react2.default.createElement(_CircularProgress2.default, null)
-					);
-				}
-	
-				return _react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(
-						_FloatingActionButton2.default,
-						{ className: 'add-vote' },
-						_react2.default.createElement(_add2.default, null)
-					),
-					_react2.default.createElement(EditVote, null),
-					votes.map(function (_ref) {
-						var title = _ref.title,
-						    id = _ref.id,
-						    options = _ref.options,
-						    status = _ref.status;
-						return _react2.default.createElement(AdminVote, { key: id, title: title, options: options, status: status });
-					})
-				);
-			}
-		}]);
-	
-		return ConfigureVotesClass;
-	}(_react2.default.Component);
-	
-	var ConfigureVotes = (0, _reactRedux.connect)(function (state) {
-		return {
-			votes: state.votes
-		};
-	})(ConfigureVotesClass);
-	
-	var AdminVote = function AdminVote(_ref2) {
-		var title = _ref2.title,
-		    options = _ref2.options,
-		    status = _ref2.status;
-	
-		var buttons = function buttons() {
-			switch (status) {
-				case 'ongoing':
-					return _react2.default.createElement(_FlatButton2.default, {
-						label: 'Avsluta',
-						primary: true,
-						onTouchTap: function onTouchTap() {} });
-				case 'completed':
-					return _react2.default.createElement(_FlatButton2.default, {
-						label: 'Ta bort',
-						secondary: true,
-						onTouchTap: function onTouchTap() {} });
-				case 'waiting':
-					return _react2.default.createElement(_FlatButton2.default, {
-						label: 'Ta bort',
-						secondary: true,
-						onTouchTap: function onTouchTap() {} });
-			}
-		};
-		return _react2.default.createElement(
-			_Card.Card,
-			{ className: 'card' },
-			_react2.default.createElement(_Card.CardTitle, { title: title }),
-			_react2.default.createElement(
-				_Card.CardText,
-				null,
-				_react2.default.createElement(
-					'div',
-					null,
-					options.map(function (name) {
-						return _react2.default.createElement(
-							'div',
-							{ key: name },
-							name
-						);
-					})
-				)
-			),
-			_react2.default.createElement(
-				_Card.CardActions,
-				null,
-				buttons()
-			)
-		);
-	};
-	
-	var EditVote = function EditVote(_ref3) {
-		var editing = _ref3.editing;
-	
-		if (editing === null) {
-			return null;
-		}
-	
-		return _react2.default.createElement(
-			_Paper2.default,
-			{ className: 'card', style: { padding: 16 } },
-			_react2.default.createElement(
-				'div',
-				null,
-				_react2.default.createElement(_TextField2.default, { floatingLabelText: 'Titel', ref: function ref(el) {
-						undefined.title = el;
-					} })
-			),
-			_react2.default.createElement(
-				'div',
-				null,
-				_react2.default.createElement(_TextField2.default, { floatingLabelText: 'Alternativ' })
-			),
-			_react2.default.createElement(
-				'div',
-				null,
-				_react2.default.createElement(
-					_IconButton2.default,
-					null,
-					_react2.default.createElement(_add2.default, null)
-				)
-			),
-			_react2.default.createElement(
-				'div',
-				{ className: 'card-actions' },
-				_react2.default.createElement(_FlatButton2.default, {
-					label: 'L\xE4gg till',
-					primary: true,
-					onTouchTap: function onTouchTap() {
-						return undefined.addFoReal(undefined.title.input.value);
-					} })
-			)
-		);
-	};
-	EditVote = (0, _reactRedux.connect)(function (state) {
-		return {
-			editing: state.editing
-		};
-	})(EditVote);
-
-/***/ },
-/* 607 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	exports.setSelected = setSelected;
-	exports.fetchVotes = fetchVotes;
-	var SET_SELECTED = exports.SET_SELECTED = 'SET_SELECTED';
-	
-	function setSelected(selected) {
-		return {
-			type: SET_SELECTED,
-			selected: selected
-		};
-	}
-	
-	var FETCH_VOTES = exports.FETCH_VOTES = 'FETCH_VOTES';
-	
-	function fetchVotes() {
-		return function (dispatch) {
-			dispatch(requestVotes());
-	
-			return fetch('/admin/votes').then(function (response) {
-				return response.json();
-			}).then(function (json) {
-				dispatch(recieveVotes(json));
-			});
-		};
-	}
-	
-	var REQUEST_VOTES = exports.REQUEST_VOTES = 'REQUEST_VOTES';
-	
-	function requestVotes() {
-		return {
-			type: REQUEST_VOTES
-		};
-	}
-	
-	var RECIEVE_VOTES = exports.RECIEVE_VOTES = 'RECIEVE_VOTES';
-	
-	function recieveVotes(json) {
-		return {
-			type: RECIEVE_VOTES,
-			votes: json
-		};
-	}
-
-/***/ },
-/* 608 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	
-	var _redux = __webpack_require__(390);
-	
-	var _reduxThunk = __webpack_require__(484);
-	
-	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
-	
-	var _configureVotes = __webpack_require__(607);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function editing() {
-		var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-		var action = arguments[1];
-	
-		switch (action.type) {
-			// case UPDATE_SESSION:
-			// 	return action.session;
-			default:
-				return state;
-		}
-	}
-	
-	function votes() {
-		var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-		var action = arguments[1];
-	
-		switch (action.type) {
-			case _configureVotes.REQUEST_VOTES:
-				return null;
-			case _configureVotes.RECIEVE_VOTES:
-				return action.votes;
-			default:
-				return state;
-		}
-	}
-	
-	var reducer = (0, _redux.combineReducers)({
-		editing: editing,
-		votes: votes
-	});
-	// TODO göra state till en egen istället för att ha en session
-	
-	var store = (0, _redux.createStore)(reducer, (0, _redux.applyMiddleware)(_reduxThunk2.default
-	// , createLogger()
-	));
-	
-	exports.default = store;
 
 /***/ }
 /******/ ]);

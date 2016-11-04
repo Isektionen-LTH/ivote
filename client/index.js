@@ -25,6 +25,12 @@ app.get('/admin/votes', function(req, res) {
 	}, 500);
 });
 
+app.get('/admin/vote/cancelcurrent', function(req, res) {
+	setTimeout(function() {
+		res.sendFile(path.resolve(__dirname, 'mock-data/admin.votes.json'));
+	}, 500);
+});
+
 io.on('connection', function(socket) {
 
 	socket.on('join vote', function({ id }) {

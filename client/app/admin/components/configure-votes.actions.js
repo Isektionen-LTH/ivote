@@ -1,14 +1,4 @@
 
-export const SET_SELECTED = 'SET_SELECTED';
-
-export function setSelected(selected) {
-	return {
-		type: SET_SELECTED,
-		selected
-	};
-}
-
-
 export const FETCH_VOTES = 'FETCH_VOTES';
 
 export function fetchVotes() {
@@ -36,6 +26,41 @@ export const RECIEVE_VOTES = 'RECIEVE_VOTES';
 function recieveVotes(json) {
 	return {
 		type: RECIEVE_VOTES,
-		votes: json
+		votes: json.map(({ _id, title, options, isActive}) => ({
+			id: _id,
+			title,
+			options,
+			status: isActive === null ? 'waiting' : isActive ? 'ongoing' : 'completed'
+		}))
+	};
+}
+
+export function startVote(id) {
+	return (dispatch) => {
+		return fetch(`/admin/vote/${id}/start`, { method: 'POST' })
+			.then(response => response.json())
+			.then((json) => {
+				dispatch(recieveVotes(json));
+			});
+	};
+}
+
+export function deleteVote(id) {
+	return (dispatch) => {
+		return fetch(`/admin/vote/${id}`, { method: 'DELETE' })
+			.then(response => response.json())
+			.then((json) => {
+				dispatch(recieveVotes(json));
+			});
+	};
+}
+
+export function cancelCurrent() {
+	return (dispatch) => {
+		return fetch('/admin/vote/cancelcurrent', { method: 'DELETE' })
+			.then(response => response.json())
+			.then((json) => {
+				dispatch(recieveVotes(json));
+			});
 	};
 }

@@ -10,7 +10,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import Paper from 'material-ui/Paper';
 import CircularProgress from 'material-ui/CircularProgress';
 
-import { fetchVotes } from './configure-votes.actions';
+import { fetchVotes, startVote, deleteVote, cancelCurrent } from './configure-votes.actions';
 import store from './configure-votes.store';
 
 import 'whatwg-fetch';
@@ -41,6 +41,8 @@ class ConfigureVotesClass extends React.Component {
 			);
 		}
 
+		const existsOngoingVote = votes.filter(({ status }) => status === 'ongoing').length > 0;
+
 		return (
 			<div>
 				<FloatingActionButton className="add-vote">
@@ -48,7 +50,12 @@ class ConfigureVotesClass extends React.Component {
 				</FloatingActionButton>
 				<EditVote />
 				{votes.map(({ title, id, options, status }) =>
-					<AdminVote key={id} title={title} options={options} status={status}></AdminVote>
+					<AdminVote
+						key={id}
+						title={title}
+						options={options}
+						status={status}
+						existsOngoingVote={existsOngoingVote} />
 				)}
 			</div>
 		);
@@ -63,29 +70,10 @@ const ConfigureVotes = connect(
 	}
 )(ConfigureVotesClass);
 
-const AdminVote = ({ title, options, status }) => {
-	const buttons = () => {
-		switch (status) {
-		case 'ongoing':
-			return <FlatButton
-				label="Avsluta"
-				primary={true}
-				onTouchTap={() => {}} />;
-		case 'completed':
-			return <FlatButton
-				label="Ta bort"
-				secondary={true}
-				onTouchTap={() => {}} />;
-		case 'waiting':
-			return <FlatButton
-				label="Ta bort"
-				secondary={true}
-				onTouchTap={() => {}} />;
-		}
-	};
+const AdminVote = ({ title, options, status, id, existsOngoingVote }) => {
 	return (
 		<Card className="card">
-			<CardTitle title={title} />
+			<CardTitle title={title} subtitle={status} />
 			<CardText>
 			<div>
 				{options.map((name => 
@@ -93,12 +81,48 @@ const AdminVote = ({ title, options, status }) => {
 				))}
 			</div>
 			</CardText>
-			<CardActions>
-				{buttons()}
+			<CardActions className="card-actions">
+				<VoteActions status={status} id={id} existsOngoingVote={existsOngoingVote} />
 			</CardActions>
 		</Card>
 	);
 };
+
+let VoteActions = ({ status, id, dispatch, existsOngoingVote }) => {
+	switch (status) {
+	case 'ongoing':
+		return (
+			<FlatButton
+				label="Avsluta"
+				primary={true}
+				onTouchTap={() => dispatch(cancelCurrent())} />
+		);
+	case 'completed':
+		return null;
+	case 'waiting':
+		const deleteButton = (
+			<FlatButton
+				label="Ta bort"
+				secondary={true}
+				onTouchTap={() => dispatch(deleteVote(id))} />
+		);
+		if (existsOngoingVote) {
+			return deleteButton;
+		} else {
+			return (
+				<div>
+					<FlatButton
+						label="Påbörja"
+						secondary={true}
+						onTouchTap={() => dispatch(startVote(id))} />
+					{deleteButton}
+				</div>
+			);
+		}
+	}
+};
+
+VoteActions = connect()(VoteActions);
 
 let EditVote = ({ editing }) => {
 	if (editing === null) {
