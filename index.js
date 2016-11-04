@@ -34,8 +34,8 @@ app.use(function(req, res, next) {
       req.role = null;
       next();
     }
-  })
-})
+  });
+});
 
 server.listen(8080, '0.0.0.0', function () {
 
@@ -418,7 +418,7 @@ app.post('/register/user', function(req, res) {
 
 });
 
-app.get('/login/voter/:id', function(req, res){
+/*app.get('/login/voter/:id', function(req, res){
   validateUser(req.params.id, function(valid){
     if(valid){
       res.cookie('ivote', req.params.id).send('Cookie is sent');
@@ -428,7 +428,7 @@ app.get('/login/voter/:id', function(req, res){
     }
   });
 });
-
+*/
 app.get('*', function (req, res) {
   res.sendFile(__dirname + '/client/index.html');
 });
