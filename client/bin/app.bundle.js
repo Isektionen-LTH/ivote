@@ -529,15 +529,15 @@
 	
 	var _app4 = _interopRequireDefault(_app3);
 	
-	var _app5 = __webpack_require__(516);
+	var _app5 = __webpack_require__(517);
 	
 	var _app6 = _interopRequireDefault(_app5);
 	
-	var _results = __webpack_require__(518);
+	var _results = __webpack_require__(519);
 	
 	var _results2 = _interopRequireDefault(_results);
 	
-	var _reactTapEventPlugin = __webpack_require__(521);
+	var _reactTapEventPlugin = __webpack_require__(522);
 	
 	var _reactTapEventPlugin2 = _interopRequireDefault(_reactTapEventPlugin);
 	
@@ -47830,7 +47830,7 @@
 	
 	var _add2 = _interopRequireDefault(_add);
 	
-	var _clear = __webpack_require__(528);
+	var _clear = __webpack_require__(514);
 	
 	var _clear2 = _interopRequireDefault(_clear);
 	
@@ -47842,9 +47842,13 @@
 	
 	var _CircularProgress2 = _interopRequireDefault(_CircularProgress);
 	
-	var _configureVotes = __webpack_require__(514);
+	var _editVote = __webpack_require__(528);
 	
-	var _configureVotes2 = __webpack_require__(515);
+	var _editVote2 = _interopRequireDefault(_editVote);
+	
+	var _configureVotes = __webpack_require__(515);
+	
+	var _configureVotes2 = __webpack_require__(516);
 	
 	var _configureVotes3 = _interopRequireDefault(_configureVotes2);
 	
@@ -47917,7 +47921,7 @@
 				return _react2.default.createElement(
 					'div',
 					null,
-					editing === null ? addButton() : _react2.default.createElement(EditVote, null),
+					editing === null ? addButton() : _react2.default.createElement(_editVote2.default, null),
 					votes.map(function (_ref2) {
 						var title = _ref2.title,
 						    id = _ref2.id,
@@ -48043,119 +48047,6 @@
 	};
 	
 	VoteActions = (0, _reactRedux.connect)()(VoteActions);
-	
-	var EditVote = function EditVote(_ref5) {
-		var editing = _ref5.editing,
-		    dispatch = _ref5.dispatch;
-	
-		if (editing === null) {
-			return null;
-		}
-	
-		var title = editing.title,
-		    options = editing.options,
-		    id = editing.id;
-	
-	
-		var validate = function validate() {
-			if (!title) {
-				return false;
-			}
-	
-			if (options.length <= 0) {
-				return false;
-			}
-	
-			var validOptions = options.filter(function (option) {
-				return option;
-			});
-			if (validOptions.length !== options.length) {
-				return false;
-			}
-	
-			return true;
-		};
-	
-		return _react2.default.createElement(
-			_Paper2.default,
-			{ className: 'card', style: { padding: 16 } },
-			_react2.default.createElement(
-				'div',
-				null,
-				_react2.default.createElement(_TextField2.default, {
-					hintText: 'Titel',
-					value: title,
-					tabIndex: -1,
-					className: 'big-textfield',
-					onChange: function onChange(e) {
-						return dispatch((0, _configureVotes.editTitleChanged)(e.target.value));
-					} })
-			),
-			_react2.default.createElement(
-				'div',
-				{ className: 'subtitle' },
-				id ? 'Ändra omröstning' : 'Ny omröstning'
-			),
-			_react2.default.createElement(
-				'div',
-				null,
-				options.map(function (option, i) {
-					return _react2.default.createElement(
-						'div',
-						{ key: i },
-						_react2.default.createElement(_TextField2.default, {
-							floatingLabelText: 'Alternativ ' + (i + 1),
-							value: option,
-							tabIndex: i,
-							onChange: function onChange(e) {
-								return dispatch((0, _configureVotes.editOptionChanged)(e.target.value, i));
-							} }),
-						_react2.default.createElement(
-							_IconButton2.default,
-							{ tabIndex: 100, onTouchTap: function onTouchTap() {
-									return dispatch((0, _configureVotes.removeEditOption)(i));
-								} },
-							_react2.default.createElement(_clear2.default, null)
-						)
-					);
-				})
-			),
-			_react2.default.createElement(
-				'div',
-				null,
-				_react2.default.createElement(
-					_IconButton2.default,
-					{ tabIndex: 100, onTouchTap: function onTouchTap() {
-							return dispatch((0, _configureVotes.addEditOption)());
-						} },
-					_react2.default.createElement(_add2.default, null)
-				)
-			),
-			_react2.default.createElement(
-				'div',
-				{ className: 'card-actions' },
-				_react2.default.createElement(_FlatButton2.default, {
-					label: 'Avbryt',
-					secondary: true,
-					onTouchTap: function onTouchTap() {
-						return dispatch((0, _configureVotes.cancelEditing)());
-					} }),
-				_react2.default.createElement(_FlatButton2.default, {
-					label: 'L\xE4gg till',
-					primary: true,
-					disabled: !validate(),
-					tabIndex: 50,
-					onTouchTap: function onTouchTap() {
-						return dispatch((0, _configureVotes.saveVote)({ title: title, options: options, id: id }));
-					} })
-			)
-		);
-	};
-	EditVote = (0, _reactRedux.connect)(function (state) {
-		return {
-			editing: state.editing
-		};
-	})(EditVote);
 
 /***/ },
 /* 511 */
@@ -48600,6 +48491,43 @@
 
 /***/ },
 /* 514 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(3);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _pure = __webpack_require__(443);
+	
+	var _pure2 = _interopRequireDefault(_pure);
+	
+	var _SvgIcon = __webpack_require__(452);
+	
+	var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var ContentClear = function ContentClear(props) {
+	  return _react2.default.createElement(
+	    _SvgIcon2.default,
+	    props,
+	    _react2.default.createElement('path', { d: 'M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z' })
+	  );
+	};
+	ContentClear = (0, _pure2.default)(ContentClear);
+	ContentClear.displayName = 'ContentClear';
+	ContentClear.muiName = 'SvgIcon';
+	
+	exports.default = ContentClear;
+
+/***/ },
+/* 515 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -48749,14 +48677,15 @@
 	function saveVote(vote) {
 		return function (dispatch) {
 			// Allow id = 0 (falsey)
+			var headers = new window.Headers({ 'Content-Type': 'application/json' });
 			if (vote.id != null) {
-				return fetch('/admin/vote/' + vote.id, { method: 'PUT', body: JSON.stringify(vote) }).then(function (response) {
+				return fetch('/admin/vote/' + vote.id, { method: 'PUT', body: JSON.stringify(vote), headers: headers }).then(function (response) {
 					return response.json();
 				}).then(function (json) {
 					dispatch(recieveVotes(json));
 				});
 			} else {
-				return fetch('/admin/vote/new', { method: 'POST', body: JSON.stringify(vote) }).then(function (response) {
+				return fetch('/admin/vote/new', { method: 'POST', body: JSON.stringify(vote), headers: headers }).then(function (response) {
 					return response.json();
 				}).then(function (json) {
 					dispatch(recieveVotes(json));
@@ -48766,7 +48695,7 @@
 	}
 
 /***/ },
-/* 515 */
+/* 516 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48783,7 +48712,7 @@
 	
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 	
-	var _configureVotes = __webpack_require__(514);
+	var _configureVotes = __webpack_require__(515);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -48795,7 +48724,7 @@
 	
 		switch (action.type) {
 			case _configureVotes.ADD_NEW_VOTE:
-				return { title: '', options: [] };
+				return { title: '', options: ['', ''] };
 			case _configureVotes.EDIT_VOTE:
 				return action.vote;
 			case _configureVotes.CANCEL_EDITING:
@@ -48853,7 +48782,7 @@
 	exports.default = store;
 
 /***/ },
-/* 516 */
+/* 517 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48874,7 +48803,7 @@
 	
 	var _reactRouter = __webpack_require__(174);
 	
-	var _registerForm = __webpack_require__(517);
+	var _registerForm = __webpack_require__(518);
 	
 	var _registerForm2 = _interopRequireDefault(_registerForm);
 	
@@ -48910,7 +48839,7 @@
 	exports.default = route;
 
 /***/ },
-/* 517 */
+/* 518 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48972,7 +48901,7 @@
 	exports.default = RegisterForm;
 
 /***/ },
-/* 518 */
+/* 519 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -49005,11 +48934,11 @@
 	
 	var _socket2 = _interopRequireDefault(_socket);
 	
-	var _results = __webpack_require__(519);
+	var _results = __webpack_require__(520);
 	
 	var _results2 = _interopRequireDefault(_results);
 	
-	var _results3 = __webpack_require__(520);
+	var _results3 = __webpack_require__(521);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -49161,7 +49090,7 @@
 	})(ResultsClass);
 
 /***/ },
-/* 519 */
+/* 520 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -49180,7 +49109,7 @@
 	
 	var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
 	
-	var _results = __webpack_require__(520);
+	var _results = __webpack_require__(521);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -49207,7 +49136,7 @@
 	exports.default = store;
 
 /***/ },
-/* 520 */
+/* 521 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -49226,11 +49155,11 @@
 	}
 
 /***/ },
-/* 521 */
+/* 522 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {var invariant = __webpack_require__(522);
-	var defaultClickRejectionStrategy = __webpack_require__(523);
+	/* WEBPACK VAR INJECTION */(function(process) {var invariant = __webpack_require__(523);
+	var defaultClickRejectionStrategy = __webpack_require__(524);
 	
 	var alreadyInjected = false;
 	
@@ -49252,14 +49181,14 @@
 	  alreadyInjected = true;
 	
 	  __webpack_require__(45).injection.injectEventPluginsByName({
-	    'TapEventPlugin':       __webpack_require__(524)(shouldRejectClick)
+	    'TapEventPlugin':       __webpack_require__(525)(shouldRejectClick)
 	  });
 	};
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 522 */
+/* 523 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -49314,7 +49243,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 523 */
+/* 524 */
 /***/ function(module, exports) {
 
 	module.exports = function(lastTouchEvent, clickTimestamp) {
@@ -49325,7 +49254,7 @@
 
 
 /***/ },
-/* 524 */
+/* 525 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -49353,10 +49282,10 @@
 	var EventPluginUtils = __webpack_require__(47);
 	var EventPropagators = __webpack_require__(44);
 	var SyntheticUIEvent = __webpack_require__(78);
-	var TouchEventUtils = __webpack_require__(525);
+	var TouchEventUtils = __webpack_require__(526);
 	var ViewportMetrics = __webpack_require__(79);
 	
-	var keyOf = __webpack_require__(526);
+	var keyOf = __webpack_require__(527);
 	var topLevelTypes = EventConstants.topLevelTypes;
 	
 	var isStartish = EventPluginUtils.isStartish;
@@ -49501,7 +49430,7 @@
 
 
 /***/ },
-/* 525 */
+/* 526 */
 /***/ function(module, exports) {
 
 	/**
@@ -49549,7 +49478,7 @@
 
 
 /***/ },
-/* 526 */
+/* 527 */
 /***/ function(module, exports) {
 
 	/**
@@ -49589,42 +49518,172 @@
 	module.exports = keyOf;
 
 /***/ },
-/* 527 */,
 /* 528 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+		value: true
 	});
 	
 	var _react = __webpack_require__(3);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _pure = __webpack_require__(443);
+	var _reactRedux = __webpack_require__(383);
 	
-	var _pure2 = _interopRequireDefault(_pure);
+	var _TextField = __webpack_require__(494);
 	
-	var _SvgIcon = __webpack_require__(452);
+	var _TextField2 = _interopRequireDefault(_TextField);
 	
-	var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
+	var _IconButton = __webpack_require__(469);
+	
+	var _IconButton2 = _interopRequireDefault(_IconButton);
+	
+	var _FlatButton = __webpack_require__(456);
+	
+	var _FlatButton2 = _interopRequireDefault(_FlatButton);
+	
+	var _Card = __webpack_require__(464);
+	
+	var _FloatingActionButton = __webpack_require__(511);
+	
+	var _FloatingActionButton2 = _interopRequireDefault(_FloatingActionButton);
+	
+	var _add = __webpack_require__(513);
+	
+	var _add2 = _interopRequireDefault(_add);
+	
+	var _clear = __webpack_require__(514);
+	
+	var _clear2 = _interopRequireDefault(_clear);
+	
+	var _Paper = __webpack_require__(439);
+	
+	var _Paper2 = _interopRequireDefault(_Paper);
+	
+	var _CircularProgress = __webpack_require__(481);
+	
+	var _CircularProgress2 = _interopRequireDefault(_CircularProgress);
+	
+	var _configureVotes = __webpack_require__(515);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var ContentClear = function ContentClear(props) {
-	  return _react2.default.createElement(
-	    _SvgIcon2.default,
-	    props,
-	    _react2.default.createElement('path', { d: 'M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z' })
-	  );
-	};
-	ContentClear = (0, _pure2.default)(ContentClear);
-	ContentClear.displayName = 'ContentClear';
-	ContentClear.muiName = 'SvgIcon';
+	var EditVote = function EditVote(_ref) {
+		var editing = _ref.editing,
+		    dispatch = _ref.dispatch;
 	
-	exports.default = ContentClear;
+		if (editing === null) {
+			return null;
+		}
+	
+		var title = editing.title,
+		    options = editing.options,
+		    id = editing.id;
+	
+	
+		var validate = function validate() {
+			if (!title) {
+				return false;
+			}
+	
+			if (options.length < 2) {
+				return false;
+			}
+	
+			var validOptions = options.filter(function (option) {
+				return option;
+			});
+			if (validOptions.length !== options.length) {
+				return false;
+			}
+	
+			return true;
+		};
+	
+		return _react2.default.createElement(
+			_Paper2.default,
+			{ className: 'card', style: { padding: 16 } },
+			_react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(_TextField2.default, {
+					hintText: 'Titel',
+					value: title,
+					tabIndex: -1,
+					className: 'big-textfield',
+					onChange: function onChange(e) {
+						return dispatch((0, _configureVotes.editTitleChanged)(e.target.value));
+					} })
+			),
+			_react2.default.createElement(
+				'div',
+				{ className: 'subtitle' },
+				id ? 'Ändra omröstning' : 'Ny omröstning'
+			),
+			_react2.default.createElement(
+				'div',
+				null,
+				options.map(function (option, i) {
+					return _react2.default.createElement(
+						'div',
+						{ key: i },
+						_react2.default.createElement(_TextField2.default, {
+							floatingLabelText: 'Alternativ ' + (i + 1),
+							value: option,
+							tabIndex: i,
+							onChange: function onChange(e) {
+								return dispatch((0, _configureVotes.editOptionChanged)(e.target.value, i));
+							} }),
+						_react2.default.createElement(
+							_IconButton2.default,
+							{ tabIndex: 100, onTouchTap: function onTouchTap() {
+									return dispatch((0, _configureVotes.removeEditOption)(i));
+								} },
+							_react2.default.createElement(_clear2.default, null)
+						)
+					);
+				})
+			),
+			_react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(_FlatButton2.default, {
+					label: 'L\xE4gg till alternativ',
+					primary: true,
+					tabIndex: 50,
+					onTouchTap: function onTouchTap() {
+						return dispatch((0, _configureVotes.addEditOption)());
+					} })
+			),
+			_react2.default.createElement(
+				'div',
+				{ className: 'card-actions' },
+				_react2.default.createElement(_FlatButton2.default, {
+					label: 'Avbryt',
+					secondary: true,
+					tabIndex: 50,
+					onTouchTap: function onTouchTap() {
+						return dispatch((0, _configureVotes.cancelEditing)());
+					} }),
+				_react2.default.createElement(_FlatButton2.default, {
+					label: 'L\xE4gg till',
+					primary: true,
+					disabled: !validate(),
+					tabIndex: 50,
+					onTouchTap: function onTouchTap() {
+						return dispatch((0, _configureVotes.saveVote)({ title: title, options: options, id: id }));
+					} })
+			)
+		);
+	};
+	exports.default = EditVote = (0, _reactRedux.connect)(function (state) {
+		return {
+			editing: state.editing
+		};
+	})(EditVote);
 
 /***/ }
 /******/ ]);

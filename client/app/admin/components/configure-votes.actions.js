@@ -128,14 +128,15 @@ export function editOptionChanged(option, index) {
 export function saveVote(vote) {
 	return (dispatch) => {
 		// Allow id = 0 (falsey)
+		const headers = new window.Headers({'Content-Type': 'application/json'});
 		if (vote.id != null) {
-			return fetch(`/admin/vote/${vote.id}`, { method: 'PUT', body: JSON.stringify(vote) })
+			return fetch(`/admin/vote/${vote.id}`, { method: 'PUT', body: JSON.stringify(vote), headers })
 				.then(response => response.json())
 				.then((json) => {
 					dispatch(recieveVotes(json));
 				});
 		} else {
-			return fetch('/admin/vote/new', { method: 'POST', body: JSON.stringify(vote) })
+			return fetch('/admin/vote/new', { method: 'POST', body: JSON.stringify(vote), headers })
 			.then(response => response.json())
 			.then((json) => {
 				dispatch(recieveVotes(json));

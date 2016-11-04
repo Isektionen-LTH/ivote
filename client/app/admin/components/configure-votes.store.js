@@ -19,7 +19,7 @@ import {
 function editing(state = null, action) {
 	switch (action.type) {
 	case ADD_NEW_VOTE:
-		return {title: '', options: []};
+		return {title: '', options: ['', '']};
 	case EDIT_VOTE:
 		return action.vote;
 	case CANCEL_EDITING:
