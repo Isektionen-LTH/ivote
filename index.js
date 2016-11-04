@@ -370,7 +370,7 @@ app.delete('/admin/vote/:id', function(req, res) {
 
 });
 
-app.post('/admin/stopcurrentvote', function(req, res) {
+app.post('/admin/vote/cancelcurrent', function(req, res) {
   console.log('function: endCurrentVote');
   db.collection('votes').update({isActive: true}, {$set: {isActive: false}}, {}, function (err, numreplaced) {
 
@@ -379,6 +379,7 @@ app.post('/admin/stopcurrentvote', function(req, res) {
     returnVotesAdmin(res);
     getVoteResults(function(results){
       io.to('resultRoom').emit('new results', results);
+      setState(0);
     });
 
   });
@@ -388,7 +389,7 @@ app.post('/admin/vote/:id/start', function(req, res) {
 
   db.collection('votes').find({isActive: false}, function(err, votes) {
 
-    docs.toArray(function(err, votesArray) {
+    votes.toArray(function(err, votesArray) {
 
       db.collection('votes').update({$and: [{isActive: null}, {_id: mongo.ObjectId(req.params.id)}]}, {$set: {isActive: true, resultOrd: votesArray.length}}, function(err, doc) {
 
