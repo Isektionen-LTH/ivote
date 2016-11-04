@@ -26,6 +26,7 @@ app.get('/', function (req, res) {
 
 app.use(express.static(__dirname));
 app.use(require('cors')());
+app.use(bodyParser.json());
 
 server.listen(8080, '0.0.0.0', function () {
 
@@ -136,9 +137,11 @@ function getVoteResults(callback){
         var options = doc[i].options.sort(function(a, b) {
           return b.numberOfVotes - a.numberOfVotes;
         });
-        resultArray.push({id: i, title: doc[i].title, options: options});
+        resultArray.push({id: i, title: doc[i].title, options: options, resultOrd: doc[i].resultOrd});
       }
-
+      resultArray.sort(function(a, b){
+        return b.resultOrd - a.resultOrd;
+      });
       callback(resultArray);
 
     });
@@ -155,8 +158,13 @@ function returnVotesAdmin(res){
         options: vote.options.map(function(option) {
           return option.title;
         }),
-        status: vote.isActive === null ? 'waiting' : vote.isActive ? 'ongoing' : 'completed'
+        status: vote.isActive === null ? 'waiting' : vote.isActive ? 'ongoing' : 'completed',
+        statusOrd: vote.isActive === null ? 1 : vote.isActive ? 0 : 2
       }
+
+    }).sort(function(a, b){
+
+      return a.statusOrd - b.statusOrd;
 
     });
     res.send(votes);
@@ -328,15 +336,18 @@ app.get('/admin/votes', function (req, res, next) {
 
 app.post('/admin/vote/new', function (req, res, next) {
 
+  console.log(req.body);
+
   var vote = {};
 
-  if(typeof req.title !== 'undefined' && typeof req.options !== 'undefined'){
+  if(typeof req.body.title !== 'undefined' && typeof req.body.options !== 'undefined'){
 
     vote.isActive = null;
     vote.hasVoted = [];
     vote.resultOrd = null;
+    vote.title = req.body.title;
 
-    vote.options = options.map(function(title) {
+    vote.options = req.body.options.map(function(title) {
       return {title: title, numberOfVotes: 0};
     });
 
@@ -352,11 +363,12 @@ app.post('/admin/vote/new', function (req, res, next) {
 
 app.put('/admin/vote/:id', function(req, res) {
   //Går endast att ändra om röstning ej skett, dvs isActive == null
-  db.collection('votes').replaceOne({$and: [{_id: mongo.ObjectId(req.params.id)}, {isActive: null}]}, editedVote, function(err, doc) {
+  console.log(req.body);
+  /*db.collection('votes').replaceOne({$and: [{_id: mongo.ObjectId(req.params.id)}, {isActive: null}]}, editedVote, function(err, doc) {
     console.log(err + ' Insatt');
     returnVotesAdmin(res);
 
-  });
+  });*/
 
 });
 
@@ -365,7 +377,6 @@ app.delete('/admin/vote/:id', function(req, res) {
   db.collection('votes').deleteOne({$and: [{_id: mongo.ObjectId(req.params.id)}, {isActive: null}]}, function (err, doc) {
 
     returnVotesAdmin(res);
-
   });
 
 });
