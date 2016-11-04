@@ -1,6 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var mongo = require('mongodb');
+var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var mail = require('./app/mail.js');
@@ -9,7 +10,7 @@ var validCodes = ['123', 'hej'];
 var adminPassword = 'hej123';
 
 var MongoClient = mongo.MongoClient;
-var app = express();
+
 //var router = express.Router();
 
 app.get('/', function (req, res) {
@@ -167,7 +168,7 @@ function returnVotesAdmin(res){
 
 function validateUser(userID, callback){
 
-  db.collection('codes').findOne({id: userID}, function(err, doc) {
+  db.collection('codes').findOne({code: userID}, function(err, doc) {
     if(doc){
       callback(true);
     } else {
@@ -197,10 +198,12 @@ io.on('connection', function (socket) {
   socket.on('join vote', function(userID){
 
     socket.userID = userID.id;
+    console.log(userID);
 
-    validateUser(userID, function(userIsValid){
+    validateUser(userID.id, function(userIsValid){
 
       socket.valid = userIsValid;
+      console.log('User status: ' + userIsValid);
 
       if(userIsValid){
         socket.join('vote');
@@ -241,26 +244,6 @@ io.on('connection', function (socket) {
 
   });
 
-  socket.on('getID', function() {
-    io.emit('state', socket.userID);
-  });
-
-  socket.on('startVote', function(adminPass, voteId){
-    console.log('hej');
-    startVote('5819a59bd641a035ef7a3a0d');
-  });
-
-  socket.on('endCurrentVote', function(adminPass){
-    endCurrentVote();
-  });
-
-  socket.on('newVote', function(vote){
-    addNewVote(vote, function(err) {
-      console.log(err);
-      socket.emit('state', 'Mottaget');
-    });
-  });
-
   socket.on('getCurrentVote', function(userId){
 
     getCurrentVote(function(vote) {
@@ -270,16 +253,18 @@ io.on('connection', function (socket) {
   });
 
   socket.on('vote', function(option){
+    if (socket.valid) {
+      vote(socket.userID, option, function(){
 
-    vote(socket.userID, option, function(){
-      getVotingStatus(function(msg) {
-        msg.state = 'voted';
-        socket.emit('state', msg);
-        socket.join('hasVoted');
+        getVotingStatus(function(msg) {
+          msg.state = 'voted';
+          socket.emit('state', msg);
+          socket.join('hasVoted');
+        });
+
       });
-    });
+    }
   });
-
 });
 
 app.get('/Hej', function (req, res) {
