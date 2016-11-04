@@ -10,7 +10,7 @@ var adminPassword = 'hej123';
 
 var MongoClient = mongo.MongoClient;
 var app = express();
-var router = express.Router();
+//var router = express.Router();
 
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/client/index.html');
@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 
 server.listen(8080, '0.0.0.0', function () {
 
-  mail("kristoffer.ipod@gmail.com");
+  //mail("kristoffder.ipod@gmaasdadil.com");
   console.log('Lyssnar');
 
   MongoClient.connect('mongodb://kristoffer:evote@ds035036.mlab.com:35036/ivote', function(err, database) {
@@ -165,6 +165,18 @@ function returnVotesAdmin(res){
   });
 }
 
+function validateUser(userID, callback){
+
+  db.collection('codes').findOne({id: userID}, function(err, doc) {
+    if(doc){
+      callback(true);
+    } else {
+      callback(false);
+    }
+  });
+
+}
+
 //app.use(express.static('/'));
 
 io.on('connection', function (socket) {
@@ -185,34 +197,46 @@ io.on('connection', function (socket) {
   socket.on('join vote', function(userID){
 
     socket.userID = userID.id;
-    socket.join('vote');
 
-    getHasVoted(userID.id, function(hasVoted) {
-      console.log(hasVoted);
+    validateUser(userID, function(userIsValid){
 
-      if(hasVoted){
-        socket.join('hasVoted');
-        //socket.emit('state', {state: 'voted'});
-        getVotingStatus(function(voteStatus) {
-          socket.emit('state', {state: 'voted', voted: voteStatus.voted, total: voteStatus.total});
-          // socket.emit('new vote', voteStatus);
-        });
-      } else {
-        db.collection('state').find({}).toArray(function(err, doc) {
-          console.log(doc);
-          //socket.emit('state', doc[0]);
+      socket.valid = userIsValid;
 
-          if(doc[0].state === 0){
-            socket.emit('state', {state: 'waiting'});
+      if(userIsValid){
+        socket.join('vote');
+
+        getHasVoted(userID.id, function(hasVoted) {
+
+          console.log(hasVoted);
+
+          if(hasVoted){
+            socket.join('hasVoted');
+            //socket.emit('state', {state: 'voted'});
+            getVotingStatus(function(voteStatus) {
+              socket.emit('state', {state: 'voted', voted: voteStatus.voted, total: voteStatus.total});
+              // socket.emit('new vote', voteStatus);
+            });
           } else {
-            getCurrentVote(function(doc) {
+            db.collection('state').find({}).toArray(function(err, doc) {
               console.log(doc);
-              socket.emit('state', doc);
+              //socket.emit('state', doc[0]);
+
+              if(doc[0].state === 0){
+                socket.emit('state', {state: 'waiting'});
+              } else {
+                getCurrentVote(function(doc) {
+                  console.log(doc);
+                  socket.emit('state', doc);
+                });
+              }
+
             });
           }
-
         });
+      } else {
+        socket.emit('state', {state: 'wrong id'});
       }
+
     });
 
   });
@@ -379,6 +403,16 @@ app.post('/admin/vote/:id/start', function(req, res) {
 
     });
 
+  });
+
+});
+
+app.post('/register/user', function(req, res) {
+
+  email(req.body.email, function(uid) {
+    db.collection('codes').insert({name: req.body.name, email: req.body.email, id: uid}, function(err) {
+
+    });
   });
 
 });

@@ -5,7 +5,10 @@ var fs = require('fs');
 
 var password = fs.readFileSync('./mail-password.txt');
 
-module.exports = function(email) {
+module.exports = function(email, callback) {
+
+  const uid = uuid.v4();
+
   var transporter = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
@@ -18,7 +21,7 @@ module.exports = function(email) {
       from: 'kristoffer.nordstrom@isek.se', // sender address
       to: email, // list of receivers
       subject: 'Email Example', // Subject line
-      text: "http://localhost:8080/login/" + uuid.v4() //, // plaintext body
+      text: "http://localhost:8080/login/" + uid//, // plaintext body
       // html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
     };
 
@@ -27,6 +30,7 @@ module.exports = function(email) {
           console.log(error);
       }else{
           console.log('Message sent: ' + info.response);
+          callback(uid);
       }
     });
 };
