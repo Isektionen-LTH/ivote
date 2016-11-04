@@ -47830,6 +47830,10 @@
 	
 	var _add2 = _interopRequireDefault(_add);
 	
+	var _clear = __webpack_require__(528);
+	
+	var _clear2 = _interopRequireDefault(_clear);
+	
 	var _Paper = __webpack_require__(439);
 	
 	var _Paper2 = _interopRequireDefault(_Paper);
@@ -48037,25 +48041,76 @@
 			return null;
 		}
 	
+		var title = editing.title,
+		    options = editing.options,
+		    id = editing.id;
+	
+	
+		var validate = function validate() {
+			if (!title) {
+				return false;
+			}
+	
+			if (options.length <= 0) {
+				return false;
+			}
+	
+			var validOptions = options.filter(function (option) {
+				return option;
+			});
+			if (validOptions.length !== options.length) {
+				return false;
+			}
+	
+			return true;
+		};
+	
 		return _react2.default.createElement(
 			_Paper2.default,
 			{ className: 'card', style: { padding: 16 } },
 			_react2.default.createElement(
 				'div',
 				null,
-				_react2.default.createElement(_TextField2.default, { floatingLabelText: 'Titel', value: editing.title })
+				_react2.default.createElement(_TextField2.default, {
+					floatingLabelText: 'Titel',
+					value: title,
+					tabIndex: -1,
+					onChange: function onChange(e) {
+						return dispatch((0, _configureVotes.editTitleChanged)(e.target.value));
+					} })
 			),
 			_react2.default.createElement(
 				'div',
 				null,
-				_react2.default.createElement(_TextField2.default, { floatingLabelText: 'Alternativ 1' })
+				options.map(function (option, i) {
+					return _react2.default.createElement(
+						'div',
+						{ key: i },
+						_react2.default.createElement(_TextField2.default, {
+							floatingLabelText: 'Alternativ ' + (i + 1),
+							value: option,
+							tabIndex: i,
+							onChange: function onChange(e) {
+								return dispatch((0, _configureVotes.editOptionChanged)(e.target.value, i));
+							} }),
+						_react2.default.createElement(
+							_IconButton2.default,
+							{ tabIndex: 100, onTouchTap: function onTouchTap() {
+									return dispatch((0, _configureVotes.removeEditOption)(i));
+								} },
+							_react2.default.createElement(_clear2.default, null)
+						)
+					);
+				})
 			),
 			_react2.default.createElement(
 				'div',
 				null,
 				_react2.default.createElement(
 					_IconButton2.default,
-					null,
+					{ tabIndex: 100, onTouchTap: function onTouchTap() {
+							return dispatch((0, _configureVotes.addEditOption)());
+						} },
 					_react2.default.createElement(_add2.default, null)
 				)
 			),
@@ -48071,7 +48126,11 @@
 				_react2.default.createElement(_FlatButton2.default, {
 					label: 'L\xE4gg till',
 					primary: true,
-					onTouchTap: function onTouchTap() {} })
+					disabled: !validate(),
+					tabIndex: 50,
+					onTouchTap: function onTouchTap() {
+						return dispatch((0, _configureVotes.saveVote)({ title: title, options: options, id: id }));
+					} })
 			)
 		);
 	};
@@ -48538,6 +48597,11 @@
 	exports.addNewVote = addNewVote;
 	exports.editVote = editVote;
 	exports.cancelEditing = cancelEditing;
+	exports.addEditOption = addEditOption;
+	exports.removeEditOption = removeEditOption;
+	exports.editTitleChanged = editTitleChanged;
+	exports.editOptionChanged = editOptionChanged;
+	exports.saveVote = saveVote;
 	var FETCH_VOTES = exports.FETCH_VOTES = 'FETCH_VOTES';
 	
 	function fetchVotes() {
@@ -48602,7 +48666,9 @@
 	var ADD_NEW_VOTE = exports.ADD_NEW_VOTE = 'ADD_NEW_VOTE';
 	
 	function addNewVote() {
-		return editVote(null);
+		return {
+			type: ADD_NEW_VOTE
+		};
 	}
 	
 	var EDIT_VOTE = exports.EDIT_VOTE = 'EDIT_VOTE';
@@ -48611,7 +48677,7 @@
 		return function (dispatch, getState) {
 			var vote = getState().votes.filter(function (vote) {
 				return id === vote.id;
-			})[0] || {};
+			})[0];
 			dispatch({
 				type: EDIT_VOTE,
 				vote: vote
@@ -48626,6 +48692,61 @@
 			type: CANCEL_EDITING
 		};
 	}
+	
+	var ADD_EDIT_OPTION = exports.ADD_EDIT_OPTION = 'ADD_EDIT_OPTION';
+	
+	function addEditOption() {
+		return {
+			type: ADD_EDIT_OPTION
+		};
+	}
+	
+	var REMOVE_EDIT_OPTION = exports.REMOVE_EDIT_OPTION = 'REMOVE_EDIT_OPTION';
+	
+	function removeEditOption(index) {
+		return {
+			type: REMOVE_EDIT_OPTION,
+			index: index
+		};
+	}
+	
+	var EDIT_TITLE_CHANGED = exports.EDIT_TITLE_CHANGED = 'EDIT_TITLE_CHANGED';
+	
+	function editTitleChanged(title) {
+		return {
+			type: EDIT_TITLE_CHANGED,
+			title: title
+		};
+	}
+	
+	var EDIT_OPTION_CHANGED = exports.EDIT_OPTION_CHANGED = 'EDIT_OPTION_CHANGED';
+	
+	function editOptionChanged(option, index) {
+		return {
+			type: EDIT_OPTION_CHANGED,
+			option: option,
+			index: index
+		};
+	}
+	
+	function saveVote(vote) {
+		return function (dispatch) {
+			// Allow id = 0 (falsey)
+			if (vote.id != null) {
+				return fetch('/admin/vote/' + vote.id, { method: 'PUT', body: JSON.stringify(vote) }).then(function (response) {
+					return response.json();
+				}).then(function (json) {
+					dispatch(recieveVotes(json));
+				});
+			} else {
+				return fetch('/admin/vote/new', { method: 'POST', body: JSON.stringify(vote) }).then(function (response) {
+					return response.json();
+				}).then(function (json) {
+					dispatch(recieveVotes(json));
+				});
+			}
+		};
+	}
 
 /***/ },
 /* 515 */
@@ -48637,6 +48758,8 @@
 		value: true
 	});
 	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
 	var _redux = __webpack_require__(390);
 	
 	var _reduxThunk = __webpack_require__(484);
@@ -48647,15 +48770,40 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+	
 	function editing() {
 		var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 		var action = arguments[1];
 	
 		switch (action.type) {
+			case _configureVotes.ADD_NEW_VOTE:
+				return { title: '', options: [] };
 			case _configureVotes.EDIT_VOTE:
 				return action.vote;
 			case _configureVotes.CANCEL_EDITING:
 				return null;
+			case _configureVotes.ADD_EDIT_OPTION:
+				return _extends({}, state, {
+					options: [].concat(_toConsumableArray(state.options), [''])
+				});
+	
+			case _configureVotes.EDIT_TITLE_CHANGED:
+				return _extends({}, state, {
+					title: action.title
+				});
+			case _configureVotes.EDIT_OPTION_CHANGED:
+				return _extends({}, state, {
+					options: state.options.map(function (option, i) {
+						return i === action.index ? action.option : option;
+					})
+				});
+			case _configureVotes.REMOVE_EDIT_OPTION:
+				return _extends({}, state, {
+					options: state.options.filter(function (option, i) {
+						return i !== action.index;
+					})
+				});
 			default:
 				return state;
 		}
@@ -49422,6 +49570,44 @@
 	};
 	
 	module.exports = keyOf;
+
+/***/ },
+/* 527 */,
+/* 528 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(3);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _pure = __webpack_require__(443);
+	
+	var _pure2 = _interopRequireDefault(_pure);
+	
+	var _SvgIcon = __webpack_require__(452);
+	
+	var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var ContentClear = function ContentClear(props) {
+	  return _react2.default.createElement(
+	    _SvgIcon2.default,
+	    props,
+	    _react2.default.createElement('path', { d: 'M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z' })
+	  );
+	};
+	ContentClear = (0, _pure2.default)(ContentClear);
+	ContentClear.displayName = 'ContentClear';
+	ContentClear.muiName = 'SvgIcon';
+	
+	exports.default = ContentClear;
 
 /***/ }
 /******/ ]);

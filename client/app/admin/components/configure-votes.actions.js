@@ -63,14 +63,16 @@ export function cancelCurrent() {
 export const ADD_NEW_VOTE = 'ADD_NEW_VOTE';
 
 export function addNewVote() {
-	return editVote(null);
+	return {
+		type: ADD_NEW_VOTE
+	};
 }
 
 export const EDIT_VOTE = 'EDIT_VOTE';
 
 export function editVote(id) {
 	return (dispatch, getState) => {
-		const vote = getState().votes.filter(vote => id === vote.id)[0] || {};
+		const vote = getState().votes.filter(vote => id === vote.id)[0];
 		dispatch({
 			type: EDIT_VOTE,
 			vote
@@ -83,5 +85,61 @@ export const CANCEL_EDITING = 'CANCEL_EDITING';
 export function cancelEditing() {
 	return {
 		type: CANCEL_EDITING
+	};
+}
+
+export const ADD_EDIT_OPTION = 'ADD_EDIT_OPTION';
+
+export function addEditOption() {
+	return {
+		type: ADD_EDIT_OPTION
+	};
+}
+
+export const REMOVE_EDIT_OPTION = 'REMOVE_EDIT_OPTION';
+
+export function removeEditOption(index) {
+	return {
+		type: REMOVE_EDIT_OPTION,
+		index
+	};
+}
+
+
+export const EDIT_TITLE_CHANGED = 'EDIT_TITLE_CHANGED';
+
+export function editTitleChanged(title) {
+	return {
+		type: EDIT_TITLE_CHANGED,
+		title
+	};
+}
+
+export const EDIT_OPTION_CHANGED = 'EDIT_OPTION_CHANGED';
+
+export function editOptionChanged(option, index) {
+	return {
+		type: EDIT_OPTION_CHANGED,
+		option,
+		index
+	};
+}
+
+export function saveVote(vote) {
+	return (dispatch) => {
+		// Allow id = 0 (falsey)
+		if (vote.id != null) {
+			return fetch(`/admin/vote/${vote.id}`, { method: 'PUT', body: JSON.stringify(vote) })
+				.then(response => response.json())
+				.then((json) => {
+					dispatch(recieveVotes(json));
+				});
+		} else {
+			return fetch('/admin/vote/new', { method: 'POST', body: JSON.stringify(vote) })
+			.then(response => response.json())
+			.then((json) => {
+				dispatch(recieveVotes(json));
+			});
+		}
 	};
 }
