@@ -4,13 +4,15 @@ import thunk from 'redux-thunk';
 
 import {
 	REQUEST_VOTES,
-	RECIEVE_VOTES
+	RECIEVE_VOTES,
+
+	EDIT_VOTE
 } from './configure-votes.actions';
 
 function editing(state = null, action) {
 	switch (action.type) {
-	// case UPDATE_SESSION:
-	// 	return action.session;
+	case EDIT_VOTE:
+		return action.vote;
 	default:
 		return state;
 	}

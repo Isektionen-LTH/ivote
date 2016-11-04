@@ -52,10 +52,25 @@ export function deleteVote(id) {
 
 export function cancelCurrent() {
 	return (dispatch) => {
-		return fetch('/admin/vote/cancelcurrent', { method: 'DELETE' })
+		return fetch('/admin/vote/cancelcurrent', { method: 'POST' })
 			.then(response => response.json())
 			.then((json) => {
 				dispatch(recieveVotes(json));
 			});
+	};
+}
+
+export const ADD_NEW_VOTE = 'ADD_NEW_VOTE';
+
+export function addNewVote() {
+	return editVote({});
+}
+
+export const EDIT_VOTE = 'EDIT_VOTE';
+
+export function editVote(vote) {
+	return {
+		type: EDIT_VOTE,
+		vote
 	};
 }

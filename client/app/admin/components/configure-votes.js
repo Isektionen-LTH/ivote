@@ -10,7 +10,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import Paper from 'material-ui/Paper';
 import CircularProgress from 'material-ui/CircularProgress';
 
-import { fetchVotes, startVote, deleteVote, cancelCurrent } from './configure-votes.actions';
+import { fetchVotes, startVote, deleteVote, cancelCurrent, addNewVote, startEditing } from './configure-votes.actions';
 import store from './configure-votes.store';
 
 import 'whatwg-fetch';
@@ -31,7 +31,7 @@ class ConfigureVotesClass extends React.Component {
 	}
 
 	render() {
-		const { votes } = this.props;
+		const { votes, dispatch } = this.props;
 
 		if (votes === null) {
 			return (
@@ -45,7 +45,8 @@ class ConfigureVotesClass extends React.Component {
 
 		return (
 			<div>
-				<FloatingActionButton className="add-vote" onTouchTap={() => console.log('Hej!')}>
+				{}
+				<FloatingActionButton className="add-vote" onTouchTap={() => dispatch(addNewVote())}>
 					<ContentAdd />
 				</FloatingActionButton>
 				<EditVote />

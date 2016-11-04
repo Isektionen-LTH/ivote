@@ -47882,7 +47882,9 @@
 		}, {
 			key: 'render',
 			value: function render() {
-				var votes = this.props.votes;
+				var _props = this.props,
+				    votes = _props.votes,
+				    dispatch = _props.dispatch;
 	
 	
 				if (votes === null) {
@@ -47904,7 +47906,7 @@
 					_react2.default.createElement(
 						_FloatingActionButton2.default,
 						{ className: 'add-vote', onTouchTap: function onTouchTap() {
-								return console.log('Hej!');
+								return dispatch((0, _configureVotes.addNewVote)());
 							} },
 						_react2.default.createElement(_add2.default, null)
 					),
@@ -48515,6 +48517,8 @@
 	exports.startVote = startVote;
 	exports.deleteVote = deleteVote;
 	exports.cancelCurrent = cancelCurrent;
+	exports.addNewVote = addNewVote;
+	exports.editVote = editVote;
 	var FETCH_VOTES = exports.FETCH_VOTES = 'FETCH_VOTES';
 	
 	function fetchVotes() {
@@ -48568,11 +48572,26 @@
 	
 	function cancelCurrent() {
 		return function (dispatch) {
-			return fetch('/admin/vote/cancelcurrent', { method: 'DELETE' }).then(function (response) {
+			return fetch('/admin/vote/cancelcurrent', { method: 'POST' }).then(function (response) {
 				return response.json();
 			}).then(function (json) {
 				dispatch(recieveVotes(json));
 			});
+		};
+	}
+	
+	var ADD_NEW_VOTE = exports.ADD_NEW_VOTE = 'ADD_NEW_VOTE';
+	
+	function addNewVote() {
+		return editVote({});
+	}
+	
+	var EDIT_VOTE = exports.EDIT_VOTE = 'EDIT_VOTE';
+	
+	function editVote(vote) {
+		return {
+			type: EDIT_VOTE,
+			vote: vote
 		};
 	}
 
@@ -48601,8 +48620,8 @@
 		var action = arguments[1];
 	
 		switch (action.type) {
-			// case UPDATE_SESSION:
-			// 	return action.session;
+			case _configureVotes.EDIT_VOTE:
+				return action.vote;
 			default:
 				return state;
 		}
