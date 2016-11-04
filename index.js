@@ -1,6 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var mongo = require('mongodb');
+var nodemailer = require('nodemailer');
 var MongoClient = mongo.MongoClient;
 var app = express();
 var server = require('http').Server(app);
@@ -9,6 +10,15 @@ var io = require('socket.io')(server);
 var db;
 var validCodes = ['123', 'hej'];
 var adminPassword = 'hej123';
+
+var router = express.Router();
+app.use('/sayHello', router);
+router.post('/', handleSayHello);
+
+function handleSayHello() {
+  console.log("hej");
+
+}
 
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/client/index.html');
@@ -136,11 +146,48 @@ function getVoteResults(callback){
 }
 
 function returnVotesAdmin(res){
-  db.collection('votes').find({}).toArray(function (err, docs) {
 
-    res.send(docs);
+  db.collection('votes').find({}).toArray(function (err, docs) {
+    var votes = docs.map(function(vote) {
+      return {
+        title: vote.title,
+        id: vote._id,
+        options: vote.options.map(function(option) {
+          return option.title;
+        }),
+        status: vote.isActive === null ? 'waiting' : vote.isActive ? 'ongoing' : 'completed'
+      }
+
+    });
+    res.send(votes);
 
   });
+}
+
+function mail() {
+  var transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+            user: 'kristoffer.nordstrom@isek.se', // Your email id
+            pass: '****' // Your password
+        }
+    });
+
+    var mailOptions = {
+      from: 'kristoffer.nordstrom@isek.se', // sender address
+      to: 'johnrappfarnes@gmail.com', // list of receivers
+      subject: 'Email Example', // Subject line
+      text: "hej" //, // plaintext body
+      // html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+      if(error){
+          console.log(error);
+      }else{
+          console.log('Message sent: ' + info.response);
+      }
+    });
 }
 
 //app.use(express.static('/'));
@@ -238,14 +285,10 @@ io.on('connection', function (socket) {
 
 app.get('/Hej', function (req, res) {
 
-  /*io.emit('state', {state:2});
-  res.send('skickat');*/
-  startVote('581bbaeb2ac9ae4d5e21aae7');
-  //setState(0);
-  //endCurrentVote();
-  res.send('Skickat');
-
+  mail();
+  res.send("hej")
 });
+
 
 //Kontrollerar kod hos klienten mot databasen
 
@@ -279,11 +322,7 @@ app.use('/admin', function(req, res, next) {
 
 app.get('/admin/votes', function (req, res, next) {
 
-  db.collection('votes').find({}).toArray(function (err, docs) {
-
-    res.send(docs);
-
-  });
+  returnVotesAdmin(res);
 
 });
 
