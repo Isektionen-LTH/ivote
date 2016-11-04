@@ -364,11 +364,13 @@ app.post('/admin/vote/new', function (req, res, next) {
 app.put('/admin/vote/:id', function(req, res) {
   //Går endast att ändra om röstning ej skett, dvs isActive == null
   console.log(req.body);
-  /*db.collection('votes').replaceOne({$and: [{_id: mongo.ObjectId(req.params.id)}, {isActive: null}]}, editedVote, function(err, doc) {
+  db.collection('votes').update({$and: [{_id: mongo.ObjectId(req.body.id)}, {isActive: null}]}, {$set: {title: req.body.title, options: req.body.options.map(function(option) {
+    return {title: option, numberOfVotes: 0};
+  })}}, function(err, doc) {
     console.log(err + ' Insatt');
     returnVotesAdmin(res);
 
-  });*/
+  });
 
 });
 
