@@ -12,6 +12,7 @@ import { updateSession, setSelected, updateOngoingVote } from './vote.actions.js
 // import { setSelected, fetchVoteState, sendVote } from './vote.actions.js';
 
 import socket from '../socket';
+import { getCookie } from '../cookie';
 
 export default function VoteRoute() {
 	
@@ -22,7 +23,7 @@ export default function VoteRoute() {
 	);
 }
 
-const id = location.search.substr(4);
+const id = getCookie('userId');
 
 class VoteSessionClass extends React.Component {
 	componentDidMount() {
@@ -52,22 +53,19 @@ class VoteSessionClass extends React.Component {
 	// }
 	render() {
 		const { session } = this.props;
-		function currentComponent() {
-			switch (session.state) {
-			case 'waiting':
-				return (
-					<div className="loading-container">
-						<CircularProgress />
-					</div>
-				);
-			case 'voting':
-				return <Vote />;
-			case 'voted':
-				return <HasVoted />;
-			}
+		
+		switch (session.state) {
+		case 'waiting':
+			return (
+				<div className="loading-container">
+					<CircularProgress />
+				</div>
+			);
+		case 'voting':
+			return <Vote />;
+		case 'voted':
+			return <HasVoted />;
 		}
-
-		return currentComponent();
 	}
 	
 }

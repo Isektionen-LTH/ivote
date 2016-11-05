@@ -17,7 +17,8 @@ import VoteActions from './vote-actions';
 
 import { 
 	fetchVotes,
-	addNewVote
+	addNewVote,
+	deleteVote
 } from './configure-votes.actions';
 
 import store from './configure-votes.store';
@@ -85,7 +86,7 @@ const ConfigureVotes = connect(
 	}
 )(ConfigureVotesClass);
 
-const AdminVote = ({ title, options, status, id, existsOngoingVote }) => {
+let AdminVote = ({ title, options, status, id, existsOngoingVote, dispatch }) => {
 	const subtitle = () => {
 		switch (status) {
 		case 'ongoing':
@@ -101,7 +102,7 @@ const AdminVote = ({ title, options, status, id, existsOngoingVote }) => {
 			<div className="clearfix">
 				<CardTitle title={title} subtitle={subtitle()} className="title" />
 				{status === 'waiting'
-					? <IconButton onTouchTap={() => {}} className="delete-button">
+					? <IconButton onTouchTap={() => dispatch(deleteVote(id))} className="delete-button">
 						<ActionDelete />
 					</IconButton>
 					: null}
@@ -119,3 +120,4 @@ const AdminVote = ({ title, options, status, id, existsOngoingVote }) => {
 		</Card>
 	);
 };
+AdminVote = connect()(AdminVote);

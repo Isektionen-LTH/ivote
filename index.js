@@ -28,25 +28,25 @@ app.use(login.auth);
 app.use('/login', login.router);
 
 app.use(function(req, res, next) {
+  if (!req.userId) { return next(); }
   validateUser(req.userId, function(exists) {
     if(!exists) {
       req.userId = null;
       req.role = null;
-      next();
     }
+    next();
   });
 });
 
-server.listen(8080, '0.0.0.0', function () {
+server.listen(8080, function () {
 
-  //mail("kristoffder.ipod@gmaasdadil.com");
   console.log('Lyssnar');
 
   MongoClient.connect('mongodb://kristoffer:evote@ds035036.mlab.com:35036/ivote', function(err, database) {
 
     if(err) console.log(err);
     db = database;
-
+    
   });
 
 });
@@ -184,7 +184,7 @@ function returnVotesAdmin(res){
 
 function validateUser(userID, callback){
 
-  db.collection('codes').findOne({code: userID}, function(err, doc) {
+  db.collection('codes').findOne({id: userID}, function(err, doc) {
     if(doc){
       callback(true);
     } else {
@@ -253,7 +253,7 @@ io.on('connection', function (socket) {
           }
         });
       } else {
-        socket.emit('state', {state: 'wrong id'});
+        socket.emit('wrong id');
       }
 
     });
@@ -408,10 +408,12 @@ app.post('/admin/vote/:id/start', function(req, res) {
 
 });
 
-app.post('/register/user', function(req, res) {
 
-  email(req.body.email, function(uid) {
-    db.collection('codes').insert({name: req.body.name, email: req.body.email, id: uid}, function(err) {
+app.get('/register/voter', function(req, res) {
+
+
+  mail(req.query.email, function(uid) {
+    db.collection('codes').insert({name: req.query.name, email: req.query.email, id: uid}, function(err) {
 
     });
   });

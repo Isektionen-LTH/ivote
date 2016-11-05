@@ -23,6 +23,12 @@ class NoMatch extends React.Component {
 	}
 }
 
+const IVote = () => {
+	return {
+
+	};
+};
+
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 // Needed for onTouchTap
@@ -54,7 +60,7 @@ ReactDOM.render(
 	<MuiThemeProvider>
 		<Router history={browserHistory}>
 			<Route path="/" component={App}>
-				<IndexRoute component={VoteRoute} />
+				<IndexRoute component={IVote} />
 				<Route path="vote" component={VoteRoute} />
 				<Route path="login" component={LoginRoute} />
 				<Route path="results" component={Results} />

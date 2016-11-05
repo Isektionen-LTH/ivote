@@ -7,6 +7,8 @@ import FlatButton from 'material-ui/FlatButton';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import CircularProgress from 'material-ui/CircularProgress';
 
+import { setCookie } from '../cookie';
+
 // import store from './vote.store.js';
 
 // import { setSelected, fetchVoteState, sendVote } from './vote.actions.js';
@@ -19,18 +21,6 @@ export default function LoginRoute() {
 		// </Provider>
 	);
 }
-// TODO move
-function createCookie(name,value,days = 1000000) {
-	var expires;
-	if (days) {
-		var date = new Date();
-		date.setTime(date.getTime()+(days*24*60*60*1000));
-		expires = '; expires='+date.toGMTString();
-	}
-	else expires = '';
-	document.cookie = name+'='+value+expires+'; path=/';
-}
-
 function hash(string) {
 	var hash = 0, i, chr, len;
 	if (string.length === 0) return hash;
@@ -59,8 +49,8 @@ class Login extends React.Component {
 	}
 
 	login(role, username, password) {
-		createCookie('username', username);
-		createCookie('hash', hash(password + salt));
+		setCookie('username', username);
+		setCookie('hash', hash(password + salt));
 		window.location = `/login/${role}`;
 	}
 

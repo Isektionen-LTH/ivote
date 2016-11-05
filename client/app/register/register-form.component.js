@@ -5,7 +5,7 @@ import FlatButton from 'material-ui/FlatButton';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 
 class RegisterForm extends React.Component {
-	copnstructor(props) {
+	constructor(props) {
 		super(props);
 
 		this.register = this.register.bind(this);
@@ -13,7 +13,7 @@ class RegisterForm extends React.Component {
 	register() {
 		const name = this.nameInput.input.value;
 		const email = this.emailInput.input.value;
-		window.loaction = `register/voter?name=${name}&email=${email}`;
+		window.location = `register/voter?name=${name}&email=${email}`;
 	}
 	render() {
 		return (

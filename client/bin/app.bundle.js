@@ -574,6 +574,10 @@
 		return NoMatch;
 	}(_react2.default.Component);
 	
+	var IVote = function IVote() {
+		return {};
+	};
+	
 	// Needed for onTouchTap
 	// http://stackoverflow.com/a/34015469/988941
 	(0, _reactTapEventPlugin2.default)();
@@ -608,7 +612,7 @@
 			_react2.default.createElement(
 				_reactRouter.Route,
 				{ path: '/', component: _app2.default },
-				_react2.default.createElement(_reactRouter.IndexRoute, { component: _vote2.default }),
+				_react2.default.createElement(_reactRouter.IndexRoute, { component: IVote }),
 				_react2.default.createElement(_reactRouter.Route, { path: 'vote', component: _vote2.default }),
 				_react2.default.createElement(_reactRouter.Route, { path: 'login', component: _login2.default }),
 				_react2.default.createElement(_reactRouter.Route, { path: 'results', component: _results2.default })
@@ -35022,6 +35026,8 @@
 	
 	var _socket2 = _interopRequireDefault(_socket);
 	
+	var _cookie = __webpack_require__(531);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -35040,7 +35046,7 @@
 		);
 	}
 	
-	var id = location.search.substr(4);
+	var id = (0, _cookie.getCookie)('userId');
 	
 	var VoteSessionClass = function (_React$Component) {
 		_inherits(VoteSessionClass, _React$Component);
@@ -35088,22 +35094,19 @@
 			value: function render() {
 				var session = this.props.session;
 	
-				function currentComponent() {
-					switch (session.state) {
-						case 'waiting':
-							return _react2.default.createElement(
-								'div',
-								{ className: 'loading-container' },
-								_react2.default.createElement(_CircularProgress2.default, null)
-							);
-						case 'voting':
-							return _react2.default.createElement(Vote, null);
-						case 'voted':
-							return _react2.default.createElement(HasVoted, null);
-					}
-				}
 	
-				return currentComponent();
+				switch (session.state) {
+					case 'waiting':
+						return _react2.default.createElement(
+							'div',
+							{ className: 'loading-container' },
+							_react2.default.createElement(_CircularProgress2.default, null)
+						);
+					case 'voting':
+						return _react2.default.createElement(Vote, null);
+					case 'voted':
+						return _react2.default.createElement(HasVoted, null);
+				}
 			}
 		}]);
 	
@@ -45404,6 +45407,8 @@
 	
 	var _CircularProgress2 = _interopRequireDefault(_CircularProgress);
 	
+	var _cookie = __webpack_require__(531);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -45425,19 +45430,6 @@
 	
 		);
 	}
-	// TODO move
-	function createCookie(name, value) {
-		var days = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1000000;
-	
-		var expires;
-		if (days) {
-			var date = new Date();
-			date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-			expires = '; expires=' + date.toGMTString();
-		} else expires = '';
-		document.cookie = name + '=' + value + expires + '; path=/';
-	}
-	
 	function hash(string) {
 		var hash = 0,
 		    i,
@@ -45477,8 +45469,8 @@
 		}, {
 			key: 'login',
 			value: function login(role, username, password) {
-				createCookie('username', username);
-				createCookie('hash', hash(password + salt));
+				(0, _cookie.setCookie)('username', username);
+				(0, _cookie.setCookie)('hash', hash(password + salt));
 				window.location = '/login/' + role;
 			}
 		}, {
@@ -48061,7 +48053,8 @@
 		    options = _ref3.options,
 		    status = _ref3.status,
 		    id = _ref3.id,
-		    existsOngoingVote = _ref3.existsOngoingVote;
+		    existsOngoingVote = _ref3.existsOngoingVote,
+		    dispatch = _ref3.dispatch;
 	
 		var subtitle = function subtitle() {
 			switch (status) {
@@ -48082,7 +48075,9 @@
 				_react2.default.createElement(_Card.CardTitle, { title: title, subtitle: subtitle(), className: 'title' }),
 				status === 'waiting' ? _react2.default.createElement(
 					_IconButton2.default,
-					{ onTouchTap: function onTouchTap() {}, className: 'delete-button' },
+					{ onTouchTap: function onTouchTap() {
+							return dispatch((0, _configureVotes.deleteVote)(id));
+						}, className: 'delete-button' },
 					_react2.default.createElement(_delete2.default, null)
 				) : null
 			),
@@ -48108,6 +48103,7 @@
 			)
 		);
 	};
+	AdminVote = (0, _reactRedux.connect)()(AdminVote);
 
 /***/ },
 /* 511 */
@@ -49174,7 +49170,7 @@
 	
 	var _reactRouter = __webpack_require__(174);
 	
-	var _registerForm = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./register-form.component\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var _registerForm = __webpack_require__(521);
 	
 	var _registerForm2 = _interopRequireDefault(_registerForm);
 	
@@ -49210,7 +49206,108 @@
 	exports.default = route;
 
 /***/ },
-/* 521 */,
+/* 521 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(3);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _TextField = __webpack_require__(494);
+	
+	var _TextField2 = _interopRequireDefault(_TextField);
+	
+	var _FlatButton = __webpack_require__(456);
+	
+	var _FlatButton2 = _interopRequireDefault(_FlatButton);
+	
+	var _Card = __webpack_require__(464);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var RegisterForm = function (_React$Component) {
+		_inherits(RegisterForm, _React$Component);
+	
+		function RegisterForm(props) {
+			_classCallCheck(this, RegisterForm);
+	
+			var _this = _possibleConstructorReturn(this, (RegisterForm.__proto__ || Object.getPrototypeOf(RegisterForm)).call(this, props));
+	
+			_this.register = _this.register.bind(_this);
+			return _this;
+		}
+	
+		_createClass(RegisterForm, [{
+			key: 'register',
+			value: function register() {
+				var name = this.nameInput.input.value;
+				var email = this.emailInput.input.value;
+				window.location = 'register/voter?name=' + name + '&email=' + email;
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this2 = this;
+	
+				return _react2.default.createElement(
+					_Card.Card,
+					null,
+					_react2.default.createElement(_Card.CardTitle, { title: 'Registrera' }),
+					_react2.default.createElement(
+						_Card.CardText,
+						null,
+						_react2.default.createElement(
+							'div',
+							null,
+							_react2.default.createElement(_TextField2.default, {
+								floatingLabelText: 'Namn',
+								ref: function ref(el) {
+									return _this2.nameInput = el;
+								} })
+						),
+						_react2.default.createElement(
+							'div',
+							null,
+							_react2.default.createElement(_TextField2.default, {
+								floatingLabelText: 'E-mail',
+								type: 'email',
+								ref: function ref(el) {
+									return _this2.emailInput = el;
+								} })
+						)
+					),
+					_react2.default.createElement(
+						_Card.CardActions,
+						{ className: 'card-actions' },
+						_react2.default.createElement(_FlatButton2.default, {
+							label: 'Skicka',
+							primary: true,
+							onTouchTap: this.register })
+					)
+				);
+			}
+		}]);
+	
+		return RegisterForm;
+	}(_react2.default.Component);
+	
+	exports.default = RegisterForm;
+
+/***/ },
 /* 522 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -49821,6 +49918,44 @@
 	};
 	
 	module.exports = keyOf;
+
+/***/ },
+/* 531 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.setCookie = setCookie;
+	exports.getCookie = getCookie;
+	function setCookie(name, value) {
+	    var days = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1000000;
+	
+	    var expires;
+	    if (days) {
+	        var date = new Date();
+	        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+	        expires = '; expires=' + date.toGMTString();
+	    } else expires = '';
+	    document.cookie = name + '=' + value + expires + '; path=/';
+	}
+	
+	function getCookie(c_name) {
+	    var i,
+	        x,
+	        y,
+	        ARRcookies = document.cookie.split(";");
+	    for (i = 0; i < ARRcookies.length; i++) {
+	        x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
+	        y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
+	        x = x.replace(/^\s+|\s+$/g, "");
+	        if (x == c_name) {
+	            return unescape(y);
+	        }
+	    }
+	}
 
 /***/ }
 /******/ ]);

@@ -5,9 +5,7 @@ const credentials = require('../credentials.json');
 const salt = 'ivote';
 
 router.get('/voter/:id', function(req, res) {
-	res.cookie({
-		voteId: req.params.id
-	});
+	res.cookie('userId', req.params.id);
 	res.redirect('/vote');
 });
 
@@ -30,8 +28,8 @@ router.get('/register', function(req, res) {
 
 function auth(req, res, next) {
 	if (!req.cookies) { return next(); }
-	if(req.cookies.voteId) {
-		req.voteId = req.cookies.voteId;
+	if(req.cookies.userId) {
+		req.userId = req.cookies.userId;
 		req.role = 'voter';
 	} else if(req.cookies.username && req.cookies.hash) {
 		if(matchingCredentials(req.cookies, credentials.admin)) {
