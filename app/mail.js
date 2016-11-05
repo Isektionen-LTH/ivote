@@ -21,7 +21,7 @@ module.exports = function(email, callback) {
       from: credentials.email, // sender address
       to: email, // list of receivers
       subject: 'Email Example', // Subject line
-      text: "http://localhost:8080/login/voter/" + uid//, // plaintext body
+      text: "http://188.166.155.102/login/voter/" + uid//, // plaintext body
       // html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
     };
 

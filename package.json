@@ -30,6 +30,7 @@
     "nedb": "^1.8.0",
     "node-uuid": "^1.4.7",
     "nodemailer": "^2.6.4",
+    "nodemon": "^1.11.0",
     "reflect-metadata": "^0.1.8",
     "rxjs": "5.0.0-beta.12",
     "socket.io": "^1.5.0",
