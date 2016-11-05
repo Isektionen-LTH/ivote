@@ -10,6 +10,7 @@ var validCodes = ['123', 'hej'];
 var adminPassword = 'hej123';
 var cookieParser = require('cookie-parser');
 var login = require('./app/login');
+const config = require('./config.json');
 
 var MongoClient = mongo.MongoClient;
 
@@ -65,7 +66,7 @@ server.listen(port, function () {
 
   console.log('Server listening on port', port);
 
-  MongoClient.connect('mongodb://kristoffer:evote@ds035036.mlab.com:35036/ivote', function(err, database) {
+  MongoClient.connect(config.dbUrl, function(err, database) {
 
     if(err) console.log(err);
     db = database;
