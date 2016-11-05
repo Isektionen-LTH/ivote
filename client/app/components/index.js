@@ -20,6 +20,9 @@ export default function IndexPage() {
 				<Link to={'/vote'}>Rösta</Link>
 			</div>
 			<div>
+				<Link to={'/results'}>Se resultat</Link>
+			</div>
+			<div>
 				<Link to={'/login'}>Logga in som admin</Link>
 			</div>
 		</Paper>

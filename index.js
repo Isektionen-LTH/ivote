@@ -32,7 +32,7 @@ app.use(login.auth);
 app.use('/login', login.router);
 
 app.use(function(req, res, next) {
-  if (!req.userId && req.role === 'voter') { return next(); }
+  if (req.role !== 'voter' ||!req.userId) { return next(); }
   validateUser(req.userId, function(exists) {
     if(!exists) {
       req.userId = null;
