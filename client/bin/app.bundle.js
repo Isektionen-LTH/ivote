@@ -509,6 +509,12 @@
 	
 	var _MuiThemeProvider2 = _interopRequireDefault(_MuiThemeProvider);
 	
+	var _getMuiTheme = __webpack_require__(324);
+	
+	var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
+	
+	var _colors = __webpack_require__(339);
+	
 	var _greeting = __webpack_require__(381);
 	
 	var _greeting2 = _interopRequireDefault(_greeting);
@@ -537,11 +543,11 @@
 	
 	var _results2 = _interopRequireDefault(_results);
 	
-	var _index = __webpack_require__(532);
+	var _index = __webpack_require__(526);
 	
 	var _index2 = _interopRequireDefault(_index);
 	
-	var _reactTapEventPlugin = __webpack_require__(526);
+	var _reactTapEventPlugin = __webpack_require__(527);
 	
 	var _reactTapEventPlugin2 = _interopRequireDefault(_reactTapEventPlugin);
 	
@@ -582,30 +588,16 @@
 	// http://stackoverflow.com/a/34015469/988941
 	(0, _reactTapEventPlugin2.default)();
 	
-	// import fetchMock from 'fetch-mock';
-	
-	// fetchMock.get('/currentvote', new Promise((resolve) => {
-	// 	setTimeout(() => resolve({
-	// 		currentState: 'voting',
-	// 		currentVote: {
-	// 			title: 'I-sektionens VD',
-	// 			options: ['John', 'Kristoffer']
-	// 		}
-	// 	}), 300);
-	// }));
-	
-	// fetchMock.post('/vote', function(url, options) {
-	// 	console.log('voted for', options.body);
-	// 	return new Promise((resolve) => {
-	// 		setTimeout(() => resolve({
-	// 			currentState: 'voted'
-	// 		}), 500);
-	// 	});
-	// });
+	var muiTheme = (0, _getMuiTheme2.default)({
+		//   palette: {
+		// 	primary1Color: red900,
+		// 	accent1Color: blueGrey50
+		//   }
+	});
 	
 	_reactDom2.default.render(_react2.default.createElement(
 		_MuiThemeProvider2.default,
-		null,
+		{ muiTheme: muiTheme },
 		_react2.default.createElement(
 			_reactRouter.Router,
 			{ history: _reactRouter.browserHistory },
@@ -46798,28 +46790,46 @@
 	
 	var _reactRouter = __webpack_require__(174);
 	
+	var _cookie = __webpack_require__(493);
+	
 	var _AppBar = __webpack_require__(507);
 	
 	var _AppBar2 = _interopRequireDefault(_AppBar);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	// import { Link } from 'react-router';
-	
 	var AppComponent = function AppComponent(_ref) {
 		var router = _ref.router,
 		    children = _ref.children;
 	
-		var navigation = router.isActive('/results') ? _react2.default.createElement(_FlatButton2.default, { label: 'R\xF6sta', onTouchTap: function onTouchTap() {
-				return router.push('/vote');
-			} }) : _react2.default.createElement(_FlatButton2.default, { label: 'Resultat', onTouchTap: function onTouchTap() {
-				return router.push('/results');
-			} });
+		var loggedIn = (0, _cookie.getCookie)('userId') || (0, _cookie.getCookie)('username') && (0, _cookie.getCookie)('password');
+	
+		var navigation = null;
+		if (router.isActive('/results')) {
+			navigation = _react2.default.createElement(_FlatButton2.default, { label: 'R\xF6sta', onTouchTap: function onTouchTap() {
+					return router.push('/vote');
+				} });
+		} else if (router.isActive('/vote')) {
+			navigation = _react2.default.createElement(_FlatButton2.default, { label: 'Resultat', onTouchTap: function onTouchTap() {
+					return router.push('/results');
+				} });
+		} else if (router.isActive('/')) {
+			navigation = loggedIn ? _react2.default.createElement(_FlatButton2.default, { label: 'Logga ut', onTouchTap: function onTouchTap() {
+					return window.location = '/logout';
+				} }) : _react2.default.createElement(_FlatButton2.default, { label: 'Logga in', onTouchTap: function onTouchTap() {
+					return router.push('/login');
+				} });
+		}
+	
 		return _react2.default.createElement(
 			'div',
 			null,
 			_react2.default.createElement(_AppBar2.default, { title: 'IVote',
-				iconElementRight: navigation
+				iconElementRight: navigation,
+				onTitleTouchTap: function onTitleTouchTap() {
+					return router.push('/');
+				},
+				titleStyle: { cursor: 'pointer' }
 			}),
 			_react2.default.createElement(
 				'div',
@@ -46828,6 +46838,8 @@
 			)
 		);
 	};
+	// import { Link } from 'react-router';
+	
 	AppComponent = (0, _reactRouter.withRouter)(AppComponent);
 	
 	exports.default = AppComponent;
@@ -49722,8 +49734,100 @@
 /* 526 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {var invariant = __webpack_require__(527);
-	var defaultClickRejectionStrategy = __webpack_require__(528);
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = IndexPage;
+	
+	var _react = __webpack_require__(3);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(174);
+	
+	var _TextField = __webpack_require__(495);
+	
+	var _TextField2 = _interopRequireDefault(_TextField);
+	
+	var _IconButton = __webpack_require__(469);
+	
+	var _IconButton2 = _interopRequireDefault(_IconButton);
+	
+	var _FlatButton = __webpack_require__(456);
+	
+	var _FlatButton2 = _interopRequireDefault(_FlatButton);
+	
+	var _Card = __webpack_require__(464);
+	
+	var _FloatingActionButton = __webpack_require__(512);
+	
+	var _FloatingActionButton2 = _interopRequireDefault(_FloatingActionButton);
+	
+	var _add = __webpack_require__(514);
+	
+	var _add2 = _interopRequireDefault(_add);
+	
+	var _clear = __webpack_require__(515);
+	
+	var _clear2 = _interopRequireDefault(_clear);
+	
+	var _Paper = __webpack_require__(439);
+	
+	var _Paper2 = _interopRequireDefault(_Paper);
+	
+	var _CircularProgress = __webpack_require__(481);
+	
+	var _CircularProgress2 = _interopRequireDefault(_CircularProgress);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function IndexPage() {
+		return _react2.default.createElement(
+			_Paper2.default,
+			{ className: 'index-page' },
+			_react2.default.createElement(
+				'h1',
+				null,
+				'V\xE4lkommen till IVote'
+			),
+			_react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					_reactRouter.Link,
+					{ to: '/vote' },
+					'R\xF6sta'
+				)
+			),
+			_react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					_reactRouter.Link,
+					{ to: '/results' },
+					'Se resultat'
+				)
+			),
+			_react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					_reactRouter.Link,
+					{ to: '/login' },
+					'Logga in som admin'
+				)
+			)
+		);
+	}
+
+/***/ },
+/* 527 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {var invariant = __webpack_require__(528);
+	var defaultClickRejectionStrategy = __webpack_require__(529);
 	
 	var alreadyInjected = false;
 	
@@ -49745,14 +49849,14 @@
 	  alreadyInjected = true;
 	
 	  __webpack_require__(45).injection.injectEventPluginsByName({
-	    'TapEventPlugin':       __webpack_require__(529)(shouldRejectClick)
+	    'TapEventPlugin':       __webpack_require__(530)(shouldRejectClick)
 	  });
 	};
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 527 */
+/* 528 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -49807,7 +49911,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 528 */
+/* 529 */
 /***/ function(module, exports) {
 
 	module.exports = function(lastTouchEvent, clickTimestamp) {
@@ -49818,7 +49922,7 @@
 
 
 /***/ },
-/* 529 */
+/* 530 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -49846,10 +49950,10 @@
 	var EventPluginUtils = __webpack_require__(47);
 	var EventPropagators = __webpack_require__(44);
 	var SyntheticUIEvent = __webpack_require__(78);
-	var TouchEventUtils = __webpack_require__(530);
+	var TouchEventUtils = __webpack_require__(531);
 	var ViewportMetrics = __webpack_require__(79);
 	
-	var keyOf = __webpack_require__(531);
+	var keyOf = __webpack_require__(532);
 	var topLevelTypes = EventConstants.topLevelTypes;
 	
 	var isStartish = EventPluginUtils.isStartish;
@@ -49994,7 +50098,7 @@
 
 
 /***/ },
-/* 530 */
+/* 531 */
 /***/ function(module, exports) {
 
 	/**
@@ -50042,7 +50146,7 @@
 
 
 /***/ },
-/* 531 */
+/* 532 */
 /***/ function(module, exports) {
 
 	/**
@@ -50080,89 +50184,6 @@
 	};
 	
 	module.exports = keyOf;
-
-/***/ },
-/* 532 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	exports.default = IndexPage;
-	
-	var _react = __webpack_require__(3);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRouter = __webpack_require__(174);
-	
-	var _TextField = __webpack_require__(495);
-	
-	var _TextField2 = _interopRequireDefault(_TextField);
-	
-	var _IconButton = __webpack_require__(469);
-	
-	var _IconButton2 = _interopRequireDefault(_IconButton);
-	
-	var _FlatButton = __webpack_require__(456);
-	
-	var _FlatButton2 = _interopRequireDefault(_FlatButton);
-	
-	var _Card = __webpack_require__(464);
-	
-	var _FloatingActionButton = __webpack_require__(512);
-	
-	var _FloatingActionButton2 = _interopRequireDefault(_FloatingActionButton);
-	
-	var _add = __webpack_require__(514);
-	
-	var _add2 = _interopRequireDefault(_add);
-	
-	var _clear = __webpack_require__(515);
-	
-	var _clear2 = _interopRequireDefault(_clear);
-	
-	var _Paper = __webpack_require__(439);
-	
-	var _Paper2 = _interopRequireDefault(_Paper);
-	
-	var _CircularProgress = __webpack_require__(481);
-	
-	var _CircularProgress2 = _interopRequireDefault(_CircularProgress);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function IndexPage() {
-		return _react2.default.createElement(
-			_Paper2.default,
-			{ className: 'index-page' },
-			_react2.default.createElement(
-				'h1',
-				null,
-				'V\xE4lkommen till IVote'
-			),
-			_react2.default.createElement(
-				'div',
-				null,
-				_react2.default.createElement(
-					_reactRouter.Link,
-					{ to: '/vote' },
-					'R\xF6sta'
-				)
-			),
-			_react2.default.createElement(
-				'div',
-				null,
-				_react2.default.createElement(
-					_reactRouter.Link,
-					{ to: '/login' },
-					'Logga in som admin'
-				)
-			)
-		);
-	}
 
 /***/ }
 /******/ ]);

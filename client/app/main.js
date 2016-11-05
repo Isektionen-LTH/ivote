@@ -4,6 +4,8 @@ import ReactDOM from 'react-dom';
 import { Router, Route, Link, browserHistory, IndexRoute } from 'react-router';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import { red900, blueGrey50 } from 'material-ui/styles/colors';
 
 import Greeting from './greeting.component';
 import VoteRoute from './components/vote';
@@ -31,36 +33,21 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
 
-// import fetchMock from 'fetch-mock';
-
-// fetchMock.get('/currentvote', new Promise((resolve) => {
-// 	setTimeout(() => resolve({
-// 		currentState: 'voting',
-// 		currentVote: {
-// 			title: 'I-sektionens VD',
-// 			options: ['John', 'Kristoffer']
-// 		}
-// 	}), 300);
-// }));
-
-// fetchMock.post('/vote', function(url, options) {
-// 	console.log('voted for', options.body);
-// 	return new Promise((resolve) => {
-// 		setTimeout(() => resolve({
-// 			currentState: 'voted'
-// 		}), 500);
-// 	});
-// });
+const muiTheme = getMuiTheme({
+//   palette: {
+// 	primary1Color: red900,
+// 	accent1Color: blueGrey50
+//   }
+});
 
 ReactDOM.render(
-	<MuiThemeProvider>
+	<MuiThemeProvider muiTheme={muiTheme}>
 		<Router history={browserHistory}>
 			<Route path="/" component={App}>
 				<IndexRoute component={IndexPage} />
 				<Route path="vote" component={VoteRoute} />
 				<Route path="login" component={LoginRoute} />
 				<Route path="results" component={Results} />
-
 			</Route>
 			{AdminRoute}
 			{RegisterRoute}
