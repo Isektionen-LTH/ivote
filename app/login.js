@@ -6,6 +6,8 @@ const salt = 'ivote';
 
 router.get('/voter/:id', function(req, res) {
 	res.cookie('userId', req.params.id);
+	res.clearCookie('username');
+	res.clearCookie('password');
 	res.redirect('/vote');
 });
 
