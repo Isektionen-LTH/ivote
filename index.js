@@ -208,6 +208,17 @@ function returnVotesAdmin(res){
   });
 }
 
+function sendUsers(res) {
+  db.collection('codes').find({}).toArray(function (err, docs) {
+    res.send(docs.map(function(doc) {
+      return {
+        name: doc.name,
+        id: doc._id
+      }
+    }));
+  });
+}
+
 function validateUser(userID, callback){
 
   db.collection('codes').findOne({id: userID}, function(err, doc) {
@@ -348,6 +359,10 @@ app.get('/admin/votes', function (req, res, next) {
 
 });
 
+app.get('/admin/userlist', function (req, res, next) {
+  sendUsers(res);
+});
+
 app.post('/admin/vote/new', function (req, res, next) {
 
   console.log(req.body);
@@ -394,6 +409,12 @@ app.delete('/admin/vote/:id', function(req, res) {
     returnVotesAdmin(res);
   });
 
+});
+
+app.delete('/admin/user/:id', function(req, res) {
+  db.collection('codes').deleteOne({$and: [{_id: mongo.ObjectId(req.params.id)}]}, function (err, doc) {
+    sendUsers(res);
+  });
 });
 
 app.post('/admin/vote/cancelcurrent', function(req, res) {

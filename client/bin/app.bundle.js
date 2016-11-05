@@ -535,19 +535,19 @@
 	
 	var _app4 = _interopRequireDefault(_app3);
 	
-	var _app5 = __webpack_require__(521);
+	var _app5 = __webpack_require__(523);
 	
 	var _app6 = _interopRequireDefault(_app5);
 	
-	var _results = __webpack_require__(523);
+	var _results = __webpack_require__(525);
 	
 	var _results2 = _interopRequireDefault(_results);
 	
-	var _index = __webpack_require__(526);
+	var _index = __webpack_require__(528);
 	
 	var _index2 = _interopRequireDefault(_index);
 	
-	var _reactTapEventPlugin = __webpack_require__(527);
+	var _reactTapEventPlugin = __webpack_require__(529);
 	
 	var _reactTapEventPlugin2 = _interopRequireDefault(_reactTapEventPlugin);
 	
@@ -47917,9 +47917,11 @@
 	
 	var _configureVotes2 = _interopRequireDefault(_configureVotes);
 	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	var _users = __webpack_require__(521);
 	
-	// import { Link } from 'react-router';
+	var _users2 = _interopRequireDefault(_users);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var AppComponent = function AppComponent(_ref) {
 		var router = _ref.router,
@@ -47939,12 +47941,15 @@
 			)
 		);
 	};
+	// import { Link } from 'react-router';
+	
 	AppComponent = (0, _reactRouter.withRouter)(AppComponent);
 	
 	var route = _react2.default.createElement(
 		_reactRouter.Route,
 		{ path: '/admin', component: AppComponent },
-		_react2.default.createElement(_reactRouter.IndexRoute, { component: _configureVotes2.default })
+		_react2.default.createElement(_reactRouter.IndexRoute, { component: _configureVotes2.default }),
+		_react2.default.createElement(_reactRouter.Route, { path: 'users', component: _users2.default })
 	);
 	
 	exports.default = route;
@@ -49250,6 +49255,217 @@
 		value: true
 	});
 	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	exports.default = UsersRoute;
+	
+	var _react = __webpack_require__(3);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(383);
+	
+	var _TextField = __webpack_require__(495);
+	
+	var _TextField2 = _interopRequireDefault(_TextField);
+	
+	var _IconButton = __webpack_require__(469);
+	
+	var _IconButton2 = _interopRequireDefault(_IconButton);
+	
+	var _FlatButton = __webpack_require__(456);
+	
+	var _FlatButton2 = _interopRequireDefault(_FlatButton);
+	
+	var _Card = __webpack_require__(464);
+	
+	var _FloatingActionButton = __webpack_require__(512);
+	
+	var _FloatingActionButton2 = _interopRequireDefault(_FloatingActionButton);
+	
+	var _add = __webpack_require__(514);
+	
+	var _add2 = _interopRequireDefault(_add);
+	
+	var _clear = __webpack_require__(515);
+	
+	var _clear2 = _interopRequireDefault(_clear);
+	
+	var _delete = __webpack_require__(516);
+	
+	var _delete2 = _interopRequireDefault(_delete);
+	
+	var _Paper = __webpack_require__(439);
+	
+	var _Paper2 = _interopRequireDefault(_Paper);
+	
+	var _CircularProgress = __webpack_require__(481);
+	
+	var _CircularProgress2 = _interopRequireDefault(_CircularProgress);
+	
+	var _users = __webpack_require__(522);
+	
+	var _users2 = __webpack_require__(535);
+	
+	var _users3 = _interopRequireDefault(_users2);
+	
+	__webpack_require__(1);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	function UsersRoute() {
+	
+		return _react2.default.createElement(
+			_reactRedux.Provider,
+			{ store: _users3.default },
+			_react2.default.createElement(Users, null)
+		);
+	}
+	
+	var UsersClass = function (_React$Component) {
+		_inherits(UsersClass, _React$Component);
+	
+		function UsersClass() {
+			_classCallCheck(this, UsersClass);
+	
+			return _possibleConstructorReturn(this, (UsersClass.__proto__ || Object.getPrototypeOf(UsersClass)).apply(this, arguments));
+		}
+	
+		_createClass(UsersClass, [{
+			key: 'componentDidMount',
+			value: function componentDidMount() {
+				var dispatch = this.props.dispatch;
+	
+				dispatch((0, _users.fetchUsers)());
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _props = this.props,
+				    users = _props.users,
+				    dispatch = _props.dispatch;
+	
+	
+				if (users === null) {
+					return _react2.default.createElement(
+						'div',
+						{ className: 'loading-container' },
+						_react2.default.createElement(_CircularProgress2.default, null)
+					);
+				}
+	
+				return _react2.default.createElement(
+					'table',
+					null,
+					_react2.default.createElement(
+						'tbody',
+						null,
+						users.map(function (_ref) {
+							var name = _ref.name,
+							    id = _ref.id;
+							return _react2.default.createElement(
+								'tr',
+								{ key: id },
+								_react2.default.createElement(
+									'td',
+									null,
+									name
+								),
+								_react2.default.createElement(
+									'td',
+									null,
+									_react2.default.createElement(
+										_IconButton2.default,
+										{ onTouchTap: function onTouchTap() {
+												return dispatch((0, _users.deleteUser)(id));
+											} },
+										_react2.default.createElement(_clear2.default, null)
+									)
+								)
+							);
+						})
+					)
+				);
+			}
+		}]);
+	
+		return UsersClass;
+	}(_react2.default.Component);
+	
+	var Users = (0, _reactRedux.connect)(function (state) {
+		return {
+			users: state.users
+		};
+	})(UsersClass);
+
+/***/ },
+/* 522 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.fetchUsers = fetchUsers;
+	exports.deleteUser = deleteUser;
+	var FETCH_VOTES = exports.FETCH_VOTES = 'FETCH_USERS';
+	
+	function fetchUsers() {
+		return function (dispatch) {
+			dispatch(requestUsers());
+	
+			return fetch('/admin/userlist', { method: 'GET', credentials: 'same-origin' }).then(function (response) {
+				return response.json();
+			}).then(function (json) {
+				dispatch(recieveUsers(json));
+			});
+		};
+	}
+	
+	var REQUEST_USERS = exports.REQUEST_USERS = 'REQUEST_USERS';
+	
+	function requestUsers() {
+		return {
+			type: REQUEST_USERS
+		};
+	}
+	
+	var RECIEVE_USERS = exports.RECIEVE_USERS = 'RECIEVE_USERS';
+	
+	function recieveUsers(json) {
+		return {
+			type: RECIEVE_USERS,
+			users: json
+		};
+	}
+	
+	function deleteUser(id) {
+		return function (dispatch) {
+			return fetch('/admin/user/' + id, { method: 'DELETE', credentials: 'same-origin' }).then(function (response) {
+				return response.json();
+			}).then(function (json) {
+				dispatch(recieveUsers(json));
+			});
+		};
+	}
+
+/***/ },
+/* 523 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
 	var _react = __webpack_require__(3);
 	
 	var _react2 = _interopRequireDefault(_react);
@@ -49266,7 +49482,7 @@
 	
 	var _Paper2 = _interopRequireDefault(_Paper);
 	
-	var _registerForm = __webpack_require__(522);
+	var _registerForm = __webpack_require__(524);
 	
 	var _registerForm2 = _interopRequireDefault(_registerForm);
 	
@@ -49324,7 +49540,7 @@
 	exports.default = route;
 
 /***/ },
-/* 522 */
+/* 524 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -49482,7 +49698,7 @@
 	exports.default = RegisterForm;
 
 /***/ },
-/* 523 */
+/* 525 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -49515,11 +49731,11 @@
 	
 	var _socket2 = _interopRequireDefault(_socket);
 	
-	var _results = __webpack_require__(524);
+	var _results = __webpack_require__(526);
 	
 	var _results2 = _interopRequireDefault(_results);
 	
-	var _results3 = __webpack_require__(525);
+	var _results3 = __webpack_require__(527);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -49666,7 +49882,7 @@
 	})(ResultsClass);
 
 /***/ },
-/* 524 */
+/* 526 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -49685,7 +49901,7 @@
 	
 	var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
 	
-	var _results = __webpack_require__(525);
+	var _results = __webpack_require__(527);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -49712,7 +49928,7 @@
 	exports.default = store;
 
 /***/ },
-/* 525 */
+/* 527 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -49731,7 +49947,7 @@
 	}
 
 /***/ },
-/* 526 */
+/* 528 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -49823,11 +50039,11 @@
 	}
 
 /***/ },
-/* 527 */
+/* 529 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {var invariant = __webpack_require__(528);
-	var defaultClickRejectionStrategy = __webpack_require__(529);
+	/* WEBPACK VAR INJECTION */(function(process) {var invariant = __webpack_require__(530);
+	var defaultClickRejectionStrategy = __webpack_require__(531);
 	
 	var alreadyInjected = false;
 	
@@ -49849,14 +50065,14 @@
 	  alreadyInjected = true;
 	
 	  __webpack_require__(45).injection.injectEventPluginsByName({
-	    'TapEventPlugin':       __webpack_require__(530)(shouldRejectClick)
+	    'TapEventPlugin':       __webpack_require__(532)(shouldRejectClick)
 	  });
 	};
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 528 */
+/* 530 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -49911,7 +50127,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 529 */
+/* 531 */
 /***/ function(module, exports) {
 
 	module.exports = function(lastTouchEvent, clickTimestamp) {
@@ -49922,7 +50138,7 @@
 
 
 /***/ },
-/* 530 */
+/* 532 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -49950,10 +50166,10 @@
 	var EventPluginUtils = __webpack_require__(47);
 	var EventPropagators = __webpack_require__(44);
 	var SyntheticUIEvent = __webpack_require__(78);
-	var TouchEventUtils = __webpack_require__(531);
+	var TouchEventUtils = __webpack_require__(533);
 	var ViewportMetrics = __webpack_require__(79);
 	
-	var keyOf = __webpack_require__(532);
+	var keyOf = __webpack_require__(534);
 	var topLevelTypes = EventConstants.topLevelTypes;
 	
 	var isStartish = EventPluginUtils.isStartish;
@@ -50098,7 +50314,7 @@
 
 
 /***/ },
-/* 531 */
+/* 533 */
 /***/ function(module, exports) {
 
 	/**
@@ -50146,7 +50362,7 @@
 
 
 /***/ },
-/* 532 */
+/* 534 */
 /***/ function(module, exports) {
 
 	/**
@@ -50184,6 +50400,51 @@
 	};
 	
 	module.exports = keyOf;
+
+/***/ },
+/* 535 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _redux = __webpack_require__(390);
+	
+	var _reduxThunk = __webpack_require__(484);
+	
+	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
+	
+	var _users = __webpack_require__(522);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function users() {
+		var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+		var action = arguments[1];
+	
+		switch (action.type) {
+			case _users.REQUEST_USERS:
+				return null;
+			case _users.RECIEVE_USERS:
+				return action.users;
+			default:
+				return state;
+		}
+	}
+	
+	var reducer = (0, _redux.combineReducers)({
+		users: users
+	});
+	// TODO göra state till en egen istället för att ha en session
+	
+	var store = (0, _redux.createStore)(reducer, (0, _redux.applyMiddleware)(_reduxThunk2.default
+	// , createLogger()
+	));
+	
+	exports.default = store;
 
 /***/ }
 /******/ ]);

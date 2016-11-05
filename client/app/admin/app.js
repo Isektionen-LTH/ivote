@@ -9,6 +9,7 @@ import { Route, IndexRoute } from 'react-router';
 import AppBar from 'material-ui/AppBar';
 
 import ConfigureVotes from './components/configure-votes';
+import Users from './components/users';
 
 let AppComponent = ({ router, children }) => {
 	return (
@@ -23,6 +24,7 @@ AppComponent = withRouter(AppComponent);
 
 let route = <Route path="/admin" component={AppComponent}>
 				<IndexRoute component={ConfigureVotes} />
+				<Route path="users" component={Users} />
 			</Route>;
 
 export default route;
