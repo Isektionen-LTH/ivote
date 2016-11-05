@@ -5,7 +5,7 @@ export function fetchVotes() {
 	return (dispatch) => {
 		dispatch(requestVotes());
 
-		return fetch('/admin/votes')
+		return fetch('/admin/votes', {method: 'GET', credentials: 'same-origin'})
 			.then(response => response.json())
 			.then((json) => {
 				dispatch(recieveVotes(json));
@@ -32,7 +32,7 @@ function recieveVotes(json) {
 
 export function startVote(id) {
 	return (dispatch) => {
-		return fetch(`/admin/vote/${id}/start`, { method: 'POST' })
+		return fetch(`/admin/vote/${id}/start`, { method: 'POST', credentials: 'same-origin' })
 			.then(response => response.json())
 			.then((json) => {
 				dispatch(recieveVotes(json));
@@ -42,7 +42,7 @@ export function startVote(id) {
 
 export function deleteVote(id) {
 	return (dispatch) => {
-		return fetch(`/admin/vote/${id}`, { method: 'DELETE' })
+		return fetch(`/admin/vote/${id}`, { method: 'DELETE', credentials: 'same-origin' })
 			.then(response => response.json())
 			.then((json) => {
 				dispatch(recieveVotes(json));
@@ -52,7 +52,7 @@ export function deleteVote(id) {
 
 export function cancelCurrent() {
 	return (dispatch) => {
-		return fetch('/admin/vote/cancelcurrent', { method: 'POST' })
+		return fetch('/admin/vote/cancelcurrent', { method: 'POST', credentials: 'same-origin' })
 			.then(response => response.json())
 			.then((json) => {
 				dispatch(recieveVotes(json));
@@ -90,9 +90,10 @@ export function cancelEditing() {
 
 export const ADD_EDIT_OPTION = 'ADD_EDIT_OPTION';
 
-export function addEditOption() {
+export function addEditOption(value) {
 	return {
-		type: ADD_EDIT_OPTION
+		type: ADD_EDIT_OPTION,
+		value
 	};
 }
 
@@ -135,13 +136,13 @@ export function saveVote(vote) {
 		// Allow id = 0 (falsey)
 		const headers = new window.Headers({'Content-Type': 'application/json'});
 		if (vote.id != null) {
-			return fetch(`/admin/vote/${vote.id}`, { method: 'PUT', body: JSON.stringify(vote), headers })
+			return fetch(`/admin/vote/${vote.id}`, { method: 'PUT', body: JSON.stringify(vote), headers, credentials: 'same-origin' })
 				.then(response => response.json())
 				.then((json) => {
 					dispatch(recieveVotes(json));
 				});
 		} else {
-			return fetch('/admin/vote/new', { method: 'POST', body: JSON.stringify(vote), headers })
+			return fetch('/admin/vote/new', { method: 'POST', body: JSON.stringify(vote), headers, credentials: 'same-origin' })
 			.then(response => response.json())
 			.then((json) => {
 				dispatch(recieveVotes(json));

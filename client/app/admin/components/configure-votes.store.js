@@ -29,7 +29,7 @@ function editing(state = null, action) {
 	case ADD_EDIT_OPTION:
 		return {
 			...state,
-			options: [...state.options, '']
+			options: [...state.options, action.value]
 		};
 
 	case EDIT_TITLE_CHANGED:
@@ -38,10 +38,17 @@ function editing(state = null, action) {
 			title: action.title
 		};
 	case EDIT_OPTION_CHANGED:
-		return {
-			...state,
-			options: state.options.map((option, i) => i === action.index ? action.option : option)
-		};
+		if (action.index === state.options.length) {
+			return {
+				...state,
+				options: state.options.concat(action.option)
+			};
+		} else {
+			return {
+				...state,
+				options: state.options.map((option, i) => i === action.index ? action.option : option)
+			};
+		}
 	case REMOVE_EDIT_OPTION:
 		return {
 			...state,

@@ -11,6 +11,7 @@ router.get('/voter/:id', function(req, res) {
 
 router.get('/admin', function(req, res) {
 	if(matchingCredentials(req.cookies, credentials.admin)) {
+		res.clearCookie('userId');
 		res.redirect('/admin');
 	} else {
 		res.redirect('/login');
@@ -19,6 +20,7 @@ router.get('/admin', function(req, res) {
 
 router.get('/register', function(req, res) {
 	if(matchingCredentials(req.cookies, credentials.register)) {
+		res.clearCookie('userId');
 		res.redirect('/register');
 	} else {
 		res.redirect('/login');

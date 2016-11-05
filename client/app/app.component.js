@@ -18,7 +18,7 @@ let AppComponent = ({ router, children }) => {
 			<div id="container">{children}</div>
 		</div>
 	);
-}
+};
 AppComponent = withRouter(AppComponent);
 
 export default AppComponent;

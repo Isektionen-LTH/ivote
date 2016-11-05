@@ -28,7 +28,7 @@ app.use(login.auth);
 app.use('/login', login.router);
 
 app.use(function(req, res, next) {
-  if (!req.userId) { return next(); }
+  if (!req.userId && req.role === 'voter') { return next(); }
   validateUser(req.userId, function(exists) {
     if(!exists) {
       req.userId = null;
@@ -36,6 +36,26 @@ app.use(function(req, res, next) {
     }
     next();
   });
+});
+
+app.use('/admin', function(req, res, next) {
+  if (req.role !== 'admin') {
+    return res.redirect('/');
+  }
+  next();
+});
+app.use('/register', function(req, res, next) {
+  if (req.role !== 'register') {
+    res.redirect('/');
+  }
+  next();
+});
+
+app.get('/logout', function(req, res) {
+  res.clearCookie('userId');
+  res.clearCookie('username');
+  res.clearCookie('hash');
+  res.redirect('/');
 });
 
 server.listen(8080, function () {
@@ -185,11 +205,7 @@ function returnVotesAdmin(res){
 function validateUser(userID, callback){
 
   db.collection('codes').findOne({id: userID}, function(err, doc) {
-    if(doc){
-      callback(true);
-    } else {
-      callback(false);
-    }
+    callback(!!doc);
   });
 
 }

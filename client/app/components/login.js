@@ -37,60 +37,72 @@ class Login extends React.Component {
 	constructor(props) {
 		super(props);
 
+		this.state = {
+			username: '',
+			password: '',
+			role: 'admin'
+		};
+
 		this.submit = this.submit.bind(this);
 	}
 
-	submit() {
-		const role = this.radioButtons.state.selected;
-		const username = this.usernameInput.input.value;
-		const password = this.passwordInput.input.value;
+	submit(e) {
+		e.preventDefault();
 
-		this.login(role, username, password);
-	}
-
-	login(role, username, password) {
+		const { username, password, role } = this.state;
 		setCookie('username', username);
 		setCookie('hash', hash(password + salt));
 		window.location = `/login/${role}`;
 	}
 
 	render() {
-		return (
-			<Card>
-				<CardTitle title={'Login'} />
-				<CardText>
-				<div>
-					<TextField
-						floatingLabelText="Användarnamn"
-						ref={(el) => this.usernameInput = el} />
-				</div>
-				<div>
-					<TextField
-						floatingLabelText="Lösenord"
-						type="password"
-						ref={(el) => this.passwordInput = el}
-					/>
-				</div>
-				<RadioButtonGroup
-					name="selected"
-					defaultSelected={'admin'}
-					ref={(el) => this.radioButtons = el}>
 
-					<RadioButton
-						label={'Admin'}
-						value={'admin'} />
-					<RadioButton
-						label={'Registrerare'}
-						value={'register'} />
-				</RadioButtonGroup>
-				</CardText>
-				<CardActions className="card-actions">
-					<FlatButton
-						label="Logga in"
-						primary={true}
-						onTouchTap={this.submit} />
-				</CardActions>
-			</Card>
+		const { username, password, role } = this.state;
+
+		const validate = () => {
+			return username && password;
+		};
+		
+		return (
+			<form onSubmit={this.submit}>
+				<Card>
+					<CardTitle title={'Login'} />
+					<CardText>
+						<div>
+							<TextField
+								floatingLabelText="Användarnamn"
+								value={username}
+								onChange={(e) => this.setState({ username: e.target.value })} />
+						</div>
+						<div>
+							<TextField
+								floatingLabelText="Lösenord"
+								type="password"
+								value={password}
+								onChange={(e) => this.setState({ password: e.target.value })} />
+						</div>
+						<RadioButtonGroup
+							name="selected"
+							defaultSelected={role}
+							onChange={(e) => this.setState({ role: e.target.value })} >
+
+							<RadioButton
+								label={'Admin'}
+								value={'admin'} />
+							<RadioButton
+								label={'Registrerare'}
+								value={'register'} />
+						</RadioButtonGroup>
+					</CardText>
+					<CardActions className="card-actions">
+						<FlatButton
+							label="Logga in"
+							primary={true}
+							disabled={!validate()}
+							type="submit" />
+					</CardActions>
+				</Card>
+			</form>
 		);
 	}
 }

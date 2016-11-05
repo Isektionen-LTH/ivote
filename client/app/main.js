@@ -14,6 +14,7 @@ import AdminRoute from './admin/app';
 import RegisterRoute from './register/app';
 
 import Results from './components/results';
+import IndexPage from './components/index';
 
 // import 'whatwg-fetch';
 
@@ -23,11 +24,6 @@ class NoMatch extends React.Component {
 	}
 }
 
-const IVote = () => {
-	return {
-
-	};
-};
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
@@ -60,7 +56,7 @@ ReactDOM.render(
 	<MuiThemeProvider>
 		<Router history={browserHistory}>
 			<Route path="/" component={App}>
-				<IndexRoute component={IVote} />
+				<IndexRoute component={IndexPage} />
 				<Route path="vote" component={VoteRoute} />
 				<Route path="login" component={LoginRoute} />
 				<Route path="results" component={Results} />

@@ -38,56 +38,65 @@ let EditVote = ({ editing, dispatch }) => {
 		return true;
 	};
 
+	const emptyForm = () => {
+		return !title && !options.filter(x => x).length;
+	};
+
+	const editOption = (option, i) => {
+		return (
+			<div key={i}>
+				<TextField
+					floatingLabelText={`Alternativ ${i + 1}`}
+					value={option}
+					tabIndex={0}
+					onChange={(e) => dispatch(editOptionChanged(e.target.value, i))} />
+				{/* TODO bara kunna ta bort om man har mer än 2*/}
+				<IconButton tabIndex={10} onTouchTap={() => dispatch(removeEditOption(i))}>
+					<ContentClear />
+				</IconButton>
+			</div>
+		);
+	};
+	const addOption = () => {
+		return (
+			<div key={options.length}>
+				<TextField
+					floatingLabelText={'Lägg till alternativ'}
+					value={''}
+					tabIndex={0}
+					onChange={(e) => dispatch(addEditOption(e.target.value))} />
+			</div>
+		);
+	};
+
 	return (
 		<Paper className="card" style={{padding: 16}}>
 			<div>
 				<TextField
 					hintText="Titel"
 					value={title}
-					tabIndex={-1}
+					tabIndex={0}
 					className="big-textfield"
+					ref={(el) => el && emptyForm() && el.focus()}
 					onChange={(e) => dispatch(editTitleChanged(e.target.value))}/>
 			</div>
 			<div className="subtitle">{id ? 'Ändra omröstning' : 'Ny omröstning'}</div>
-			
 			<div>
-				{options.map((option, i)=>
-					<div key={i}>
-						<TextField
-							floatingLabelText={`Alternativ ${i + 1}`}
-							value={option}
-							tabIndex={i}
-							onChange={(e) => dispatch(editOptionChanged(e.target.value, i))} />
-						{/* TODO bara kunna ta bort om man har mer än 2*/}
-						<IconButton tabIndex={100} onTouchTap={() => dispatch(removeEditOption(i))}>
-							<ContentClear />
-						</IconButton>
-					</div>
+				{options.concat(['']).map((option, i) =>
+					i < options.length ? editOption(option, i) : addOption(option, i)
 				)}
-			</div>
-			<div>
-				<FlatButton
-					label="Lägg till alternativ"
-					primary={true}
-					tabIndex={50}
-					onTouchTap={() => dispatch(addEditOption())} />
-				{/* 
-				<IconButton tabIndex={100} onTouchTap={() => dispatch(addEditOption())}>
-					<ContentAdd />
-				</IconButton>
-				*/}
 			</div>
 			<div className="card-actions">
 				<FlatButton
 					label="Avbryt"
 					secondary={true}
-					tabIndex={50}
+					tabIndex={1}
 					onTouchTap={() => dispatch(cancelEditing())} />
 				<FlatButton
 					label={id ? 'Ändra' : 'Lägg till'}
 					primary={true}
 					disabled={!validate()}
-					tabIndex={50}
+					tabIndex={0}
 					onTouchTap={() => dispatch(saveVote({ title, options, id }))} />
 			</div>
 		</Paper>
