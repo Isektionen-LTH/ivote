@@ -70,7 +70,7 @@ server.listen(port, function () {
 
     if(err) console.log(err);
     db = database;
-    
+
   });
 
 });
@@ -129,7 +129,9 @@ function getCurrentVote(callback){
 
 function getVotingStatus(callback){
   db.collection('votes').findOne({isActive: true}, function(err, doc) {
-    callback({voted: doc.hasVoted.length, total: 55});
+    db.collection('codes').count(function(err, count) {
+      callback({voted: doc.hasVoted.length, total: count});
+    });
   });
 }
 
