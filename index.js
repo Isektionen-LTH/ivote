@@ -13,6 +13,9 @@ var login = require('./app/login');
 
 var MongoClient = mongo.MongoClient;
 
+var argv = require('minimist')(process.argv.slice(2));
+const port = argv.p || 8080;
+
 //var router = express.Router();
 
 app.get('/', function (req, res) {
@@ -58,9 +61,9 @@ app.get('/logout', function(req, res) {
   res.redirect('/');
 });
 
-server.listen(8080, function () {
+server.listen(port, function () {
 
-  console.log('Lyssnar');
+  console.log('Server listening on port', port);
 
   MongoClient.connect('mongodb://kristoffer:evote@ds035036.mlab.com:35036/ivote', function(err, database) {
 
@@ -430,7 +433,7 @@ app.get('/register/voter', function(req, res) {
 
   mail(req.query.email, function(uid) {
     db.collection('codes').insert({name: req.query.name, email: req.query.email, id: uid}, function(err) {
-
+      res.redirect('/register/done');
     });
   });
 

@@ -49250,6 +49250,10 @@
 	
 	var _reactRouter = __webpack_require__(174);
 	
+	var _Paper = __webpack_require__(439);
+	
+	var _Paper2 = _interopRequireDefault(_Paper);
+	
 	var _registerForm = __webpack_require__(522);
 	
 	var _registerForm2 = _interopRequireDefault(_registerForm);
@@ -49260,8 +49264,6 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	// import { Link } from 'react-router';
-	
 	var AppComponent = function AppComponent(_ref) {
 		var router = _ref.router,
 		    children = _ref.children;
@@ -49269,7 +49271,7 @@
 		return _react2.default.createElement(
 			'div',
 			null,
-			_react2.default.createElement(_AppBar2.default, { title: 'Register' }),
+			_react2.default.createElement(_AppBar2.default, { title: 'Registrera' }),
 			_react2.default.createElement(
 				'div',
 				{ id: 'container' },
@@ -49277,10 +49279,34 @@
 			)
 		);
 	};
+	// import { Link } from 'react-router';
+	
+	var Registered = function Registered() {
+		return _react2.default.createElement(
+			_Paper2.default,
+			{ className: 'index-page' },
+			_react2.default.createElement(
+				'h1',
+				null,
+				'Du \xE4r registrerad!'
+			),
+			_react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					_reactRouter.Link,
+					{ to: '/register' },
+					'Registera ny anv\xE4ndare'
+				)
+			)
+		);
+	};
+	
 	var route = _react2.default.createElement(
 		_reactRouter.Route,
 		{ path: '/register', component: AppComponent },
-		_react2.default.createElement(_reactRouter.IndexRoute, { component: _registerForm2.default })
+		_react2.default.createElement(_reactRouter.IndexRoute, { component: _registerForm2.default }),
+		_react2.default.createElement(_reactRouter.Route, { path: 'done', component: Registered })
 	);
 	
 	exports.default = route;
@@ -49363,9 +49389,17 @@
 				    email = _state2.email;
 	
 	
-				var validate = function validate() {
-					return name && email && validateEmail(email);
+				var validateName = function validateName(name) {
+					return (/^[^\s]+\s[^\s]+$/.test(name)
+					);
 				};
+	
+				var validate = function validate() {
+					return name && email && validateName(name) && validateEmail(email);
+				};
+	
+				// const nameError = name && !validateName(email) ? 'För och efternamn' : null;
+				var emailError = email && !validateEmail(email) ? 'Ogiltig mailaddress' : null;
 	
 				return _react2.default.createElement(
 					'form',
@@ -49373,7 +49407,23 @@
 					_react2.default.createElement(
 						_Card.Card,
 						null,
-						_react2.default.createElement(_Card.CardTitle, { title: 'Registrera' }),
+						_react2.default.createElement(_Card.CardTitle, { title: 'Registrera', subtitle: _react2.default.createElement(
+								'span',
+								null,
+								'Vi kan endast se ',
+								_react2.default.createElement(
+									'i',
+									null,
+									'om'
+								),
+								' du r\xF6stat inte ',
+								_react2.default.createElement(
+									'i',
+									null,
+									'vem'
+								),
+								' du r\xF6stat p\xE5'
+							) }),
 						_react2.default.createElement(
 							_Card.CardText,
 							null,
@@ -49381,7 +49431,7 @@
 								'div',
 								null,
 								_react2.default.createElement(_TextField2.default, {
-									floatingLabelText: 'Namn',
+									floatingLabelText: 'F\xF6r- och efternamn',
 									value: name,
 									onChange: function onChange(e) {
 										return _this2.setState({ name: e.target.value });
@@ -49391,9 +49441,10 @@
 								'div',
 								null,
 								_react2.default.createElement(_TextField2.default, {
-									floatingLabelText: 'E-mail',
+									floatingLabelText: 'Mailadress',
 									type: 'email',
 									value: email,
+									errorText: emailError,
 									onChange: function onChange(e) {
 										return _this2.setState({ email: e.target.value });
 									} })

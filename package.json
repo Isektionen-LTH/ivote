@@ -4,12 +4,8 @@
   "description": "som evote 2.0",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && concurrently \"tsc -w\" \"lite-server\" ",
-    "lite": "lite-server",
-    "postinstall": "typings install",
-    "tsc": "tsc",
-    "tsc:w": "tsc -w",
-    "typings": "typings"
+    "start": "node .",
+    "production": "node . -p 80"
   },
   "repository": {
     "type": "git",
@@ -29,6 +25,7 @@
     "core-js": "^2.4.1",
     "cors": "^2.8.1",
     "express": "^4.14.0",
+    "minimalist": "^1.0.0",
     "mongodb": "^2.2.10",
     "nedb": "^1.8.0",
     "node-uuid": "^1.4.7",

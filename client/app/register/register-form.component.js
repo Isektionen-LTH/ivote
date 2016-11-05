@@ -31,26 +31,34 @@ class RegisterForm extends React.Component {
 
 		const { name, email } = this.state;
 
-		const validate = () => {
-			return name && email && validateEmail(email);
+		const validateName = (name) => {
+			return /^[^\s]+\s[^\s]+$/.test(name);
 		};
+
+		const validate = () => {
+			return name && email && validateName(name) && validateEmail(email);
+		};
+
+		// const nameError = name && !validateName(email) ? 'För och efternamn' : null;
+		const emailError = email && !validateEmail(email) ? 'Ogiltig mailaddress' : null;
 
 		return (
 			<form onSubmit={this.submit}>
 				<Card>
-					<CardTitle title={'Registrera'} />
+					<CardTitle title={'Registrera'} subtitle={<span>Vi kan endast se <i>om</i> du röstat inte <i>vem</i> du röstat på</span>} />
 					<CardText>
 					<div>
 						<TextField
-							floatingLabelText="Namn"
+							floatingLabelText="För- och efternamn"
 							value={name}
 							onChange={(e) => this.setState({ name: e.target.value })} />
 					</div>
 					<div>
 						<TextField
-							floatingLabelText="E-mail"
+							floatingLabelText="Mailadress"
 							type="email"
 							value={email}
+     						errorText={emailError}
 							onChange={(e) => this.setState({ email: e.target.value })} />
 					</div>
 					</CardText>
