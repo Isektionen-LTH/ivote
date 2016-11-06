@@ -200,9 +200,7 @@ function returnVotesAdmin(res){
       }
 
     }).sort(function(a, b){
-      console.log(a.statusOrd, b.statusOrd);
       if (a.statusOrd === b.statusOrd){
-        console.log(a.resultOrd, b.resultOrd);
         return - a.resultOrd + b.resultOrd;
       } else {
         return a.statusOrd - b.statusOrd;
