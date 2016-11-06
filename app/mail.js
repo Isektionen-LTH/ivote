@@ -2,6 +2,7 @@
 var nodemailer = require('nodemailer');
 var uuid = require('node-uuid');
 var fs = require('fs');
+const config = require('../config.json');
 
 var credentials = require('../credentials.json').email;
 
@@ -21,7 +22,7 @@ module.exports = function(email, callback) {
       from: credentials.email, // sender address
       to: email, // list of receivers
       subject: 'Email Example', // Subject line
-      text: "http://188.166.155.102/login/voter/" + uid//, // plaintext body
+      text: 'http://' + config.url + '/login/voter/' + uid//, // plaintext body
       // html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
     };
 

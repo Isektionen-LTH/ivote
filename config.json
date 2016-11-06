@@ -1,3 +1,4 @@
 {
-	"dbUrl": "mongodb://kristoffer:evote@ds035036.mlab.com:35036/ivote"
+	"dbUrl": "mongodb://kristoffer:evote@ds035036.mlab.com:35036/ivote",
+	"url": "localhost:8080"
 }
