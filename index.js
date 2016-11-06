@@ -4,13 +4,16 @@ var bodyParser = require('body-parser');
 var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
+var cookieParser = require('cookie-parser');
 var login = require('./app/login');
-
 const config = require('./config.json');
-
 app.use(bodyParser.json());
+
 app.use(express.static(__dirname));
 app.use(require('cors')());
+
+app.use(cookieParser());
+
 app.use(login.auth);
 app.use('/login', login.router);
 
@@ -21,6 +24,10 @@ db = require("./server/db.js");
 
 var argv = require('minimist')(process.argv.slice(2));
 const port = argv.p || 8080;
+
+app.get('/', function (req, res) {
+  res.sendFile(__dirname + '/client/index.html');
+});
 
 app.use(function(req, res, next) {
   if (req.role !== 'voter' ||!req.userId) { return next(); }
@@ -46,10 +53,6 @@ app.use('/register', function(req, res, next) {
   next();
 });
 
-server.listen(port, function () {
-  console.log('Server listening on port', port);
-});
-
 app.get('/logout', function(req, res) {
   res.clearCookie('userId');
   res.clearCookie('username');
@@ -57,8 +60,8 @@ app.get('/logout', function(req, res) {
   res.redirect('/');
 });
 
-app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/client/index.html');
+server.listen(port, function () {
+  console.log('Server listening on port', port);
 });
 
 app.get('/bundle.js', function (req, res) {
