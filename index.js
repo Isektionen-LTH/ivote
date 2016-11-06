@@ -195,12 +195,18 @@ function returnVotesAdmin(res){
           return option.title;
         }),
         status: vote.isActive === null ? 'waiting' : vote.isActive ? 'ongoing' : 'completed',
-        statusOrd: vote.isActive === null ? 1 : vote.isActive ? 0 : 2
+        statusOrd: vote.isActive === null ? 1 : vote.isActive ? 0 : 2,
+        resultOrd: vote.resultOrd
       }
 
     }).sort(function(a, b){
-
-      return a.statusOrd - b.statusOrd;
+      console.log(a.statusOrd, b.statusOrd);
+      if (a.statusOrd === b.statusOrd){
+        console.log(a.resultOrd, b.resultOrd);
+        return - a.resultOrd + b.resultOrd;
+      } else {
+        return a.statusOrd - b.statusOrd;
+      }
 
     });
     res.send(votes);
@@ -371,19 +377,24 @@ app.post('/admin/vote/new', function (req, res, next) {
 
   if(typeof req.body.title !== 'undefined' && typeof req.body.options !== 'undefined'){
 
-    vote.isActive = null;
-    vote.hasVoted = [];
-    vote.resultOrd = null;
-    vote.title = req.body.title;
+    db.collection('votes').count(function(err, count) {
 
-    vote.options = req.body.options.map(function(title) {
-      return {title: title, numberOfVotes: 0};
+      vote.isActive = null;
+      vote.hasVoted = [];
+      vote.resultOrd = count;
+      vote.title = req.body.title;
+
+      vote.options = req.body.options.map(function(title) {
+        return {title: title, numberOfVotes: 0};
+      });
+
+      db.collection('votes').insert(vote, function(err){
+        console.log('vote inserted');
+        returnVotesAdmin(res);
+      });
+
     });
 
-    db.collection('votes').insert(vote, function(err){
-      console.log('vote inserted');
-      returnVotesAdmin(res);
-    });
   } else {
     returnVotesAdmin(res);
   }
