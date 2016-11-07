@@ -33,7 +33,7 @@ module.exports = function(io) {
             if(hasVoted){
               socket.join('hasVoted');
 
-              getVotingStatus(function(voteStatus) {
+              db.getVotingStatus(function(voteStatus) {
                 socket.emit('state', {state: 'voted', voted: voteStatus.voted, total: voteStatus.total});
               });
             } else {
