@@ -127,7 +127,7 @@ exports.newVote = function(title, options, callback) {
 }
 
 exports.updateVote = function(id, title, options, callback){
-  db.collection('votes').update({$and: [{_id: dbCon.ObjectId(id)}, {isActive: null}]}, {$set: {title: title, options: options.map(function(option) {
+  db.collection('votes').update({$and: [{_id: mongo.ObjectId(id)}, {isActive: null}]}, {$set: {title: title, options: options.map(function(option) {
     return {title: option, numberOfVotes: 0};
   })}}, function(err, doc) {
     callback();
