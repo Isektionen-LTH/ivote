@@ -26,7 +26,21 @@ var argv = require('minimist')(process.argv.slice(2));
 const port = argv.p || 8080;
 
 app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/client/index.html');
+
+  switch (req.role) {
+  case 'voter':
+    res.redirect('/vote');
+    break;
+  case 'admin':
+    res.redirect('/admin');
+    break;
+  case 'register':
+    res.redirect('/register');
+    break;
+  default:
+    res.sendFile(__dirname + '/client/index.html');
+    break;
+  }
 });
 
 app.use(function(req, res, next) {
