@@ -33,10 +33,19 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
 
+import { primaryColor, secondaryColor, toolbarFontColor } from './colors';
+
 const muiTheme = getMuiTheme({
 	palette: {
-		primary1Color: '#70002d',
-		accent1Color: '#ab2c5f'
+		primary1Color: primaryColor,
+		accent1Color: secondaryColor
+	},
+	toolbar: {
+		backgroundColor: primaryColor,
+		height: 60,
+		separatorColor: toolbarFontColor,
+		color: toolbarFontColor,
+		iconColor: toolbarFontColor
 	}
 });
 

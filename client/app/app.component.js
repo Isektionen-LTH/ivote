@@ -3,6 +3,11 @@ import React from 'react';
 
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import FlatButton from 'material-ui/FlatButton';
+
+import RaisedButton from 'material-ui/RaisedButton';
+import IconButton from 'material-ui/IconButton';
+import ActionHome from 'material-ui/svg-icons/action/exit-to-app';
+
 import { withRouter, Link } from 'react-router';
 
 import loginLogout from './login-logout';
@@ -18,6 +23,24 @@ let AppComponent = ({ router, children }) => {
 	} else if (router.isActive('/')) {
 		navigation = loginLogout(router);
 	}
+
+	return (
+		<Toolbar>
+			<ToolbarGroup firstChild={true}>
+				<ToolbarTitle text="IVote" />
+			</ToolbarGroup>
+			<ToolbarGroup>
+				<ToolbarTitle
+					text="Du är inloggad som John Rapp"
+					style={{fontSize: '16px'}} />
+				<IconButton tooltip="Logga ut">
+					<ActionHome />
+				</IconButton>
+				<ToolbarSeparator />
+				<FlatButton style={{color: 'white'}} label="Rösta" />
+			</ToolbarGroup>
+		</Toolbar>
+	);
 
 	return (
 		<div>
