@@ -60,6 +60,7 @@ class Login extends React.Component {
 		const { username, password, role } = this.state;
 
 		const validate = () => {
+			return true;
 			return username && password;
 		};
 		
