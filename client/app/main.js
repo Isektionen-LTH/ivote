@@ -34,10 +34,10 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
 const muiTheme = getMuiTheme({
-//   palette: {
-// 	primary1Color: red900,
-// 	accent1Color: blueGrey50
-//   }
+	palette: {
+		primary1Color: '#70002d',
+		accent1Color: '#ab2c5f'
+	}
 });
 
 ReactDOM.render(

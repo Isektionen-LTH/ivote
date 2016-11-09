@@ -63,6 +63,9 @@ class Login extends React.Component {
 			return username && password;
 		};
 		
+
+		const emptyForm = () => !username && !password;
+		
 		return (
 			<form onSubmit={this.submit}>
 				<Card>
@@ -72,6 +75,7 @@ class Login extends React.Component {
 							<TextField
 								floatingLabelText="Användarnamn"
 								value={username}
+								ref={(el) => el && emptyForm() && el.focus()}
 								onChange={(e) => this.setState({ username: e.target.value })} />
 						</div>
 						<div>

@@ -589,10 +589,10 @@
 	(0, _reactTapEventPlugin2.default)();
 	
 	var muiTheme = (0, _getMuiTheme2.default)({
-		//   palette: {
-		// 	primary1Color: red900,
-		// 	accent1Color: blueGrey50
-		//   }
+		palette: {
+			primary1Color: '#70002d',
+			accent1Color: '#ab2c5f'
+		}
 	});
 	
 	_reactDom2.default.render(_react2.default.createElement(
@@ -45521,6 +45521,10 @@
 					return username && password;
 				};
 	
+				var emptyForm = function emptyForm() {
+					return !username && !password;
+				};
+	
 				return _react2.default.createElement(
 					'form',
 					{ onSubmit: this.submit },
@@ -45537,6 +45541,9 @@
 								_react2.default.createElement(_TextField2.default, {
 									floatingLabelText: 'Anv\xE4ndarnamn',
 									value: username,
+									ref: function ref(el) {
+										return el && emptyForm() && el.focus();
+									},
 									onChange: function onChange(e) {
 										return _this2.setState({ username: e.target.value });
 									} })
@@ -49656,7 +49663,7 @@
 				    name = _state.name,
 				    email = _state.email;
 	
-				window.location = 'register/voter?name=' + name + '&email=' + email;
+				window.location = 'register/voter?name=' + name.trim() + '&email=' + email.trim();
 			}
 		}, {
 			key: 'render',
@@ -49666,6 +49673,9 @@
 				var _state2 = this.state,
 				    name = _state2.name,
 				    email = _state2.email;
+				var _ref = [name.trim(), email.trim()],
+				    trimmedName = _ref[0],
+				    trimmedEmail = _ref[1];
 	
 	
 				var validateName = function validateName(name) {
@@ -49674,11 +49684,15 @@
 				};
 	
 				var validate = function validate() {
-					return name && email && validateName(name) && validateEmail(email);
+					return name && email && validateName(trimmedName) && validateEmail(trimmedEmail);
 				};
 	
 				// const nameError = name && !validateName(email) ? 'För och efternamn' : null;
-				var emailError = email && !validateEmail(email) ? 'Ogiltig mailaddress' : null;
+				var emailError = email && !validateEmail(trimmedEmail) ? 'Ogiltig mailaddress' : null;
+	
+				var emptyForm = function emptyForm() {
+					return !name && !email;
+				};
 	
 				return _react2.default.createElement(
 					'form',
@@ -49712,6 +49726,9 @@
 								_react2.default.createElement(_TextField2.default, {
 									floatingLabelText: 'F\xF6r- och efternamn',
 									value: name,
+									ref: function ref(el) {
+										return el && emptyForm() && el.focus();
+									},
 									onChange: function onChange(e) {
 										return _this2.setState({ name: e.target.value });
 									} })

@@ -25,22 +25,26 @@ class RegisterForm extends React.Component {
 		e.preventDefault();
 
 		const { name, email } = this.state;
-		window.location = `register/voter?name=${name}&email=${email}`;
+		window.location = `register/voter?name=${name.trim()}&email=${email.trim()}`;
 	}
 	render() {
 
 		const { name, email } = this.state;
+
+		const [ trimmedName, trimmedEmail ] = [ name.trim(), email.trim() ];
 
 		const validateName = (name) => {
 			return /^[^\s]+\s[^\s]+$/.test(name);
 		};
 
 		const validate = () => {
-			return name && email && validateName(name) && validateEmail(email);
+			return name && email && validateName(trimmedName) && validateEmail(trimmedEmail);
 		};
 
 		// const nameError = name && !validateName(email) ? 'För och efternamn' : null;
-		const emailError = email && !validateEmail(email) ? 'Ogiltig mailaddress' : null;
+		const emailError = email && !validateEmail(trimmedEmail) ? 'Ogiltig mailaddress' : null;
+
+		const emptyForm = () => !name && !email;
 
 		return (
 			<form onSubmit={this.submit}>
@@ -51,6 +55,7 @@ class RegisterForm extends React.Component {
 						<TextField
 							floatingLabelText="För- och efternamn"
 							value={name}
+							ref={(el) => el && emptyForm() && el.focus()}
 							onChange={(e) => this.setState({ name: e.target.value })} />
 					</div>
 					<div>
