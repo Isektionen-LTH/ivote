@@ -17,10 +17,10 @@ app.use(cookieParser());
 app.use(login.auth);
 app.use('/login', login.router);
 
-require("./server/admin.js")(app, io);
-require("./server/user.js")(io);
-require("./server/register.js")(app);
-db = require("./server/db.js");
+require("./app/admin.js")(app, io);
+require("./app/user.js")(io);
+require("./app/register.js")(app);
+db = require("./app/db.js");
 
 var argv = require('minimist')(process.argv.slice(2));
 const port = argv.p || 8080;
@@ -54,6 +54,12 @@ app.use(function(req, res, next) {
   });
 });
 
+app.use('/vote', function(req, res, next) {
+  if (req.role !== 'voter') {
+    return res.redirect('/');
+  }
+  next();
+});
 app.use('/admin', function(req, res, next) {
   if (req.role !== 'admin') {
     return res.redirect('/');

@@ -3,9 +3,10 @@ const router = express.Router();
 
 const credentials = require('../credentials.json');
 const salt = 'ivote';
+const cookieOptions = { maxAge: 900000, httpOnly: true };
 
 router.get('/voter/:id', function(req, res) {
-	res.cookie('userId', req.params.id);
+	res.cookie('userId', req.params.id, cookieOptions);
 	res.clearCookie('username');
 	res.clearCookie('password');
 	res.redirect('/vote');

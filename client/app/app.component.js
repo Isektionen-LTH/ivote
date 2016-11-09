@@ -5,11 +5,10 @@ import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui
 import FlatButton from 'material-ui/FlatButton';
 import { withRouter, Link } from 'react-router';
 
-import { getCookie } from './cookie';
+import loginLogout from './login-logout';
 
 import AppBar from 'material-ui/AppBar';
 let AppComponent = ({ router, children }) => {
-	const loggedIn = getCookie('userId') || (getCookie('username') && getCookie('password'));
 
 	let navigation = null;
 	if (router.isActive('/results')) {
@@ -17,9 +16,7 @@ let AppComponent = ({ router, children }) => {
 	} else if (router.isActive('/vote')) {
 		navigation = <FlatButton label="Resultat" onTouchTap={() => router.push('/results')} />;
 	} else if (router.isActive('/')) {
-		navigation = loggedIn
-			? <FlatButton label="Logga ut" onTouchTap={() => window.location = '/logout'} />
-			: <FlatButton label="Logga in" onTouchTap={() => router.push('/login')} />;
+		navigation = loginLogout(router);
 	}
 
 	return (

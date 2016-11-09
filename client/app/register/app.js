@@ -11,10 +11,14 @@ import Paper from 'material-ui/Paper';
 import RegisterForm from './register-form.component';
 
 import AppBar from 'material-ui/AppBar';
+
+import loginLogout from '../login-logout';
+
 let AppComponent = ({ router, children }) => {
 	return (
 		<div>
-			<AppBar title="Registrera" />
+			<AppBar title="Registrera"
+				iconElementRight={loginLogout(router)} />
 			<div id="container">{children}</div>
 		</div>
 	);

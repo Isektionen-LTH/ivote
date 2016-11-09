@@ -535,19 +535,19 @@
 	
 	var _app4 = _interopRequireDefault(_app3);
 	
-	var _app5 = __webpack_require__(523);
+	var _app5 = __webpack_require__(525);
 	
 	var _app6 = _interopRequireDefault(_app5);
 	
-	var _results = __webpack_require__(525);
+	var _results = __webpack_require__(527);
 	
 	var _results2 = _interopRequireDefault(_results);
 	
-	var _index = __webpack_require__(528);
+	var _index = __webpack_require__(530);
 	
 	var _index2 = _interopRequireDefault(_index);
 	
-	var _reactTapEventPlugin = __webpack_require__(529);
+	var _reactTapEventPlugin = __webpack_require__(531);
 	
 	var _reactTapEventPlugin2 = _interopRequireDefault(_reactTapEventPlugin);
 	
@@ -46790,7 +46790,9 @@
 	
 	var _reactRouter = __webpack_require__(174);
 	
-	var _cookie = __webpack_require__(493);
+	var _loginLogout = __webpack_require__(537);
+	
+	var _loginLogout2 = _interopRequireDefault(_loginLogout);
 	
 	var _AppBar = __webpack_require__(507);
 	
@@ -46802,7 +46804,6 @@
 		var router = _ref.router,
 		    children = _ref.children;
 	
-		var loggedIn = (0, _cookie.getCookie)('userId') || (0, _cookie.getCookie)('username') && (0, _cookie.getCookie)('password');
 	
 		var navigation = null;
 		if (router.isActive('/results')) {
@@ -46814,11 +46815,7 @@
 					return router.push('/results');
 				} });
 		} else if (router.isActive('/')) {
-			navigation = loggedIn ? _react2.default.createElement(_FlatButton2.default, { label: 'Logga ut', onTouchTap: function onTouchTap() {
-					return window.location = '/logout';
-				} }) : _react2.default.createElement(_FlatButton2.default, { label: 'Logga in', onTouchTap: function onTouchTap() {
-					return router.push('/login');
-				} });
+			navigation = (0, _loginLogout2.default)(router);
 		}
 	
 		return _react2.default.createElement(
@@ -47921,19 +47918,24 @@
 	
 	var _users2 = _interopRequireDefault(_users);
 	
+	var _loginLogout = __webpack_require__(537);
+	
+	var _loginLogout2 = _interopRequireDefault(_loginLogout);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	// import { Link } from 'react-router';
 	
 	var AppComponent = function AppComponent(_ref) {
 		var router = _ref.router,
 		    children = _ref.children;
 	
+	
 		return _react2.default.createElement(
 			'div',
 			null,
 			_react2.default.createElement(_AppBar2.default, { title: 'Admin',
-				iconElementRight: _react2.default.createElement(_FlatButton2.default, { label: 'R\xF6sta', onTouchTap: function onTouchTap() {
-						return router.push('/vote');
-					} }) }),
+				iconElementRight: (0, _loginLogout2.default)(router) }),
 			_react2.default.createElement(
 				'div',
 				{ id: 'container' },
@@ -47941,8 +47943,6 @@
 			)
 		);
 	};
-	// import { Link } from 'react-router';
-	
 	AppComponent = (0, _reactRouter.withRouter)(AppComponent);
 	
 	var route = _react2.default.createElement(
@@ -49305,7 +49305,7 @@
 	
 	var _users = __webpack_require__(522);
 	
-	var _users2 = __webpack_require__(535);
+	var _users2 = __webpack_require__(523);
 	
 	var _users3 = _interopRequireDefault(_users2);
 	
@@ -49466,6 +49466,52 @@
 		value: true
 	});
 	
+	var _redux = __webpack_require__(390);
+	
+	var _reduxThunk = __webpack_require__(484);
+	
+	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
+	
+	var _users = __webpack_require__(522);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function users() {
+		var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+		var action = arguments[1];
+	
+		switch (action.type) {
+			case _users.REQUEST_USERS:
+				return null;
+			case _users.RECIEVE_USERS:
+				return action.users;
+			default:
+				return state;
+		}
+	}
+	
+	var reducer = (0, _redux.combineReducers)({
+		users: users
+	});
+	// TODO göra state till en egen istället för att ha en session
+	
+	var store = (0, _redux.createStore)(reducer, (0, _redux.applyMiddleware)(_reduxThunk2.default
+	// , createLogger()
+	));
+	
+	exports.default = store;
+
+/***/ },
+/* 524 */,
+/* 525 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
 	var _react = __webpack_require__(3);
 	
 	var _react2 = _interopRequireDefault(_react);
@@ -49482,7 +49528,7 @@
 	
 	var _Paper2 = _interopRequireDefault(_Paper);
 	
-	var _registerForm = __webpack_require__(524);
+	var _registerForm = __webpack_require__(526);
 	
 	var _registerForm2 = _interopRequireDefault(_registerForm);
 	
@@ -49490,7 +49536,13 @@
 	
 	var _AppBar2 = _interopRequireDefault(_AppBar);
 	
+	var _loginLogout = __webpack_require__(537);
+	
+	var _loginLogout2 = _interopRequireDefault(_loginLogout);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	// import { Link } from 'react-router';
 	
 	var AppComponent = function AppComponent(_ref) {
 		var router = _ref.router,
@@ -49499,7 +49551,8 @@
 		return _react2.default.createElement(
 			'div',
 			null,
-			_react2.default.createElement(_AppBar2.default, { title: 'Registrera' }),
+			_react2.default.createElement(_AppBar2.default, { title: 'Registrera',
+				iconElementRight: (0, _loginLogout2.default)(router) }),
 			_react2.default.createElement(
 				'div',
 				{ id: 'container' },
@@ -49507,7 +49560,6 @@
 			)
 		);
 	};
-	// import { Link } from 'react-router';
 	
 	var Registered = function Registered() {
 		return _react2.default.createElement(
@@ -49540,7 +49592,7 @@
 	exports.default = route;
 
 /***/ },
-/* 524 */
+/* 526 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -49698,7 +49750,7 @@
 	exports.default = RegisterForm;
 
 /***/ },
-/* 525 */
+/* 527 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -49731,11 +49783,11 @@
 	
 	var _socket2 = _interopRequireDefault(_socket);
 	
-	var _results = __webpack_require__(526);
+	var _results = __webpack_require__(528);
 	
 	var _results2 = _interopRequireDefault(_results);
 	
-	var _results3 = __webpack_require__(527);
+	var _results3 = __webpack_require__(529);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -49882,7 +49934,7 @@
 	})(ResultsClass);
 
 /***/ },
-/* 526 */
+/* 528 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -49901,7 +49953,7 @@
 	
 	var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
 	
-	var _results = __webpack_require__(527);
+	var _results = __webpack_require__(529);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -49928,7 +49980,7 @@
 	exports.default = store;
 
 /***/ },
-/* 527 */
+/* 529 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -49947,7 +49999,7 @@
 	}
 
 /***/ },
-/* 528 */
+/* 530 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50039,11 +50091,11 @@
 	}
 
 /***/ },
-/* 529 */
+/* 531 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {var invariant = __webpack_require__(530);
-	var defaultClickRejectionStrategy = __webpack_require__(531);
+	/* WEBPACK VAR INJECTION */(function(process) {var invariant = __webpack_require__(532);
+	var defaultClickRejectionStrategy = __webpack_require__(533);
 	
 	var alreadyInjected = false;
 	
@@ -50065,14 +50117,14 @@
 	  alreadyInjected = true;
 	
 	  __webpack_require__(45).injection.injectEventPluginsByName({
-	    'TapEventPlugin':       __webpack_require__(532)(shouldRejectClick)
+	    'TapEventPlugin':       __webpack_require__(534)(shouldRejectClick)
 	  });
 	};
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 530 */
+/* 532 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -50127,7 +50179,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 531 */
+/* 533 */
 /***/ function(module, exports) {
 
 	module.exports = function(lastTouchEvent, clickTimestamp) {
@@ -50138,7 +50190,7 @@
 
 
 /***/ },
-/* 532 */
+/* 534 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -50166,10 +50218,10 @@
 	var EventPluginUtils = __webpack_require__(47);
 	var EventPropagators = __webpack_require__(44);
 	var SyntheticUIEvent = __webpack_require__(78);
-	var TouchEventUtils = __webpack_require__(533);
+	var TouchEventUtils = __webpack_require__(535);
 	var ViewportMetrics = __webpack_require__(79);
 	
-	var keyOf = __webpack_require__(534);
+	var keyOf = __webpack_require__(536);
 	var topLevelTypes = EventConstants.topLevelTypes;
 	
 	var isStartish = EventPluginUtils.isStartish;
@@ -50314,7 +50366,7 @@
 
 
 /***/ },
-/* 533 */
+/* 535 */
 /***/ function(module, exports) {
 
 	/**
@@ -50362,7 +50414,7 @@
 
 
 /***/ },
-/* 534 */
+/* 536 */
 /***/ function(module, exports) {
 
 	/**
@@ -50402,7 +50454,7 @@
 	module.exports = keyOf;
 
 /***/ },
-/* 535 */
+/* 537 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50410,41 +50462,32 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
+	exports.default = loginLogout;
 	
-	var _redux = __webpack_require__(390);
+	var _react = __webpack_require__(3);
 	
-	var _reduxThunk = __webpack_require__(484);
+	var _react2 = _interopRequireDefault(_react);
 	
-	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
+	var _reactRouter = __webpack_require__(174);
 	
-	var _users = __webpack_require__(522);
+	var _cookie = __webpack_require__(493);
+	
+	var _FlatButton = __webpack_require__(456);
+	
+	var _FlatButton2 = _interopRequireDefault(_FlatButton);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	function users() {
-		var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-		var action = arguments[1];
+	function loginLogout(router) {
 	
-		switch (action.type) {
-			case _users.REQUEST_USERS:
-				return null;
-			case _users.RECIEVE_USERS:
-				return action.users;
-			default:
-				return state;
-		}
+		var loggedIn = !!(0, _cookie.getCookie)('userId') || !!(0, _cookie.getCookie)('username') && !!(0, _cookie.getCookie)('hash');
+	
+		return loggedIn ? _react2.default.createElement(_FlatButton2.default, { label: 'Logga ut', onTouchTap: function onTouchTap() {
+				return window.location = '/logout';
+			} }) : _react2.default.createElement(_FlatButton2.default, { label: 'Logga in', onTouchTap: function onTouchTap() {
+				return router.push('/login');
+			} });
 	}
-	
-	var reducer = (0, _redux.combineReducers)({
-		users: users
-	});
-	// TODO göra state till en egen istället för att ha en session
-	
-	var store = (0, _redux.createStore)(reducer, (0, _redux.applyMiddleware)(_reduxThunk2.default
-	// , createLogger()
-	));
-	
-	exports.default = store;
 
 /***/ }
 /******/ ]);

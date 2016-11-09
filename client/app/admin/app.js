@@ -11,11 +11,14 @@ import AppBar from 'material-ui/AppBar';
 import ConfigureVotes from './components/configure-votes';
 import Users from './components/users';
 
+import loginLogout from '../login-logout';
+
 let AppComponent = ({ router, children }) => {
+
 	return (
 		<div>
 			<AppBar title="Admin"
-				iconElementRight={<FlatButton label="Rösta" onTouchTap={() => router.push('/vote')} />} />
+				iconElementRight={loginLogout(router)} />
 			<div id="container">{children}</div>
 		</div>
 	);
