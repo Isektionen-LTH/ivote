@@ -45,12 +45,7 @@ class VoteSessionClass extends React.Component {
 		const { dispatch } = this.props;
 		dispatch(updateSession(session));
 	}
-	// {
-	// 	state: 'wating' | 'voting' | 'voted',
-	// 	options: [],
-	// 	title: ''
 
-	// }
 	render() {
 		const { session } = this.props;
 		
@@ -65,6 +60,8 @@ class VoteSessionClass extends React.Component {
 			return <Vote />;
 		case 'voted':
 			return <HasVoted />;
+		case 'no id':
+			return <h1>Du måste registrera dig för att rösta!</h1>;
 		}
 	}
 	

@@ -54,12 +54,6 @@ app.use(function(req, res, next) {
   });
 });
 
-app.use('/vote', function(req, res, next) {
-  if (req.role !== 'voter') {
-    return res.redirect('/');
-  }
-  next();
-});
 app.use('/admin', function(req, res, next) {
   if (req.role !== 'admin') {
     return res.redirect('/');

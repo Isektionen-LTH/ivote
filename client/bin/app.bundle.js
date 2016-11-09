@@ -35074,13 +35074,6 @@
 	
 				dispatch((0, _voteActions.updateSession)(session));
 			}
-			// {
-			// 	state: 'wating' | 'voting' | 'voted',
-			// 	options: [],
-			// 	title: ''
-	
-			// }
-	
 		}, {
 			key: 'render',
 			value: function render() {
@@ -35098,6 +35091,12 @@
 						return _react2.default.createElement(Vote, null);
 					case 'voted':
 						return _react2.default.createElement(HasVoted, null);
+					case 'no id':
+						return _react2.default.createElement(
+							'h1',
+							null,
+							'Du m\xE5ste registrera dig f\xF6r att r\xF6sta!'
+						);
 				}
 			}
 		}]);

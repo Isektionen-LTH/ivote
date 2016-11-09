@@ -52,7 +52,7 @@ module.exports = function(io) {
             }
           });
         } else {
-          socket.emit('wrong id');
+          socket.emit('state', { state: 'no id' });
         }
 
       });
