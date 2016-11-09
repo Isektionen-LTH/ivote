@@ -138,7 +138,7 @@ module.exports = function(email, callback) {
     var mailOptions = {
       from: credentials.email, // sender address
       to: email, // list of receivers
-      subject: 'Email Example', // Subject line
+      subject: 'Välkommen till hösterminsmötet!', // Subject line
       //text: 'http://' + config.url + '/login/voter/' + uid//, // plaintext body
       html: html1 + 'http://' + config.url + '/login/voter/' + uid + html2
       // html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
