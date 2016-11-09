@@ -3,7 +3,7 @@ const router = express.Router();
 
 const credentials = require('../credentials.json');
 const salt = 'ivote';
-const cookieOptions = { maxAge: 900000, httpOnly: true };
+const cookieOptions = { maxAge: 900000 };
 
 router.get('/voter/:id', function(req, res) {
 	res.cookie('userId', req.params.id, cookieOptions);
