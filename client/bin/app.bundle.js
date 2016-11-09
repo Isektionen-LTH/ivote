@@ -45502,7 +45502,7 @@
 				    password = _state.password,
 				    role = _state.role;
 	
-				(0, _cookie.setCookie)('username', username);
+				(0, _cookie.setCookie)('username', username.trim());
 				(0, _cookie.setCookie)('hash', hash(password + salt));
 				window.location = '/login/' + role;
 			}

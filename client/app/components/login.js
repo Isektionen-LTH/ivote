@@ -50,7 +50,7 @@ class Login extends React.Component {
 		e.preventDefault();
 
 		const { username, password, role } = this.state;
-		setCookie('username', username);
+		setCookie('username', username.trim());
 		setCookie('hash', hash(password + salt));
 		window.location = `/login/${role}`;
 	}
