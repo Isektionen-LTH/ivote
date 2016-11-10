@@ -83,9 +83,13 @@ module.exports = function(io) {
   });
 }
 
-function vote(userID, option, callback){
+function vote(userID, options, callback){
 
-  db.userVote(userID, option, function(succeded) {
+  if(!Array.isArray(options)){
+    options = [options];
+  }
+
+  db.userVote(userID, options, function(succeded) {
 
     if(succeded){
       db.getVotingStatus(function(voteStatus) {

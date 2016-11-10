@@ -46,7 +46,7 @@ module.exports = function(app, io){
 
     console.log(req.body);
 
-    db.newVote(req.body.title, req.body.options, function() {
+    db.newVote(req.body.title, req.body.options, req.body.numberOfChoices, function() {
       returnVotesAdmin(res);
     });
 

@@ -16,7 +16,7 @@ exports.getCurrentVote = function(callback){
         doc.options[i] = doc.options[i].title;
       }
 
-      doc = {state: 'voting', title: doc.title, options:doc.options};
+      doc = {state: 'voting', title: doc.title, options:doc.options, numberOfChoices: doc.numberOfChoices};
       callback(doc);
     }
   });
@@ -100,7 +100,7 @@ exports.deleteVote = function(id, callback) {
 
 }
 
-exports.newVote = function(title, options, callback) {
+exports.newVote = function(title, options, multiple, callback) {
 
   var vote = {};
 
@@ -112,6 +112,11 @@ exports.newVote = function(title, options, callback) {
       vote.hasVoted = [];
       vote.resultOrd = count;
       vote.title = title;
+      if(multiple){
+        vote.numberOfChoices = multiple;
+      } else {
+        vote.numberOfChoices = 1;
+      }
 
       vote.options = options.map(function(title) {
         return {title: title, numberOfVotes: 0};
@@ -150,14 +155,23 @@ exports.getVotingStatus = function(callback){
   });
 }
 
-exports.userVote = function(userID, option, callback) {
-  db.collection('votes').findOne({ $and: [{ hasVoted: userID } , { isActive: true }] }, function(err, doc) {
-      if(!doc){
-        db.collection('votes').findAndModify({isActive: true, 'options.title': option},[['_id',1]], {$inc: {'options.$.numberOfVotes': 1}}, {new:true}, function(err, doc) {
-          db.collection('votes').update({isActive: true}, {$push: {hasVoted: userID}}, {}, function() {
-            callback(true);
-          });
+exports.userVote = function(userID, options, callback) {
+  console.log("Hej");
+  db.collection('votes').findOne({ $and: [{hasVoted: {$nin: [userID]} }, { isActive: true }] }, function(err, doc) {
+    if(doc){
+
+      for (var i = 0; i < doc.numberOfChoices; i++) {
+        var k = i;
+        db.collection('votes').findAndModify({isActive: true, 'options.title': options[i]},[['_id',1]], {$inc: {'options.$.numberOfVotes': 1}}, {new:true}, function(err, doc2) {
+          console.log(i,k, doc.numberOfChoices);
+          if(k === doc.numberOfChoices - 1){
+            db.collection('votes').update({isActive: true}, {$push: {hasVoted: userID}}, {}, function() {
+              callback(true);
+            });
+          }
         });
+      }
+
       } else {
         callback(false);
       }
