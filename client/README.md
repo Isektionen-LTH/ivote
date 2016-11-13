@@ -1,1 +1,1 @@
-# ivote-client
+# IVote: I-sektionens röstningssystem för årsmötet
