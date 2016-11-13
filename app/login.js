@@ -5,7 +5,10 @@ const credentials = require('../credentials.json');
 const salt = 'ivote';
 const cookieOptions = { maxAge: 900000 };
 
+var db = require('./db.js');
+
 router.get('/voter/:id', function(req, res) {
+	db.activateUser(req.params.id);
 	res.cookie('userId', req.params.id, cookieOptions);
 	res.clearCookie('username');
 	res.clearCookie('password');

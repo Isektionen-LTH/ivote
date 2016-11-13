@@ -149,7 +149,7 @@ exports.getHasVoted = function(id, callback){
 
 exports.getVotingStatus = function(callback){
   db.collection('votes').findOne({isActive: true}, function(err, doc) {
-    db.collection('codes').count(function(err, count) {
+    db.collection('codes').count({activated: true}, function(err, count) {
       callback({voted: doc.hasVoted.length, total: count});
     });
   });
@@ -180,7 +180,7 @@ exports.userVote = function(userID, options, callback) {
 
 exports.validateUser = function(userID, callback){
 
-  db.collection('codes').findOne({id: userID}, function(err, doc) {
+  db.collection('codes').findOne({id: userID, activated: true}, function(err, doc) {
     callback(!!doc);
   });
 
@@ -193,19 +193,26 @@ exports.getState = function(callback) {
 }
 
 exports.registerUser = function(name, email, uid, callback) {
-  db.collection('codes').insert({name: +name, email: email, id: uid}, function(err){
+  db.collection('codes').insert({name: +name, email: email, id: uid, activated: false}, function(err){
     callback();
   });
 }
 
+exports.activateUser = function(id){
 
+  db.collection('codes').update({id: id}, {$set: {activated:true}}, function err() {
+    console.log(err);
+  });
+
+};
 
 exports.getUsers = function(callback) {
   db.collection('codes').find({}).toArray(function (err, docs) {
     callback(docs.map(function(doc) {
       return {
         name: doc.name,
-        id: doc._id
+        id: doc._id,
+        activated: doc.activated
       }
     }));
   });
