@@ -2,16 +2,22 @@ var webpack = require('webpack');
 var path = require('path');
 
 module.exports = {
-  entry: './scripts/index',
-  output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'bundle.js',
-    publicPath: '/'
-  },
-  resolve: {
-    extensions: ['', '.js']
-  },
-  devtool: 'source-map',
+	// entry: './app/main.js',
+	entry: ['whatwg-fetch', './app/main.js'],
+	output: {
+		path: './bin',
+		filename: 'app.bundle.js',
+	},
+	module: {
+		loaders: [{
+			test: /\.js$/,
+			exclude: /node_modules/,
+			loader: 'babel-loader',
+			query: {
+				presets: ['es2015', 'react']
+			}
+		}]
+	},
   plugins: [
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.DefinePlugin({
@@ -25,13 +31,5 @@ module.exports = {
       }
     })
   ],
-  module: {
-    loaders: [
-      {
-        test: /\.jsx?$/,
-        loaders: ['babel'],
-        include: path.join(__dirname, 'scripts')
-      }
-    ]
-  }
+  devtool: 'source-map'
 };
