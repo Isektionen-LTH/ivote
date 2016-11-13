@@ -15,7 +15,7 @@ import socket from '../socket';
 import { getCookie } from '../cookie';
 
 export default function VoteRoute() {
-	
+
 	return (
 		<Provider store={store}>
 			<VoteSession />
@@ -29,9 +29,9 @@ class VoteSessionClass extends React.Component {
 	componentDidMount() {
 		const { dispatch } = this.props;
 		dispatch(updateSession({ state: 'waiting' }));
-	
+
 		this.onStateUpdate = this.onStateUpdate.bind(this);
-		
+
 		socket.emit('join vote', { id: id });
 		socket.on('state', this.onStateUpdate);
 	}
@@ -48,7 +48,7 @@ class VoteSessionClass extends React.Component {
 
 	render() {
 		const { session } = this.props;
-		
+
 		switch (session.state) {
 		case 'waiting':
 			return (
@@ -64,7 +64,7 @@ class VoteSessionClass extends React.Component {
 			return <h1>Du måste registrera dig för att rösta!</h1>;
 		}
 	}
-	
+
 }
 const VoteSession = connect(
 	(state) => {
@@ -148,9 +148,9 @@ const HasVoted = () => {
 export class OngoingVoteClass extends React.Component {
 	componentDidMount() {
 		const { dispatch } = this.props;
-	
+
 		this.onVoteUpdate = this.onVoteUpdate.bind(this);
-		
+
 		socket.on('new vote', this.onVoteUpdate);
 	}
 
@@ -166,7 +166,7 @@ export class OngoingVoteClass extends React.Component {
 	render() {
 		const {voted, total} = this.props;
 		return (
-			<div>Hittils har {voted} av {total} personer röstat!</div>
+			<div>Hittills har {voted} av {total} personer röstat!</div>
 		);
 	}
 }
