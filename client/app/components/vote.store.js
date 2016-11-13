@@ -1,4 +1,4 @@
-import { createStore, combineReducers, applyMiddleware  } from 'redux';
+import { createStore, combineReducers, applyMiddleware, compose  } from 'redux';
 
 import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
@@ -34,16 +34,41 @@ import createLogger from 'redux-logger';
 import {
 	SET_SELECTED,
 	UPDATE_SESSION,
-	UPDATE_ONGOING_VOTE
+	UPDATE_ONGOING_VOTE,
+	SET_OPTION_SELECTED
 } from './vote.actions';
 
-function selected(state = '', action) {
+function singleSelected(state = '', action) {
 	switch (action.type) {
 	case SET_SELECTED:
 		return action.selected;
 	case UPDATE_SESSION:
-		if (action.session.state === 'voting') {
+		if (action.session.state === 'voting' && action.session.numberOfChoices === 1) {
 			return action.session.options[0];
+		} else {
+			return state;
+		}
+	default:
+		return state;
+	}
+}
+
+function contains(array, item) {
+	return array.indexOf(item) !== -1;
+}
+function multipleSelected(state = [], action) {
+	switch (action.type) {
+	case SET_OPTION_SELECTED:
+		if (contains(state, action.option)) {
+			// Remove option
+			return state.filter(x => x !== action.option);
+		} else {
+			// Add option
+			return [...state, action.option];
+		}
+	case UPDATE_SESSION:
+		if (action.session.state === 'voting' && action.session.numberOfChoices > 1) {
+			return [];
 		} else {
 			return state;
 		}
@@ -80,15 +105,18 @@ function ongoingVote(state = {voted: 0, total: 0}, action) {
 }
 
 const reducer = combineReducers({
-	selected,
+	singleSelected,
+	multipleSelected,
 	voteSession,
 	ongoingVote
 });
 // TODO göra state till en egen istället för att ha en session
 
-const store = createStore(reducer, applyMiddleware(
-	thunk
-	// , createLogger()
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(reducer, composeEnhancers(
+	applyMiddleware(
+		thunk
+	)
 ));
 
 export default store;
