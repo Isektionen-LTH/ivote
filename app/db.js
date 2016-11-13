@@ -223,3 +223,11 @@ exports.deleteUser = function(userID, callback) {
     callback();
   });
 }
+
+exports.getUserStatus = function() {
+  db.collection('codes').count(function(err, count) {
+    db.collection('codes').count({isActivated: true}, function(err, count2) {
+      return({totalUsers: count, activatedUsers: count2});
+    });
+  });
+}
