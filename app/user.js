@@ -5,11 +5,14 @@ module.exports = function(io) {
   _io = io;
   _io.on('connection', function (socket) {
 
-    socket.on('join results', function() {
-      socket.join('resultRoom');
-      db.getVoteResults(function(results) {
-        socket.emit('new results', results);
-      });
+    socket.on('join results',role, function() {
+      console.log(role);
+      if(role == "admin"){
+        socket.join('resultRoom');
+        db.getVoteResults(function(results) {
+          socket.emit('new results', results);
+        });
+      }
 
     });
 
