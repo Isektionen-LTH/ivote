@@ -68,7 +68,12 @@ exports.getVotesAdmin = function(callback){
 };
 
 exports.setState = function(newState, callback) {
-  db.collection('state').update({}, {state: newState}, function(err, docs) {
+  db.collection('state').update({}, {state: newState}, function(err, doc) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("State changed", doc.state);
+    }
     callback();
   });
 }
@@ -79,6 +84,11 @@ exports.startVote = function(id, callback){
     votes.toArray(function(err, votesArray) {
 
       db.collection('votes').update({$and: [{isActive: null}, {_id: mongo.ObjectId(id)}]}, {$set: {isActive: true, resultOrd: votesArray.length}}, function(err, doc) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("Vote started");
+        }
         callback(doc);
       });
 
@@ -88,7 +98,12 @@ exports.startVote = function(id, callback){
 }
 
 exports.cancelCurrnetVote = function(callback){
-  db.collection('votes').update({isActive: true}, {$set: {isActive: false}}, {}, function (err, numreplaced) {
+  db.collection('votes').update({isActive: true}, {$set: {isActive: false}}, {}, function (err, doc) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("Vote stoped");
+    }
       callback();
   });
 }
@@ -96,6 +111,11 @@ exports.cancelCurrnetVote = function(callback){
 exports.deleteVote = function(id, callback) {
 
   db.collection('votes').deleteOne({$and: [{_id: mongo.ObjectId(id)}, {isActive: null}]}, function (err, doc){
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("Vote deleted");
+    }
     callback();
   });
 
@@ -124,6 +144,11 @@ exports.newVote = function(title, options, multiple, callback) {
       });
 
       db.collection('votes').insert(vote, function(err){
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("Vote Inserted", vote);
+        }
         callback();
       });
 
@@ -136,6 +161,11 @@ exports.updateVote = function(id, title, options, numberOfChoices, callback){
   db.collection('votes').update({$and: [{_id: mongo.ObjectId(id)}, {isActive: null}]}, {$set: {title: title, options: options.map(function(option) {
     return {title: option, numberOfVotes: 0};
   }), numberOfChoices: numberOfChoices}}, function(err, doc) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("Vote updated");
+    }
     callback();
   });
 };
@@ -157,15 +187,12 @@ exports.getVotingStatus = function(callback){
 }
 
 exports.userVote = function(userID, options, callback) {
-  console.log("Hej");
   db.collection('votes').findOne({ $and: [{hasVoted: {$nin: [userID]} }, { isActive: true }] }, function(err, doc) {
     if(doc){
 
       for (var i = 0; i < doc.numberOfChoices; i++) {
         var k = i;
         db.collection('votes').findAndModify({isActive: true, 'options.title': options[i]},[['_id',1]], {$inc: {'options.$.numberOfVotes': 1}}, {new:true}, function(err, doc2) {
-          //console.log(i,k, doc.numberOfChoices);
-          console.log("I:", i, "K: ", k);
           if(k === doc.numberOfChoices - 1){
 
           }
@@ -198,6 +225,11 @@ exports.getState = function(callback) {
 
 exports.registerUser = function(name, email, uid, callback) {
   db.collection('codes').insert({name: name, email: email, id: uid, activated: false}, function(err){
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("User registered: ", name);
+    }
     callback();
   });
 }
@@ -205,7 +237,11 @@ exports.registerUser = function(name, email, uid, callback) {
 exports.activateUser = function(id, callback) {
 
   db.collection('codes').findAndModify({ id: id }, [], { $set: { activated: true } }, function(err, doc) {
-    if(err) console.log(err);
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("User activated", doc.value);
+    }
     callback(err, doc.value.name);
   });
 
@@ -217,6 +253,7 @@ exports.getUsers = function(callback) {
     callback(docs.map(function(doc) {
       return {
         name: doc.name,
+        email: doc.email,
         id: doc._id,
         activated: doc.activated
       }
@@ -226,6 +263,11 @@ exports.getUsers = function(callback) {
 
 exports.deleteUser = function(userID, callback) {
   db.collection('codes').deleteOne({$and: [{_id: mongo.ObjectId(userID)}]}, function (err, doc) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("User deleted");
+    }
     callback();
   });
 }
@@ -244,7 +286,5 @@ exports.dbDelete = function() {
 
   setState(0, function() {
   });
-
-  console.log("Databas rensad");
 
 }

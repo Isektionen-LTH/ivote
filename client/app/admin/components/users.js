@@ -22,7 +22,7 @@ import store from './users.store';
 import 'whatwg-fetch';
 
 export default function UsersRoute() {
-	
+
 	return (
 		<Provider store={store}>
 			<Users />
@@ -37,7 +37,7 @@ class UsersClass extends React.Component {
 	}
 
 	render() {
-		const { users, dispatch } = this.props;		
+		const { users, dispatch } = this.props;
 
 		if (users === null) {
 			return (
@@ -47,13 +47,14 @@ class UsersClass extends React.Component {
 			);
 		}
 
-		
+
 		return (
 			<table>
 				<tbody>
-					{users.map(({ name, id }) =>
+					{users.map(({ name, email, id }) =>
 						<tr key={id}>
 							<td>{name}</td>
+							<td>{email}</td>
 							<td>
 								<IconButton onTouchTap={() => dispatch(deleteUser(id))}>
 									<ContentClear />
