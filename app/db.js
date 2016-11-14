@@ -201,7 +201,7 @@ exports.registerUser = function(name, email, uid, callback) {
 exports.activateUser = function(id){
 
   db.collection('codes').update({id: id}, {$set: {activated:true}}, function err() {
-    console.log(err);
+    console.log("Activate User", err);
   });
 
 };

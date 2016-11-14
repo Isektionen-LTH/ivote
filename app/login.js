@@ -8,11 +8,13 @@ const cookieOptions = { maxAge: 900000 };
 var db = require('./db.js');
 
 router.get('/voter/:id', function(req, res) {
+	console.log("activate user");
 	db.activateUser(req.params.id, function(err, username) {
 		res.cookie('userId', req.params.id, cookieOptions);
 		res.cookie('username', username, cookieOptions);
 		res.clearCookie('password');
 		res.redirect('/vote');
+
 	});
 });
 
