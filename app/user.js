@@ -5,30 +5,29 @@ module.exports = function(io) {
   _io = io;
   _io.on('connection', function (socket) {
 
-    socket.on('join results', function() {
-      socket.join('resultRoom');
-      db.getVoteResults(function(results) {
-        socket.emit('new results', results);
-      });
+    socket.on('join results', function(role) {
+      console.log(role);
+      if(role == "admin"){
+        socket.join('resultRoom');
+        db.getVoteResults(function(results) {
+          socket.emit('new results', results);
+        });
+      }
 
     });
 
     socket.on('join vote', function(userID){
 
       socket.userID = userID.id;
-      console.log(userID);
 
       db.validateUser(userID.id, function(userIsValid){
 
         socket.valid = userIsValid;
-        console.log('User status: ' + userIsValid);
 
         if(userIsValid){
           socket.join('vote');
 
           db.getHasVoted(userID.id, function(hasVoted) {
-
-            console.log(hasVoted);
 
             if(hasVoted){
               socket.join('hasVoted');
@@ -38,13 +37,10 @@ module.exports = function(io) {
               });
             } else {
               db.getState(function(state){
-
                 if(state === 0){
                   socket.emit('state', {state: 'waiting'});
                 } else {
-
                   db.getCurrentVote(function(doc) {
-                    console.log(doc);
                     socket.emit('state', doc);
                   });
                 }
@@ -83,9 +79,13 @@ module.exports = function(io) {
   });
 }
 
-function vote(userID, option, callback){
+function vote(userID, options, callback){
 
-  db.userVote(userID, option, function(succeded) {
+  if(!Array.isArray(options)){
+    options = [options];
+  }
+
+  db.userVote(userID, options, function(succeded) {
 
     if(succeded){
       db.getVotingStatus(function(voteStatus) {
@@ -93,7 +93,6 @@ function vote(userID, option, callback){
         callback();
       });
     } else {
-      console.log('Användaren har redan röstat');
     }
 
   });

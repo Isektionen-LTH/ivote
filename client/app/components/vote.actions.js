@@ -8,6 +8,16 @@ export function setSelected(selected) {
 	};
 }
 
+export const SET_OPTION_SELECTED = 'SET_OPTION_SELECTED';
+
+export function setOptionSelected(option, selected) {
+	return {
+		type: SET_OPTION_SELECTED,
+		option,
+		selected
+	};
+}
+
 export const REQUEST_VOTE_STATE = 'REQUEST_VOTE_STATE';
 
 export function requestVoteState() {

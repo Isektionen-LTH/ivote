@@ -6,9 +6,11 @@ import FlatButton from 'material-ui/FlatButton';
 
 export default function loginLogout(router) {
 	
-	const loggedIn = !!getCookie('userId') || (!!getCookie('username') && !!getCookie('hash'));
+	const username = getCookie('username');
+
+	const loggedIn = !!getCookie('userId') || (!!username && !!getCookie('hash'));
 	
 	return loggedIn
-		? <FlatButton label="Logga ut" onTouchTap={() => window.location = '/logout'} />
+		? <FlatButton label={`Logga ut ${username}`} onTouchTap={() => window.location = '/logout'} />
 		: <FlatButton label="Logga in" onTouchTap={() => router.push('/login')} />;
 }

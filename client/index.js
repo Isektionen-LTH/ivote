@@ -36,11 +36,14 @@ io.on('connection', function(socket) {
 			socket.emit('state', {
 				state: 'voting',
 				title: 'Ordförande',
-				options: ['John', 'Kristoffer']
+				options: ['Kristoffer', 'John', 'Oscar'],
+				numberOfChoices: 2
 			});
 		}, 500);
 
-		socket.on('vote', function() {
+		socket.on('vote', function(vote) {
+			console.log('vote:', vote);
+
 			socket.emit('state', {
 				state: 'voted',
 				total: 10,
@@ -48,16 +51,16 @@ io.on('connection', function(socket) {
 			});
 
 			setTimeout(function() {
-				socket.emit('new vote', 6);
+				socket.emit('new vote', {total: 10, voted: 6});
 			}, 500);
 			setTimeout(function() {
-				socket.emit('new vote', 7);
+				socket.emit('new vote', {total: 10, voted: 7});
 			}, 1000);
 			setTimeout(function() {
-				socket.emit('new vote', 9);
+				socket.emit('new vote', {total: 10, voted: 9});
 			}, 2000);
 			setTimeout(function() {
-				socket.emit('new vote', 10);
+				socket.emit('new vote', {total: 10, voted: 10});
 			}, 2500);
 
 			setTimeout(function() {
@@ -70,7 +73,8 @@ io.on('connection', function(socket) {
 				socket.emit('state', {
 					state: 'voting',
 					title: 'Ordförande',
-					options: ['Kristoffer', 'John']
+					options: ['Kristoffer', 'John', 'Oscar'],
+					numberOfChoices: 1
 				});
 			}, 3500);
 		});

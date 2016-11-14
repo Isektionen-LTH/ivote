@@ -5,11 +5,27 @@ const credentials = require('../credentials.json');
 const salt = 'ivote';
 const cookieOptions = { maxAge: 900000 };
 
+var db = require('./db.js');
+
 router.get('/voter/:id', function(req, res) {
-	res.cookie('userId', req.params.id, cookieOptions);
-	res.clearCookie('username');
-	res.clearCookie('password');
-	res.redirect('/vote');
+
+	db.validateUserBefore(req.params.id, function(isValid) {
+		console.log(isValid);
+		if(isValid){
+			console.log("activate user");
+			db.activateUser(req.params.id, function(err, username) {
+				console.log(err);
+				console.log(username);
+				res.cookie('userId', req.params.id, cookieOptions);
+				res.cookie('username', username, cookieOptions);
+				res.clearCookie('password');
+				res.redirect('/vote');
+
+			});
+		} else {
+			res.redirect('/');
+		}
+	});
 });
 
 router.get('/admin', function(req, res) {

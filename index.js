@@ -66,6 +66,12 @@ app.use('/register', function(req, res, next) {
   }
   next();
 });
+app.use('/results', function(req, res, next) {
+  if (req.role !== 'admin') {
+    return res.redirect('/');
+  } 
+  next();
+});
 
 app.get('/logout', function(req, res) {
   res.clearCookie('userId');

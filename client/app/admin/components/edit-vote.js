@@ -10,6 +10,8 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import ContentClear from 'material-ui/svg-icons/content/clear';
 import Paper from 'material-ui/Paper';
 import CircularProgress from 'material-ui/CircularProgress';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
 
 import { 
 	cancelEditing,
@@ -17,15 +19,24 @@ import {
 	saveVote,
 	editTitleChanged,
 	editOptionChanged,
-	removeEditOption
+	removeEditOption,
+	setNumberOfChoices
 } from './configure-votes.actions';
+
+function count(n) {
+	var array = [];
+	for (let i = 0; i < n; i++) {
+		array.push(i);
+	}
+	return array;
+}
 
 let EditVote = ({ editing, dispatch }) => {
 	if (editing === null) {
 		return null;
 	}
 
-	const { title, options, id } = editing;
+	const { title, options, id, numberOfChoices } = editing;
 
 	const validate = () => {
 		if (!title) { return false; }
@@ -86,6 +97,15 @@ let EditVote = ({ editing, dispatch }) => {
 					i < options.length ? editOption(option, i) : addOption(option, i)
 				)}
 			</div>
+			<div>
+				<span>Tillåt</span>
+				<DropDownMenu value={numberOfChoices} onChange={(e, i, value) => dispatch(setNumberOfChoices(value))}>
+					{count(options.length - 1).map((i) =>
+						<MenuItem key={i} value={i + 1} primaryText={i + 1} />
+					)}
+				</DropDownMenu>
+				<span>alternativ</span>
+			</div>
 			<div className="card-actions">
 				<FlatButton
 					label="Avbryt"
@@ -97,7 +117,7 @@ let EditVote = ({ editing, dispatch }) => {
 					primary={true}
 					disabled={!validate()}
 					tabIndex={0}
-					onTouchTap={() => dispatch(saveVote({ title, options, id }))} />
+					onTouchTap={() => dispatch(saveVote({ title, options, id, numberOfChoices }))} />
 			</div>
 		</Paper>
 	);
