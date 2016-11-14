@@ -53,8 +53,8 @@ module.exports = function(app, io){
   });
 
   app.put('/admin/vote/:id', function(req, res) {
-
-    db.updateVote(req.body.id, req.body.title, req.body.options, function() {
+    console.log(req.body);
+    db.updateVote(req.body.id, req.body.title, req.body.options, req.body.numberOfChoices, function() {
       returnVotesAdmin(res);
     });
 
