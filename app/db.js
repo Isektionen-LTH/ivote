@@ -163,7 +163,8 @@ exports.userVote = function(userID, options, callback) {
       for (var i = 0; i < doc.numberOfChoices; i++) {
         var k = i;
         db.collection('votes').findAndModify({isActive: true, 'options.title': options[i]},[['_id',1]], {$inc: {'options.$.numberOfVotes': 1}}, {new:true}, function(err, doc2) {
-          console.log(i,k, doc.numberOfChoices);
+          //console.log(i,k, doc.numberOfChoices);
+          console.log("I:", i);
           if(k === doc.numberOfChoices - 1){
             db.collection('votes').update({isActive: true}, {$push: {hasVoted: userID}}, {}, function() {
               callback(true);
