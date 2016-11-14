@@ -9,6 +9,8 @@ import store from './results.store';
 import { updateResults } from './results.actions';
 
 // import 'whatwg-fetch';
+import { getCookie } from '../cookie';
+const name = getCookie('username');
 
 export default function ResultsRoute() {
 	return (
@@ -24,7 +26,7 @@ class ResultsClass extends React.Component {
 
 		this.onResultsUpdate = this.onResultsUpdate.bind(this);
 
-		socket.emit('join results');
+		socket.emit('join results', name);
 		socket.on('new results', this.onResultsUpdate);
 	}
 

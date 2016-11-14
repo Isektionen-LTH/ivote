@@ -6,7 +6,7 @@ module.exports = function(io) {
   _io.on('connection', function (socket) {
 
     socket.on('join results', function(role) {
-
+      console.log(role);
       if(role == "admin"){
         socket.join('resultRoom');
         db.getVoteResults(function(results) {

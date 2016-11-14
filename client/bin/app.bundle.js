@@ -56476,6 +56476,8 @@
 	
 	var _results3 = __webpack_require__(/*! ./results.actions */ 556);
 	
+	var _cookie = __webpack_require__(/*! ../cookie */ 497);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -56485,6 +56487,9 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
 	// import 'whatwg-fetch';
+	
+	
+	var name = (0, _cookie.getCookie)('username');
 	
 	function ResultsRoute() {
 		return _react2.default.createElement(
@@ -56511,7 +56516,7 @@
 	
 				this.onResultsUpdate = this.onResultsUpdate.bind(this);
 	
-				_socket2.default.emit('join results');
+				_socket2.default.emit('join results', name);
 				_socket2.default.on('new results', this.onResultsUpdate);
 			}
 		}, {
