@@ -1,13 +1,14 @@
 var db = require('./db.js');
 var _io;
 
+
 module.exports = function(io) {
   _io = io;
   _io.on('connection', function (socket) {
 
-    socket.on('join results', function(role) {
-      console.log(role);
-      if(role == "admin"){
+    socket.on('join results', function(request) {
+      //TODO authenticate
+      if(request.username == "admin"){
         socket.join('resultRoom');
         db.getVoteResults(function(results) {
           socket.emit('new results', results);

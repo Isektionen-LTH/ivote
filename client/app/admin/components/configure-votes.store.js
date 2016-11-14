@@ -51,9 +51,15 @@ function editing(state = null, action) {
 			};
 		}
 	case REMOVE_EDIT_OPTION:
+		// If there are more choices than options after deletion
+		const numberOfChoices = state.numberOfChoices === state.options.length - 1
+			? Math.max(state.options.length - 2, 1)
+			: state.numberOfChoices;
+		
 		return {
 			...state,
-			options: state.options.filter((option, i) => i !== action.index)
+			options: state.options.filter((option, i) => i !== action.index),
+			numberOfChoices: numberOfChoices
 		};
 	case SET_NUMBER_OF_CHOICES:
 		return {
