@@ -206,7 +206,7 @@ exports.activateUser = function(id, callback) {
 
   db.collection('codes').findAndModify({ id: id }, [], { $set: { activated: true } }, function(err, doc) {
     console.log(err, doc);
-    callback(err, doc.value.name);
+    callback(err, null);
   });
 
 };
