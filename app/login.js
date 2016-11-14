@@ -9,7 +9,8 @@ var db = require('./db.js');
 
 router.get('/voter/:id', function(req, res) {
 
-	db.validateUser(req.params.id, function(isValid) {
+	db.validateUserBefore(req.params.id, function(isValid) {
+		console.log(isValid);
 		if(isValid){
 			console.log("activate user");
 			db.activateUser(req.params.id, function(err, username) {
@@ -21,6 +22,8 @@ router.get('/voter/:id', function(req, res) {
 				res.redirect('/vote');
 
 			});
+		} else {
+			res.redirect('/');
 		}
 	});
 });

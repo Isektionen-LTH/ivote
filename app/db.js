@@ -224,6 +224,14 @@ exports.validateUser = function(userID, callback){
 
 }
 
+exports.validateUserBefore = function(userID, callback){
+
+  db.collection('codes').findOne({id: userID}, function(err, doc) {
+    callback(!!doc);
+  });
+
+}
+
 exports.getState = function(callback) {
   db.collection('state').find({}).toArray(function(err, doc) {
     callback(doc[0].state);
