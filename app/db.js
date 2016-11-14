@@ -187,26 +187,33 @@ exports.getVotingStatus = function(callback){
 }
 
 exports.userVote = function(userID, options, callback) {
-  db.collection('votes').findOne({ $and: [{hasVoted: {$nin: [userID]} }, { isActive: true }] }, function(err, doc) {
-    if(doc){
 
-      for (var i = 0; i < doc.numberOfChoices; i++) {
-        var k = i;
-        db.collection('votes').findAndModify({isActive: true, 'options.title': options[i]},[['_id',1]], {$inc: {'options.$.numberOfVotes': 1}}, {new:true}, function(err, doc2) {
-          if(k === doc.numberOfChoices - 1){
+  db.collection('codes').findOne({id: userID, activated: true}, function(err, user) {
+    if(user){
 
+      db.collection('votes').findOne({ $and: [{hasVoted: {$nin: [userID]} }, { isActive: true }] }, function(err, doc) {
+        if(doc){
+
+          for (var i = 0; i < doc.numberOfChoices; i++) {
+            var k = i;
+            db.collection('votes').findAndModify({isActive: true, 'options.title': options[i]},[['_id',1]], {$inc: {'options.$.numberOfVotes': 1}}, {new:true}, function(err, doc2) {
+              if(k === doc.numberOfChoices - 1){
+
+              }
+            });
+          }
+
+          db.collection('votes').update({isActive: true}, {$push: {hasVoted: userID}}, {}, function() {
+            callback(true);
+          });
+
+          } else {
+            callback(false);
           }
         });
-      }
 
-      db.collection('votes').update({isActive: true}, {$push: {hasVoted: userID}}, {}, function() {
-        callback(true);
-      });
-
-      } else {
-        callback(false);
-      }
-    });
+    }
+  });
 }
 
 exports.validateUser = function(userID, callback){
@@ -236,13 +243,20 @@ exports.registerUser = function(name, email, uid, callback) {
 
 exports.activateUser = function(id, callback) {
 
-  db.collection('codes').findAndModify({ id: id }, [], { $set: { activated: true } }, function(err, doc) {
-    if (err) {
-      console.log(err);
+  db.collection('codes').findOne({id: id}, function(err, user) {
+    if(user){
+
+      db.collection('codes').findAndModify({ id: id }, [], { $set: { activated: true } }, function(err, doc) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("User activated", doc.value);
+        }
+        callback(err, doc.value.name);
+      });
     } else {
-      console.log("User activated", doc.value);
+      callback(null, null);
     }
-    callback(err, doc.value.name);
   });
 
 };
