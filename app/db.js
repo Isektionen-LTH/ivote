@@ -241,7 +241,7 @@ exports.dbDelete = function() {
   });
   setState(0, function() {
   });
-  
-  console.log(Databas rensad);
+
+  console.log("Databas rensad");
 
 }
