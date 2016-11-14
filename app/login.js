@@ -9,7 +9,7 @@ var db = require('./db.js');
 
 router.get('/voter/:id', function(req, res) {
 
-	db.validateUser(function(isValid) {
+	db.validateUser(req.params.id, function(isValid) {
 		if(isValid){
 			console.log("activate user");
 			db.activateUser(req.params.id, function(err, username) {
