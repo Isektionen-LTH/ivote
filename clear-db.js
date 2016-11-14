@@ -1,2 +1,4 @@
 var db = require('./app/db.js');
-db.dbDelete();
+setTimeout(function () {
+    db.dbDelete();
+}, 2000);

@@ -235,6 +235,7 @@ exports.getUserStatus = function() {
 exports.dbDelete = function() {
   db.collection('codes').remove(false)
   db.collection('votes').remove(false)
+
   setState(0, function() {
   });
 
