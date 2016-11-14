@@ -51,23 +51,15 @@ exports.getVotesAdmin = function(callback){
           return option.title;
         }),
         status: vote.isActive === null ? 'waiting' : vote.isActive ? 'ongoing' : 'completed',
-        statusOrder: vote.isActive === null ? 1 : vote.isActive ? 0 : 2,
-        resultOrder: vote.resultOrder,
-        numberOfChoices: vote.numberOfChoices
-      };
-    })
-    .sort(function(a, b){
-      if (a.statusOrder === b.statusOrder){
-        return - a.resultOrder + b.resultOrder;
-      } else {
-        return a.statusOrder - b.statusOrder;
-      }
-    })
-    .map(function(vote) {
-      delete vote.statusOrder;
-      delete vote.resultOrder;
-      return vote;
-    });
+        statusOrd: vote.isActive === null ? 1 : vote.isActive ? 0 : 2,
+        resultOrd: vote.resultOrd};
+      }).sort(function(a, b){
+        if (a.statusOrd === b.statusOrd){
+          return - a.resultOrd + b.resultOrd;
+        } else {
+          return a.statusOrd - b.statusOrd;
+        }
+      });
 
       callback(votes);
 
