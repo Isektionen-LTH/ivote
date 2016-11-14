@@ -51,23 +51,15 @@ exports.getVotesAdmin = function(callback){
           return option.title;
         }),
         status: vote.isActive === null ? 'waiting' : vote.isActive ? 'ongoing' : 'completed',
-        statusOrder: vote.isActive === null ? 1 : vote.isActive ? 0 : 2,
-        resultOrder: vote.resultOrder,
-        numberOfChoices: vote.numberOfChoices
-      };
-    })
-    .sort(function(a, b){
-      if (a.statusOrder === b.statusOrder){
-        return - a.resultOrder + b.resultOrder;
-      } else {
-        return a.statusOrder - b.statusOrder;
-      }
-    })
-    .map(function(vote) {
-      delete vote.statusOrder;  
-      delete vote.resultOrder;
-      return vote;
-    });
+        statusOrd: vote.isActive === null ? 1 : vote.isActive ? 0 : 2,
+        resultOrd: vote.resultOrd};
+      }).sort(function(a, b){
+        if (a.statusOrd === b.statusOrd){
+          return - a.resultOrd + b.resultOrd;
+        } else {
+          return a.statusOrd - b.statusOrd;
+        }
+      });
 
       callback(votes);
 
@@ -196,21 +188,20 @@ exports.validateUser = function(userID, callback){
 
 exports.getState = function(callback) {
   db.collection('state').find({}).toArray(function(err, doc) {
-    callback(doc[0].state);
+    callback(doc[0]);
   });
 }
 
 exports.registerUser = function(name, email, uid, callback) {
-  db.collection('codes').insert({name: name, email: email, id: uid, activated: false}, function(err){
+  db.collection('codes').insert({name: +name, email: email, id: uid, activated: false}, function(err){
     callback();
   });
 }
 
-exports.activateUser = function(id, callback) {
+exports.activateUser = function(id){
 
-  db.collection('codes').findAndModify({ id: id }, [], { $set: { activated: true } }, function(err, doc) {
-    console.log(err, doc);
-    callback(err, doc.value.name);
+  db.collection('codes').update({id: id}, {$set: {activated:true}}, function err() {
+    console.log(err);
   });
 
 };
@@ -239,4 +230,18 @@ exports.getUserStatus = function() {
       return({totalUsers: count, activatedUsers: count2});
     });
   });
+}
+
+exports.dbDelete = function() {
+  db.collection('codes').remove(function(err) {
+    console.log(err);
+  });
+  db.collection('votes').remove(function(err) {
+    console.log(err);
+  });
+  setState(0, function() {
+  });
+  
+  console.log(Databas rensad);
+
 }
