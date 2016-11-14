@@ -10,6 +10,8 @@ var db = require('./db.js');
 router.get('/voter/:id', function(req, res) {
 	console.log("activate user");
 	db.activateUser(req.params.id, function(err, username) {
+		console.log(err);
+		console.log(username);
 		res.cookie('userId', req.params.id, cookieOptions);
 		res.cookie('username', username, cookieOptions);
 		res.clearCookie('password');

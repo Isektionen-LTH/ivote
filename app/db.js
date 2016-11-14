@@ -205,8 +205,8 @@ exports.registerUser = function(name, email, uid, callback) {
 exports.activateUser = function(id, callback) {
 
   db.collection('codes').findAndModify({ id: id }, [], { $set: { activated: true } }, function(err, doc) {
-    console.log(err, doc);
-    callback(err, doc.name);
+    if(err) console.log(err);
+    callback(err, doc.value.name);
   });
 
 };
