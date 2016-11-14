@@ -52,7 +52,8 @@ exports.getVotesAdmin = function(callback){
         }),
         status: vote.isActive === null ? 'waiting' : vote.isActive ? 'ongoing' : 'completed',
         statusOrd: vote.isActive === null ? 1 : vote.isActive ? 0 : 2,
-        resultOrd: vote.resultOrd};
+        resultOrd: vote.resultOrd,
+        numberOfChoices: vote.numberOfChoices};
       }).sort(function(a, b){
         if (a.statusOrd === b.statusOrd){
           return - a.resultOrd + b.resultOrd;
