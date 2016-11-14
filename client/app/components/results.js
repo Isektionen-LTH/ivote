@@ -9,7 +9,7 @@ import store from './results.store';
 import { updateResults } from './results.actions';
 
 import { getCookie } from '../cookie';
-const role = getCookie('role');
+const role = getCookie('username');
 
 // import 'whatwg-fetch';
 
