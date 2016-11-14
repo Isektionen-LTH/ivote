@@ -6,7 +6,7 @@ module.exports = function(io) {
   _io.on('connection', function (socket) {
 
     socket.on('join results', function(role) {
-      console.log(role);
+
       if(role == "admin"){
         socket.join('resultRoom');
         db.getVoteResults(function(results) {
@@ -19,19 +19,15 @@ module.exports = function(io) {
     socket.on('join vote', function(userID){
 
       socket.userID = userID.id;
-      console.log(userID);
 
       db.validateUser(userID.id, function(userIsValid){
 
         socket.valid = userIsValid;
-        console.log('User status: ' + userIsValid);
 
         if(userIsValid){
           socket.join('vote');
 
           db.getHasVoted(userID.id, function(hasVoted) {
-
-            console.log(hasVoted);
 
             if(hasVoted){
               socket.join('hasVoted');
@@ -45,7 +41,6 @@ module.exports = function(io) {
                   socket.emit('state', {state: 'waiting'});
                 } else {
                   db.getCurrentVote(function(doc) {
-                    console.log(doc);
                     socket.emit('state', doc);
                   });
                 }
@@ -98,7 +93,6 @@ function vote(userID, options, callback){
         callback();
       });
     } else {
-      console.log('Användaren har redan röstat');
     }
 
   });

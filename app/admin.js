@@ -9,11 +9,7 @@ function returnVotesAdmin(res){
 
 function setState(newState){
 
-  console.log('function: setState');
-
   db.setState(newState, function(err, docs) {
-
-    console.log('error: setState: ' + err);
 
     if(newState === 0){
       //FIXA IO
@@ -44,8 +40,6 @@ module.exports = function(app, io){
 
   app.post('/admin/vote/new', function (req, res, next) {
 
-    console.log(req.body);
-
     db.newVote(req.body.title, req.body.options, req.body.numberOfChoices, function() {
       returnVotesAdmin(res);
     });
@@ -53,7 +47,7 @@ module.exports = function(app, io){
   });
 
   app.put('/admin/vote/:id', function(req, res) {
-    console.log(req.body);
+
     db.updateVote(req.body.id, req.body.title, req.body.options, req.body.numberOfChoices, function() {
       returnVotesAdmin(res);
     });
