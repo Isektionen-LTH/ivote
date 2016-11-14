@@ -233,12 +233,8 @@ exports.getUserStatus = function() {
 }
 
 exports.dbDelete = function() {
-  db.collection('codes').remove(function(err) {
-    console.log(err);
-  });
-  db.collection('votes').remove(function(err) {
-    console.log(err);
-  });
+  db.collection('codes').remove(false)
+  db.collection('votes').remove(false)
   setState(0, function() {
   });
 
