@@ -16,7 +16,7 @@ export function getCookie(c_name) {
         y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
         x = x.replace(/^\s+|\s+$/g, "");
         if (x == c_name) {
-            return unescape(y);
+            return decodeURIComponent(y);
         }
     }
 }

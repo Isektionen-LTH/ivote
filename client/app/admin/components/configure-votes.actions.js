@@ -126,6 +126,14 @@ export function editOptionChanged(option, index) {
 	};
 }
 
+export const SET_NUMBER_OF_CHOICES = 'SET_NUMBER_OF_CHOICES';
+export function setNumberOfChoices(numberOfChoices) {
+	return {
+		type: SET_NUMBER_OF_CHOICES,
+		numberOfChoices
+	};
+}
+
 export const SAVE_VOTE = 'SAVE_VOTE';
 
 export function saveVote(vote) {

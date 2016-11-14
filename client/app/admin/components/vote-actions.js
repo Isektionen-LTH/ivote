@@ -49,6 +49,17 @@ let VoteActions = ({ status, id, dispatch, existsOngoingVote }) => {
 				</div>
 			);
 		}
+		// return (
+		// 	<div>
+		// 		<FlatButton
+		// 			label="Ändra"
+		// 			onTouchTap={() => dispatch(editVote(id))} />
+		// 		<FlatButton
+		// 			label="Påbörja"
+		// 			primary={true}
+		// 			onTouchTap={() => dispatch(startVote(id))} />
+		// 	</div>
+		// );
 	}
 };
 

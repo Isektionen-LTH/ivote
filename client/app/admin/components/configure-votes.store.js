@@ -1,4 +1,4 @@
-import { createStore, combineReducers, applyMiddleware  } from 'redux';
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 
 import thunk from 'redux-thunk';
 
@@ -14,13 +14,14 @@ import {
 
 	EDIT_TITLE_CHANGED,
 	EDIT_OPTION_CHANGED,
-	REMOVE_EDIT_OPTION
+	REMOVE_EDIT_OPTION,
+	SET_NUMBER_OF_CHOICES
 } from './configure-votes.actions';
 
 function editing(state = null, action) {
 	switch (action.type) {
 	case ADD_NEW_VOTE:
-		return {title: '', options: ['', '']};
+		return {title: '', options: ['', ''], numberOfChoices: 1};
 	case EDIT_VOTE:
 		return action.vote;
 	case CANCEL_EDITING: // Fallthrough
@@ -54,6 +55,11 @@ function editing(state = null, action) {
 			...state,
 			options: state.options.filter((option, i) => i !== action.index)
 		};
+	case SET_NUMBER_OF_CHOICES:
+		return {
+			...state,
+			numberOfChoices: action.numberOfChoices
+		};
 	default:
 		return state;
 	}
@@ -74,11 +80,11 @@ const reducer = combineReducers({
 	editing,
 	votes
 });
-// TODO göra state till en egen istället för att ha en session
 
-const store = createStore(reducer, applyMiddleware(
-	thunk
-	// , createLogger()
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(reducer, composeEnhancers(
+	applyMiddleware(
+		thunk
+	)
 ));
-
 export default store;

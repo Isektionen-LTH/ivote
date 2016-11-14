@@ -8,11 +8,12 @@ const cookieOptions = { maxAge: 900000 };
 var db = require('./db.js');
 
 router.get('/voter/:id', function(req, res) {
-	db.activateUser(req.params.id);
-	res.cookie('userId', req.params.id, cookieOptions);
-	res.clearCookie('username');
-	res.clearCookie('password');
-	res.redirect('/vote');
+	db.activateUser(req.params.id, function(err, username) {
+		res.cookie('userId', req.params.id, cookieOptions);
+		res.cookie('username', username, cookieOptions);
+		res.clearCookie('password');
+		res.redirect('/vote');
+	});
 });
 
 router.get('/admin', function(req, res) {

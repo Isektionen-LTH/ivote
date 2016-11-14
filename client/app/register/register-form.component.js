@@ -34,11 +34,10 @@ class RegisterForm extends React.Component {
 		const [ trimmedName, trimmedEmail ] = [ name.trim(), email.trim() ];
 
 		const validateName = (name) => {
-			return /^[^\s]+\s[^\s]+$/.test(name);
+			return /^[^\s]+\s[\S\s]+$/.test(name);
 		};
 
 		const validate = () => {
-			return true;
 			return name && email && validateName(trimmedName) && validateEmail(trimmedEmail);
 		};
 

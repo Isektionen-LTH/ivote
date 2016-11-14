@@ -29,7 +29,7 @@ const id = getCookie('userId');
 class VoteSessionClass extends React.Component {
 	componentDidMount() {
 		const { dispatch } = this.props;
-		dispatch(updateSession({ state: 'waiting' }));
+		dispatch(updateSession({ state: 'loading' }));
 
 		this.onStateUpdate = this.onStateUpdate.bind(this);
 
@@ -51,9 +51,16 @@ class VoteSessionClass extends React.Component {
 		const { session } = this.props;
 
 		switch (session.state) {
+		case 'loading':
+			return (
+				<div className="loading-container">
+					<CircularProgress />
+				</div>
+			);
 		case 'waiting':
 			return (
 				<div className="loading-container">
+					<h1>Väntar på att röstning ska startas</h1>
 					<CircularProgress />
 				</div>
 			);
@@ -186,8 +193,8 @@ MultipleVoteList = connect(
 
 const HasVoted = () => {
 	return (
-		<div>
-			<div className="has-voted">Du har röstat!</div>
+		<div className="has-voted">
+			<h1>Du har röstat!</h1>
 			<OngoingVote></OngoingVote>
 		</div>
 	);

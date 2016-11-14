@@ -38,11 +38,9 @@ module.exports = function(io) {
               });
             } else {
               db.getState(function(state){
-
                 if(state === 0){
                   socket.emit('state', {state: 'waiting'});
                 } else {
-
                   db.getCurrentVote(function(doc) {
                     console.log(doc);
                     socket.emit('state', doc);

@@ -1,4 +1,4 @@
-import { createStore, combineReducers, applyMiddleware, compose  } from 'redux';
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 
 import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
@@ -77,7 +77,7 @@ function multipleSelected(state = [], action) {
 	}
 }
 
-function voteSession(state = {state: 'waiting'}, action) {
+function voteSession(state = {state: 'loading'}, action) {
 	switch (action.type) {
 	case UPDATE_SESSION:
 		return action.session;
