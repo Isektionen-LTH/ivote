@@ -60,7 +60,7 @@ class VoteSessionClass extends React.Component {
 		case 'waiting':
 			return (
 				<div className="loading-container">
-					<h1>Väntar på att röstning ska startas</h1>
+					<h1>Väntar på att en röstning ska startas</h1>
 					<CircularProgress />
 				</div>
 			);
