@@ -48,11 +48,15 @@ class UsersClass extends React.Component {
 		}
 
 
+		const style = (activated) => {
+			return activated ? {} : { color: 'red' };
+		};
+
 		return (
 			<table>
 				<tbody>
-					{users.map(({ name, email, id }) =>
-						<tr key={id}>
+					{users.map(({ name, email, id, activated }) =>
+						<tr key={id} style={style(activated)}>
 							<td>{name}</td>
 							<td>{email}</td>
 							<td>
