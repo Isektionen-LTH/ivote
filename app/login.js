@@ -3,7 +3,7 @@ const router = express.Router();
 
 const credentials = require('../credentials.json');
 const salt = 'ivote';
-const cookieOptions = { maxAge: 900000 };
+const cookieOptions = { maxAge: 315360000000 };
 
 var db = require('./db.js');
 
