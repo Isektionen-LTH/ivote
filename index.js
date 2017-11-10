@@ -1,3 +1,5 @@
+require('./setup/ensure-setup')();
+
 var express = require('express');
 var bodyParser = require('body-parser');
 
@@ -7,6 +9,7 @@ var io = require('socket.io')(server);
 var cookieParser = require('cookie-parser');
 var login = require('./app/login');
 const config = require('./config.json');
+
 app.use(bodyParser.json());
 
 app.use(express.static(__dirname));

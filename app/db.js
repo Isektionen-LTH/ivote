@@ -5,6 +5,8 @@ var db;
 
 mongo.MongoClient.connect(config.dbUrl, function(err, database) {
   db = database;
+
+  exports.setState(0, function() {});
 });
 
 exports.getCurrentVote = function(callback){
@@ -68,7 +70,7 @@ exports.getVotesAdmin = function(callback){
 };
 
 exports.setState = function(newState, callback) {
-  db.collection('state').update({}, {state: newState}, function(err, doc) {
+  db.collection('state').update({}, {state: newState}, {upsert: true}, function(err, doc) {
     if (err) {
       console.log(err);
     } else {
@@ -306,7 +308,6 @@ exports.dbDelete = function() {
   db.collection('codes').remove(false)
   db.collection('votes').remove(false)
 
-  setState(0, function() {
-  });
+  setState(0, function() {});
 
 }
