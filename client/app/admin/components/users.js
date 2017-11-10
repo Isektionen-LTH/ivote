@@ -52,22 +52,28 @@ class UsersClass extends React.Component {
 			return activated ? {} : { color: 'red' };
 		};
 
+		const activatedUsers = users.filter(user => user.activated).length;
+
 		return (
-			<table>
-				<tbody>
-					{users.map(({ name, email, id, activated }) =>
-						<tr key={id} style={style(activated)}>
-							<td>{name}</td>
-							<td>{email}</td>
-							<td>
-								<IconButton onTouchTap={() => dispatch(deleteUser(id))}>
-									<ContentClear />
-								</IconButton>
-							</td>
-						</tr>
-					)}
-				</tbody>
-			</table>
+			<div>
+				<div>Antal aktiverade: {activatedUsers} av {users.length} användare</div>
+				<table>
+					<tbody>
+						{users.map(({ name, email, id, activated }) =>
+							<tr key={id} style={style(activated)}>
+								<td>{name}</td>
+								<td>{email}</td>
+								<td>
+									<IconButton onTouchTap={() => dispatch(deleteUser(id))}>
+										<ContentClear />
+									</IconButton>
+								</td>
+							</tr>
+						)}
+					</tbody>
+				</table>
+			</div>
+			
 		);
 	}
 }
