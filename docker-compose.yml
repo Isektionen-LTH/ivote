@@ -1,0 +1,10 @@
+db:
+  image: mongo
+  volumes:
+   - "~/ivote-data:/data/db"
+ivote:
+  build: .
+  ports:
+   - "8080:8080"
+  links:
+   - db
