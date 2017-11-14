@@ -58,7 +58,7 @@ $ npm run dev
 ### Server
 
 Servern är skriven i Node.js och den mesta serverkoden finns i `app`
-Servern startas om genom att köra `git run dev`
+Servern startas om genom att köra `npm run dev`
 
 ### Klient
 
