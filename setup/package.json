@@ -1,4 +1,8 @@
 {
+  "main": "index.js",
+  "scripts": {
+    "start": "node ."
+  },
   "dependencies": {
     "inquirer": "^3.3.0"
   }

@@ -37,6 +37,12 @@ module.exports = [
   },
   {
     type: 'input',
+    name: 'name',
+    message: 'Name of meeting',
+    default: 'HT-mötet'
+  },
+  {
+    type: 'input',
     name: 'emailUsername',
     message: 'Email username',
     validate: x => !!x
@@ -46,11 +52,5 @@ module.exports = [
     name: 'emailPassword',
     message: 'Email password',
     validate: x => !!x
-  },
-  {
-    type: 'input',
-    name: 'name',
-    message: 'Name of meeting',
-    default: 'Ivote'
   }
 ];

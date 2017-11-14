@@ -22,15 +22,6 @@ export default function IndexPage() {
 			<div>
 				<Link to={'/login'}>Logga in som admin</Link>
 			</div>
-			<div style={{ marginTop: 20 }}>
-				Admin:
-				<div>
-					<Link to={'/admin/users'}>Användare</Link>
-				</div>
-				<div>
-					<Link to={'/results'}>Resultat</Link>
-				</div>
-			</div>
 		</Paper>
 	);
 }

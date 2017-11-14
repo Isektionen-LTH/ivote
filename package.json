@@ -4,8 +4,10 @@
   "description": "som evote 2.0",
   "main": "index.js",
   "scripts": {
+    "dev": "docker-compose up --build",
     "start": "node .",
-    "production": "node . -p 80"
+    "prod": "git pull && docker-compose -f docker-compose-prod.yml up -d --build",
+    "setup": "cd setup && node . && cd .."
   },
   "repository": {
     "type": "git",
