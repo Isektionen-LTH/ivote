@@ -69,7 +69,7 @@ table.vb-container.fullwidth {padding-left: 0;padding-right: 0;}</style><style t
 <div class="mobile-full" style="display: inline-block; max-width: 184px; vertical-align: top; width: 100%;">
 
                     <table class="vb-content" border="0" cellspacing="9" cellpadding="0" width="184" align="left" style="border-collapse: separate;width: 100%;"><tbody><tr><td width="100%" valign="top" align="left" class="links-color">
-                            <img border="0" hspace="0" vspace="0" width="166" class="mobile-full" alt="" style="border: 0px;display: block;vertical-align: top;width: 100%;height: auto;max-width: 166px;" src="https://www.tlth.se/media/W1siZiIsIjIwMTYvMDIvMTgvMTAvMjEvMDQvNGMyYzFiZjUtODgzMC00ZmIxLThhOTUtYTU2NTcyM2EzNmY4L0kucG5nIl1d/I.png?sha=a4d9a21cd2c9ef9e"></a>
+                            <img border="0" hspace="0" vspace="0" width="166" class="mobile-full" alt="" style="border: 0px;display: block;vertical-align: top;width: 100%;height: auto;max-width: 166px;" src="http://isek.se/wp-content/uploads/2016/06/I-sektionen.png"></a>
                         </td>
                       </tr></tbody></table></div><!--[if (gte mso 9)|(lte ie 8)]></td>
 <![endif]--><!--[if (gte mso 9)|(lte ie 8)]>
@@ -77,7 +77,7 @@ table.vb-container.fullwidth {padding-left: 0;padding-right: 0;}</style><style t
 <![endif]--><div class="mobile-full" style="display: inline-block; max-width: 368px; vertical-align: top; width: 100%;">
 
                     <table class="vb-content" border="0" cellspacing="9" cellpadding="0" width="368" align="left" style="border-collapse: separate;width: 100%;"><tbody><tr><td style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: #3f3f3f; text-align: left;">
-                          <span style="color: #3f3f3f;">Välkommen till hösterminsmötet<br></span>
+                          <span style="color: #3f3f3f;">Välkommen till` + config.name + `<br></span>
                         </td>
                       </tr><tr><td align="left" class="long-text links-color" style="text-align: left; font-size: 13px; font-family: Arial, Helvetica, sans-serif; color: #3f3f3f;"><p style="margin: 1em 0px;margin-bottom: 0px;margin-top: 0px;">Detta är din personliga länk för att kunna delta i röstningen, klicka på knappen för att sätta igång!<br></p></td>
                       </tr><tr><td valign="top">
@@ -138,7 +138,7 @@ module.exports = function(email, callback) {
     var mailOptions = {
       from: credentials.email, // sender address
       to: email, // list of receivers
-      subject: 'Välkommen till hösterminsmötet!', // Subject line
+      subject: 'Välkommen till ' + config.name, // Subject line
       //text: 'http://' + config.url + '/login/voter/' + uid//, // plaintext body
       html: html1 + 'http://' + config.url + '/login/voter/' + uid + html2
       // html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead

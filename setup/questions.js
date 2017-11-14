@@ -46,5 +46,11 @@ module.exports = [
     name: 'emailPassword',
     message: 'Email password',
     validate: x => !!x
+  },
+  {
+    type: 'input',
+    name: 'name',
+    message: 'Name of meeting',
+    default: 'Ivote'
   }
 ];

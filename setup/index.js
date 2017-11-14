@@ -11,7 +11,8 @@ inquirer.prompt(questions).then(function (answers) {
       emailUsername = answers.emailUsername,
       emailPassword = answers.emailPassword,
       dbUrl = answers.dbUrl,
-      url = answers.url;
+      url = answers.url,
+      name = answers.name;
 
 
   var credentials = {
@@ -28,7 +29,7 @@ inquirer.prompt(questions).then(function (answers) {
       password: emailPassword
     }
   };
-  var config = { dbUrl: dbUrl, url: url };
+  var config = { dbUrl: dbUrl, url: url , name: name};
 
   fs.writeFileSync('../credentials.json', JSON.stringify(credentials, null, '\t'));
   fs.writeFileSync('../config.json', JSON.stringify(config, null, '\t'));
