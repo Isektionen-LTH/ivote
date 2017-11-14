@@ -7,7 +7,7 @@
     "dev": "docker-compose up --build",
     "start": "node .",
     "prod": "git pull && docker-compose -f docker-compose-prod.yml up -d --build",
-    "setup": "cd setup && node . && cd .."
+    "setup": "cd setup && npm install && node . && cd .."
   },
   "repository": {
     "type": "git",

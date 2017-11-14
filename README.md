@@ -2,29 +2,34 @@
 
 I-Sektionen vid LTHs röstningssystem för årsmöten
 
-### Prerequisites
+## Förutsättningar
 
-För att installera och köra ivote krävs Docker. https://www.docker.com
+För att installera och köra ivote krävs git, docker, docker-compose och Node.js.
 
-### Installing
+## Köra i produktion
 
-Börja med att installera docker.
+Börja med att installera all programvara i Prerequities genom knivskarpa googlingar!
 
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
+Ladda sedan ned projektet genom att köra 
 
 ```
-until finished
+$ git clone https://github.com/Isektionen-LTH/ivote.git
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
+Gör sedan en setup där du skriver in alla parametrar för att köra I-vote.
 
-#Använda systemet
+```
+$ cd ivote
+$ npm run setup
+```
+
+Starta systemet genom att köra
+
+```
+$ npm run prod
+```
+
+## Använda systemet
 Systemet består av 3 stycken delar.
 
 * Admin
@@ -42,6 +47,29 @@ Under registeraren finns en sida:
 Under användare finns en sida:
 * /vote - rösta på den aktuella omröstningen
 
+## Utveckla
+
+Projektet körs för utveckling genom att köra
+
+```
+$ npm run dev
+```
+
+### Server
+
+Servern är skriven i Node.js och den mesta serverkoden finns i `app`
+Servern startas om genom att köra `git run dev`
+
+### Klient
+
+Klienten är skriven i React + Redux och koden finns i `client`
+För att ändringar ska visas måste
+
+```
+$ npm run build
+```
+köras i `client`-mappen
+
 
 ## Authors
 
@@ -51,5 +79,3 @@ Under användare finns en sida:
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
