@@ -20,10 +20,7 @@ app.use(cookieParser());
 app.use(login.auth);
 app.use('/login', login.router);
 
-require("./app/admin.js")(app, io);
-require("./app/user.js")(io);
-require("./app/register.js")(app);
-db = require("./app/db.js");
+var db = require("./app/db.js");
 
 var argv = require('minimist')(process.argv.slice(2));
 const port = argv.p || 8080;
@@ -57,7 +54,7 @@ app.use(function(req, res, next) {
   });
 });
 
-app.use('/admin', function(req, res, next) {
+app.use('/admin/**', function(req, res, next) {
   if (req.role !== 'admin') {
     return res.redirect('/');
   }
@@ -82,6 +79,10 @@ app.get('/logout', function(req, res) {
   res.clearCookie('hash');
   res.redirect('/');
 });
+
+require("./app/admin.js")(app, io);
+require("./app/user.js")(io);
+require("./app/register.js")(app);
 
 server.listen(port, function () {
   console.log('Server listening on port', port);
