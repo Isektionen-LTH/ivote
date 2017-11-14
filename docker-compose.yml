@@ -5,7 +5,7 @@ db:
 ivote:
   build: .
   ports:
-   - "8080:80"
+   - "80:8080"
   volumes:
     - ".:/usr/src/app"
   links:

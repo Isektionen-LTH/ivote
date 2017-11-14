@@ -56571,7 +56571,7 @@
 				_react2.default.createElement(
 					_reactRouter.Link,
 					{ to: '/login' },
-					'Logga in som admin'
+					'Logga in som administrator'
 				)
 			)
 		);
