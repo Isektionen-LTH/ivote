@@ -49678,7 +49678,6 @@
 		var router = _ref.router,
 		    children = _ref.children;
 	
-	
 		return _react2.default.createElement(
 			'div',
 			null,
@@ -55833,7 +55832,8 @@
 						'Antal aktiverade: ',
 						activatedUsers,
 						' av ',
-						users.length
+						users.length,
+						' anv\xE4ndare'
 					),
 					_react2.default.createElement(
 						'table',
@@ -56572,6 +56572,29 @@
 					_reactRouter.Link,
 					{ to: '/login' },
 					'Logga in som admin'
+				)
+			),
+			_react2.default.createElement(
+				'div',
+				{ style: { marginTop: 20 } },
+				'Admin:',
+				_react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: '/admin/users' },
+						'Anv\xE4ndare'
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: '/results' },
+						'Resultat'
+					)
 				)
 			)
 		);

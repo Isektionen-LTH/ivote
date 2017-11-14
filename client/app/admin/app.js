@@ -14,7 +14,6 @@ import Users from './components/users';
 import loginLogout from '../login-logout';
 
 let AppComponent = ({ router, children }) => {
-
 	return (
 		<div>
 			<AppBar title="Admin"
